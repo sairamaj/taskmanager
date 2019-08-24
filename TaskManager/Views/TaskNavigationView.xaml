@@ -1,0 +1,29 @@
+﻿<UserControl x:Class="TaskManager.Views.TaskNavigationView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:TaskManager.Views"
+             xmlns:viewModels="clr-namespace:TaskManager.ViewModels"
+             xmlns:views="clr-namespace:Utils.Core.Views;assembly=Utils.Core"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800"
+             TreeView.SelectedItemChanged="TaskSelectedItemChanged">
+    <Grid>
+        <TreeView ItemsSource="{Binding Tasks}">
+            <TreeView.Resources>
+
+                <Style TargetType="TreeViewItem">
+                    <Setter Property="views:TreeViewBehavior.ExpandingBehaviour" Value="{Binding ExpandingCommand}"/>
+                </Style>
+
+                <HierarchicalDataTemplate DataType="{x:Type viewModels:TaskViewModel}"  ItemsSource="{Binding Children}">
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="{Binding Name}" />
+                    </StackPanel>
+                </HierarchicalDataTemplate>
+            </TreeView.Resources>
+        </TreeView>
+    </Grid>
+
+</UserControl>
