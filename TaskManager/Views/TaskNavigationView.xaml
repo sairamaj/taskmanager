@@ -6,6 +6,7 @@
              xmlns:local="clr-namespace:TaskManager.Views"
              xmlns:viewModels="clr-namespace:TaskManager.ViewModels"
              xmlns:views="clr-namespace:Utils.Core.Views;assembly=Utils.Core"
+             xmlns:viewModels1="clr-namespace:Utils.Core.ViewModels;assembly=Utils.Core"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800"
              TreeView.SelectedItemChanged="TaskSelectedItemChanged">
@@ -17,7 +18,7 @@
                     <Setter Property="views:TreeViewBehavior.ExpandingBehaviour" Value="{Binding ExpandingCommand}"/>
                 </Style>
 
-                <HierarchicalDataTemplate DataType="{x:Type viewModels:TaskViewModel}"  ItemsSource="{Binding Children}">
+                <HierarchicalDataTemplate DataType="{x:Type viewModels1:TaskViewModel}"  ItemsSource="{Binding Children}">
                     <StackPanel Orientation="Horizontal">
                         <TextBlock Text="{Binding Name}" />
                     </StackPanel>

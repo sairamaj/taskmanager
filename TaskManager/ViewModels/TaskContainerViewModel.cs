@@ -1,5 +1,6 @@
 ﻿using System.Collections.ObjectModel;
-using TaskManager.Views;
+using System.Threading.Tasks;
+using TaskManager.Repository;
 using Utils.Core;
 using Utils.Core.ViewModels;
 
@@ -7,17 +8,20 @@ namespace TaskManager.ViewModels
 {
     class TaskContainerViewModel : CoreViewModel
     {
-        public TaskContainerViewModel(ICommandTreeItemViewMapper mapper)
+        public TaskContainerViewModel(ICommandTreeItemViewMapper mapper, ITaskRepository taskRepository)
         {
             this.Tasks = new SafeObservableCollection<TaskViewModel>();
-            var taskViewModel1 = new TaskViewModel("Dummy1");
-            var taskViewModel2 = new TaskViewModel("Dummy2");
-            mapper.Add("Dummy1", new DummyTask1View() { DataContext = taskViewModel1 });
-            mapper.Add("Dummy2", new DummyTask2View() { DataContext = taskViewModel2 });
-            this.Tasks.Add(taskViewModel1);
-            this.Tasks.Add(taskViewModel2);
+            var task = LoadTasks(taskRepository);
         }
 
         public ObservableCollection<TaskViewModel> Tasks { get; set; }
+
+        private async Task LoadTasks(ITaskRepository taskRepository)
+        {
+            foreach (var task in await taskRepository.GetTasksAsync())
+            {
+                this.Tasks.Add(new TaskViewModel(task.Name, task.Name));
+            }
+        }
     }
 }

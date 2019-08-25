@@ -1,4 +1,5 @@
-﻿using Autofac;
+﻿using System.Collections.Generic;
+using Autofac;
 using Autofac.Core;
 
 namespace Utils.Core.Registration
@@ -13,10 +14,15 @@ namespace Utils.Core.Registration
         /// <summary>
         /// Initializes AUTOFAC container.
         /// </summary>
-        public void Initialize()
+        public void Initialize(IEnumerable<Module> modules)
         {
             var builder = new ContainerBuilder();
             builder.RegisterModule(new CoreModule());
+            foreach (var module in modules)
+            {
+                builder.RegisterModule(module);
+            }
+
             _container = builder.Build();
         }
 

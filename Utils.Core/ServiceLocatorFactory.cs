@@ -1,21 +1,16 @@
-﻿using Utils.Core.Registration;
+﻿using System.Collections.Generic;
+using Autofac;
+using Utils.Core.Registration;
 
 namespace Utils.Core
 {
     public static class ServiceLocatorFactory
     {
-        private static ServiceLocator _instance;
-        public static IServiceLocator Get()
+        public static IServiceLocator Create(params Module[] modules)
         {
-            if (_instance != null)
-            {
-                return _instance;
-            }
-
             var instance = new ServiceLocator();
-            instance.Initialize();
-            _instance = instance;
-            return _instance;
+            instance.Initialize(modules);
+            return instance;
         }
     }
 }

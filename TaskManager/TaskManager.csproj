@@ -58,9 +58,11 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Repository\TaskRepository.cs" />
+    <Compile Include="Repository\ITaskRepository.cs" />
+    <Compile Include="TaskModule.cs" />
     <Compile Include="ViewModels\MainViewModel.cs" />
     <Compile Include="ViewModels\TaskContainerViewModel.cs" />
-    <Compile Include="ViewModels\TaskViewModel.cs" />
     <Compile Include="Views\DummyTask1View.xaml.cs">
       <DependentUpon>DummyTask1View.xaml</DependentUpon>
     </Compile>
@@ -122,7 +124,9 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Tasks\Group1\" />
+  </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Utils.Core\Utils.Core.csproj">
       <Project>{1fff3f27-60c6-4e3f-af4b-c7bffd3f8154}</Project>
