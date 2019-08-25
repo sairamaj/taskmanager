@@ -7,9 +7,9 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Utils.Core", "Utils.Core\Ut
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TaskManager", "TaskManager\TaskManager.csproj", "{ADA071A3-C24C-4B71-8EF0-9D95462C3620}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Demo1", "Samples\Demo1\Demo1.csproj", "{6BB4B127-7E29-43A7-BB8F-F62DBB692F6A}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Demo1Task", "Samples\Demo1\Demo1Task.csproj", "{6BB4B127-7E29-43A7-BB8F-F62DBB692F6A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Demo2", "Samples\Demo2\Demo2.csproj", "{EAB4B470-25B9-4B25-ABA4-3542B898D10A}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Demo2Task", "Samples\Demo2\Demo2Task.csproj", "{EAB4B470-25B9-4B25-ABA4-3542B898D10A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

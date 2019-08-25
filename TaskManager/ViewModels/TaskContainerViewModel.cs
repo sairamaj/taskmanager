@@ -11,16 +11,17 @@ namespace TaskManager.ViewModels
         public TaskContainerViewModel(ICommandTreeItemViewMapper mapper, ITaskRepository taskRepository)
         {
             this.Tasks = new SafeObservableCollection<TaskViewModel>();
-            var task = LoadTasks(taskRepository);
+            var task = LoadTasks(mapper, taskRepository);
         }
 
         public ObservableCollection<TaskViewModel> Tasks { get; set; }
 
-        private async Task LoadTasks(ITaskRepository taskRepository)
+        private async Task LoadTasks(ICommandTreeItemViewMapper mapper, ITaskRepository taskRepository)
         {
             foreach (var task in await taskRepository.GetTasksAsync())
             {
-                this.Tasks.Add(new TaskViewModel(task.Name, task.Name));
+                this.Tasks.Add(task.TaskViewModel);
+                mapper.Add(task.Tag, task.View);
             }
         }
     }
