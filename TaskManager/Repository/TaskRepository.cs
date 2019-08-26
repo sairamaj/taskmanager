@@ -21,7 +21,7 @@ namespace TaskManager.Repository
         {
             await Task.Delay(0);
             var taskList = new List<TaskInfo>();
-            foreach (var assembly in GetTaskAssemblies())
+            foreach (var assembly in GetTaskAssemblies("*Task.dll"))
             {
                 try
                 {
@@ -45,11 +45,15 @@ namespace TaskManager.Repository
         {
             await Task.Delay(0);
             var taskModules = new List<Module>();
-            foreach (var assembly in GetTaskAssemblies())
+            foreach (var assembly in GetTaskAssemblies("*Task.dll"))
             {
                 taskModules.AddRange(assembly.InitializeTaskAssemblyModules(builder));
             }
 
+            foreach (var assembly in GetTaskAssemblies("*Startup.dll"))
+            {
+                taskModules.AddRange(assembly.InitializeTaskAssemblyModules(builder));
+            }
             return taskModules;
         }
 
@@ -85,18 +89,18 @@ namespace TaskManager.Repository
             return null;
         }
 
-        private IEnumerable<Assembly> GetTaskAssemblies()
+        private IEnumerable<Assembly> GetTaskAssemblies(string filter)
         {
             var taskAssemblies = new List<Assembly>();
             foreach (var dir in Directory.GetDirectories(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Tasks")))
             {
-                foreach (var taskAssembly in Directory.GetFiles(dir, "*Task.dll"))
+                foreach (var taskAssembly in Directory.GetFiles(dir, filter))
                 {
                     try
                     {
                         taskAssemblies.Add(Assembly.LoadFrom(taskAssembly));
                     }
-                    catch (Exception e)
+                    catch (Exception)
                     {
                         // need to get this back to caller to show the errors.
                     }

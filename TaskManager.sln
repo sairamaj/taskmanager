@@ -6,10 +6,17 @@ MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Utils.Core", "Utils.Core\Utils.Core.csproj", "{1FFF3F27-60C6-4E3F-AF4B-C7BFFD3F8154}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TaskManager", "TaskManager\TaskManager.csproj", "{ADA071A3-C24C-4B71-8EF0-9D95462C3620}"
+	ProjectSection(ProjectDependencies) = postProject
+		{962E9805-1DA2-44A3-A6CF-3E93030C188F} = {962E9805-1DA2-44A3-A6CF-3E93030C188F}
+		{6BB4B127-7E29-43A7-BB8F-F62DBB692F6A} = {6BB4B127-7E29-43A7-BB8F-F62DBB692F6A}
+		{EAB4B470-25B9-4B25-ABA4-3542B898D10A} = {EAB4B470-25B9-4B25-ABA4-3542B898D10A}
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Demo1Task", "Samples\Demo1\Demo1Task.csproj", "{6BB4B127-7E29-43A7-BB8F-F62DBB692F6A}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Demo2Task", "Samples\Demo2\Demo2Task.csproj", "{EAB4B470-25B9-4B25-ABA4-3542B898D10A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DemoStartup", "Samples\DemoStartup\DemoStartup.csproj", "{962E9805-1DA2-44A3-A6CF-3E93030C188F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,6 +40,10 @@ Global
 		{EAB4B470-25B9-4B25-ABA4-3542B898D10A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{EAB4B470-25B9-4B25-ABA4-3542B898D10A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{EAB4B470-25B9-4B25-ABA4-3542B898D10A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{962E9805-1DA2-44A3-A6CF-3E93030C188F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{962E9805-1DA2-44A3-A6CF-3E93030C188F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{962E9805-1DA2-44A3-A6CF-3E93030C188F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{962E9805-1DA2-44A3-A6CF-3E93030C188F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -1,4 +1,4 @@
-﻿namespace Demo2.ViewModels
+﻿namespace Demo2Task.ViewModels
 {
     public class RootViewModel
     {
