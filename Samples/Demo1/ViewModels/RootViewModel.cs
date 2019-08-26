@@ -1,12 +1,11 @@
 ﻿using System;
 using Demo1Task.Repository;
-using Utils.Core.ViewModels;
 
 namespace Demo1Task.ViewModels
 {
-    public class RootViewModel : TaskViewModel
+    public class RootViewModel 
     {
-        public RootViewModel(string name, string tag, IDemoRepository demoRepository) : base(name, tag)
+        public RootViewModel(IDemoRepository demoRepository)
         {
             if (demoRepository == null)
             {

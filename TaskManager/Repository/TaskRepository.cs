@@ -11,7 +11,6 @@ using Autofac;
 using TaskManager.Extension;
 using TaskManager.Model;
 using Utils.Core.Registration;
-using Utils.Core.ViewModels;
 using Module = Autofac.Module;
 
 namespace TaskManager.Repository
@@ -56,34 +55,30 @@ namespace TaskManager.Repository
 
         private TaskInfo GetTaskInfo(Assembly assembly, IServiceLocator serviceLocator)
         {
-            var rootViewModel = assembly
+            var rootViewModelType = assembly
                 .GetTypes()
                 .FirstOrDefault(t => t.Name == "RootViewModel");
-            var rootView = assembly
+            var rootViewType = assembly
                 .GetTypes()
                 .FirstOrDefault(t => t.Name == "RootView");
-            if (rootViewModel != null && rootView != null)
+            if (rootViewModelType != null && rootViewType != null)
             {
                 var tag = assembly.FullName;
-
-                // temporary testing for Demo1 which has 3 parameters
-                // will be making it generic based on parameters.
-                var constructor = rootViewModel.GetConstructors().FirstOrDefault();
-                var parameterType = constructor.GetParameters()[2];
-                var instance = serviceLocator.Resolve(parameterType.ParameterType);
                 var name = GetTaskName(assembly.GetName().Name);
+                var dataContext = rootViewModelType.Assembly.CreateInstance(
+                    rootViewModelType.FullName,
+                    true,
+                    BindingFlags.Instance | BindingFlags.Public,
+                    null,
+                    CreateConstructorParameters(rootViewModelType, serviceLocator),
+                    CultureInfo.CurrentCulture, null);
+
                 return new TaskInfo()
                 {
-                    TaskViewModel = rootViewModel.Assembly.CreateInstance(
-                        rootViewModel.FullName,
-                        true,
-                        BindingFlags.Instance | BindingFlags.Public,
-                        null,
-                        new object[] { name, tag , instance },
-                        CultureInfo.CurrentCulture, null) as TaskViewModel,
                     Name = name,
                     Tag = tag,
-                    View = rootView.Assembly.CreateInstance(rootView.FullName) as UserControl
+                    View = rootViewType.Assembly.CreateInstance(rootViewType.FullName) as UserControl,
+                    DataContext = dataContext,
                 };
             }
 
@@ -123,6 +118,23 @@ namespace TaskManager.Repository
             }
 
             return name.Substring(0, index);
+        }
+
+        static object[] CreateConstructorParameters(Type type, IServiceLocator serviceLocator)
+        {
+            var constructor = type.GetConstructors().FirstOrDefault();
+            if (constructor == null)
+            {
+                return new object[] { };
+            }
+
+            var constructorArgs = new List<object>();
+            foreach (var parameter in constructor.GetParameters())
+            {
+                constructorArgs.Add(serviceLocator.Resolve(parameter.ParameterType));
+            }
+
+            return constructorArgs.ToArray();
         }
     }
 }

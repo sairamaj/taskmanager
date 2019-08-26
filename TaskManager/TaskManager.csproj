@@ -66,6 +66,7 @@
     <Compile Include="ViewModels\MainViewModel.cs" />
     <Compile Include="ViewModels\TaskContainerViewModel.cs" />
     <Compile Include="ViewModels\TaskGroupViewModel.cs" />
+    <Compile Include="ViewModels\TaskViewModel.cs" />
     <Compile Include="Views\DummyTask1View.xaml.cs">
       <DependentUpon>DummyTask1View.xaml</DependentUpon>
     </Compile>

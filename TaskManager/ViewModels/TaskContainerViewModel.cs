@@ -27,7 +27,8 @@ namespace TaskManager.ViewModels
         {
             foreach (var task in await taskRepository.GetTasksAsync(serviceLocator))
             {
-                this.Tasks.Add(task.TaskViewModel);
+                this.Tasks.Add(
+                    new TaskViewModel(task.Name, task.Tag, task.DataContext));
                 mapper.Add(task.Tag, task.View);
             }
         }

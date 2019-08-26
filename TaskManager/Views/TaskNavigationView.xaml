@@ -18,7 +18,7 @@
                     <Setter Property="views:TreeViewBehavior.ExpandingBehaviour" Value="{Binding ExpandingCommand}"/>
                 </Style>
 
-                <HierarchicalDataTemplate DataType="{x:Type viewModels1:TaskViewModel}"  ItemsSource="{Binding Children}">
+                <HierarchicalDataTemplate DataType="{x:Type viewModels:TaskViewModel}"  ItemsSource="{Binding Children}">
                     <StackPanel Orientation="Horizontal">
                         <TextBlock Text="{Binding Name}" />
                     </StackPanel>

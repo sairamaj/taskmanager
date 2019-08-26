@@ -1,5 +1,6 @@
 ﻿using System.Windows;
 using TaskManager.Repository;
+using TaskManager.ViewModels;
 using Utils.Core;
 using Utils.Core.ViewModels;
 
@@ -15,16 +16,16 @@ namespace TaskManager
             InitializeComponent();
             this.TaskNavigationViewer.TaskSelectionChangedEvent += (s, e) =>
             {
-                var cmdViewModel = e.SelectedItem as CommandTreeViewModel;
-                if (cmdViewModel == null)
+                var taskViewModel = e.SelectedItem as TaskViewModel;
+                if (taskViewModel == null)
                 {
                     return;
                 }
 
-                var ctrl = mapper.GetControl(cmdViewModel.Tag);
+                var ctrl = mapper.GetControl(taskViewModel.Tag);
                 if (ctrl != null)
                 {
-                    ctrl.DataContext = cmdViewModel;
+                    ctrl.DataContext = taskViewModel.DataContext;
                     this.DetailViewContainer.ShowView(ctrl);
                 }
 

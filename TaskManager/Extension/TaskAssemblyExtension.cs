@@ -23,7 +23,6 @@ namespace TaskManager.Extension
                 .FirstOrDefault(m => m.IsStatic && m.Name == "Initialize");
             if (initializeMethod != null)
             {
-                MessageBox.Show(initializeMethod.Name);
                 initializeMethod.Invoke(null, new[] { builder });
             }
             return new List<Module>();

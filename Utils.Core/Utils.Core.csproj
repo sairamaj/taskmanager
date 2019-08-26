@@ -69,7 +69,6 @@
     <Compile Include="ViewModels\ErrorInfoViewModel.cs" />
     <Compile Include="ViewModels\ExceptionTreeViewItemViewModel.cs" />
     <Compile Include="ViewModels\NameValueTreeViewModel.cs" />
-    <Compile Include="ViewModels\TaskViewModel.cs" />
     <Compile Include="ViewModels\TreeViewItemViewModel.cs" />
     <Compile Include="ViewModels\ViewModelEventArgs.cs" />
     <Compile Include="ViewModels\WorkInProgressCommandTreeViewModel.cs" />
