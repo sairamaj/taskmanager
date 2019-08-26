@@ -1,4 +1,5 @@
-﻿using Autofac.Core;
+﻿using System;
+using Autofac.Core;
 
 namespace Utils.Core.Registration
 {
@@ -6,5 +7,6 @@ namespace Utils.Core.Registration
     {
         T Resolve<T>();
         T Resolve<T>(params Parameter[] parameters);
+        object Resolve(Type serviceType);
     }
 }

@@ -58,12 +58,14 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Extension\TaskAssemblyExtension.cs" />
     <Compile Include="Model\TaskInfo.cs" />
     <Compile Include="Repository\TaskRepository.cs" />
     <Compile Include="Repository\ITaskRepository.cs" />
     <Compile Include="TaskModule.cs" />
     <Compile Include="ViewModels\MainViewModel.cs" />
     <Compile Include="ViewModels\TaskContainerViewModel.cs" />
+    <Compile Include="ViewModels\TaskGroupViewModel.cs" />
     <Compile Include="Views\DummyTask1View.xaml.cs">
       <DependentUpon>DummyTask1View.xaml</DependentUpon>
     </Compile>

@@ -6,10 +6,10 @@ namespace Utils.Core
 {
     public static class ServiceLocatorFactory
     {
-        public static IServiceLocator Create(params Module[] modules)
+        public static IServiceLocator Create(ContainerBuilder builder)
         {
             var instance = new ServiceLocator();
-            instance.Initialize(modules);
+            instance.Initialize(builder);
             return instance;
         }
     }

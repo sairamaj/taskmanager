@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Autofac;
 using Autofac.Core;
 
@@ -14,15 +15,9 @@ namespace Utils.Core.Registration
         /// <summary>
         /// Initializes AUTOFAC container.
         /// </summary>
-        public void Initialize(IEnumerable<Module> modules)
+        public void Initialize(ContainerBuilder builder)
         {
-            var builder = new ContainerBuilder();
             builder.RegisterModule(new CoreModule());
-            foreach (var module in modules)
-            {
-                builder.RegisterModule(module);
-            }
-
             _container = builder.Build();
         }
 
@@ -45,6 +40,20 @@ namespace Utils.Core.Registration
         public T Resolve<T>(params Parameter[] parameters)
         {
             return _container.Resolve<T>(parameters);
+        }
+
+        /// <summary>
+        /// Resolves the object for given type.
+        /// </summary>
+        /// <param name="serviceType">
+        /// A <see cref="Type"/> service type.
+        /// </param>
+        /// <returns>
+        /// A service instance.
+        /// </returns>
+        public object Resolve(Type serviceType)
+        {
+            return _container.Resolve(serviceType);
         }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 using System.Windows;
 using Autofac;
 using TaskManager.Repository;
@@ -26,10 +27,16 @@ namespace TaskManager
 
             try
             {
-                var serviceLocator = ServiceLocatorFactory.Create(new TaskModule());
+                var builder = new ContainerBuilder();
+                new TaskRepository().InitializeTaskModules(builder).Wait();
+                builder.RegisterModule(new TaskModule());
+                var serviceLocator = ServiceLocatorFactory.Create(builder);
                 var win = new MainWindow(serviceLocator.Resolve<ICommandTreeItemViewMapper>())
                 {
-                    DataContext = new MainViewModel(serviceLocator.Resolve<ICommandTreeItemViewMapper>(), serviceLocator.Resolve<ITaskRepository>())
+                    DataContext = new MainViewModel(
+                        serviceLocator,
+                        serviceLocator.Resolve<ICommandTreeItemViewMapper>(), 
+                        serviceLocator.Resolve<ITaskRepository>())
                 };
 
                 win.Show();
