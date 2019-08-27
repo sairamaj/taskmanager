@@ -7,7 +7,6 @@ namespace DemoStartup
     {
         public static void Initialize(ContainerBuilder builder)
         {
-            builder.RegisterType<Logger>().As<ILogger>();
         }
     }
 }

@@ -8,15 +8,31 @@
         xmlns:views1="clr-namespace:Utils.Core.Views;assembly=Utils.Core"
         mc:Ignorable="d"
         Title="Task Manager" Height="450" Width="800">
-    <Grid>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="150"/>
-            <ColumnDefinition Width="3"/>
-            <ColumnDefinition />
-        </Grid.ColumnDefinitions>
+    <DockPanel>
+        <Expander Header="Logger" DockPanel.Dock="Bottom">
+            <ListView ItemsSource="{Binding Logger.LogMessages}"  Height="150" >
+                <ListView.View>
+                    <GridView>
+                        <GridViewColumn  DisplayMemberBinding="{Binding Timestamp}">
+                            <GridViewColumnHeader Tag="Timestamp" Content="Timestamp" VerticalContentAlignment="Center"/>
+                        </GridViewColumn>
+                        <GridViewColumn  DisplayMemberBinding="{Binding Message}" Width="600">
+                            <GridViewColumnHeader Tag="Message" Content="Message" VerticalContentAlignment="Center"/>
+                        </GridViewColumn>
+                    </GridView>
+                </ListView.View>
+            </ListView>
+        </Expander>
+        <Grid DockPanel.Dock="Top">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="150"/>
+                <ColumnDefinition Width="3"/>
+                <ColumnDefinition />
+            </Grid.ColumnDefinitions>
 
-        <views:TaskNavigationView Grid.Row="0" Grid.Column="0" x:Name="TaskNavigationViewer" DataContext="{Binding TaskContainer}"/>
-        <GridSplitter Grid.Row="0" Grid.Column="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
-        <views1:DetailViewContainer Grid.Row="0" Grid.Column="2" x:Name="DetailViewContainer"/>
-    </Grid>
+            <views:TaskNavigationView Grid.Row="0" Grid.Column="0" x:Name="TaskNavigationViewer" DataContext="{Binding TaskContainer}"/>
+            <GridSplitter Grid.Row="0" Grid.Column="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
+            <views1:DetailViewContainer Grid.Row="0" Grid.Column="2" x:Name="DetailViewContainer"/>
+        </Grid>
+    </DockPanel>
 </Window>

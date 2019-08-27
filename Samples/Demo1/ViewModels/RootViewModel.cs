@@ -1,6 +1,7 @@
 ﻿using System;
 using Demo1Task.Repository;
 using DemoStartup;
+using Utils.Core.Diagnostics;
 
 namespace Demo1Task.ViewModels
 {

@@ -68,6 +68,10 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\Utils.Core\Utils.Core.csproj">
+      <Project>{1fff3f27-60c6-4e3f-af4b-c7bffd3f8154}</Project>
+      <Name>Utils.Core</Name>
+    </ProjectReference>
     <ProjectReference Include="..\DemoStartup\DemoStartup.csproj">
       <Project>{962e9805-1da2-44a3-a6cf-3e93030c188f}</Project>
       <Name>DemoStartup</Name>

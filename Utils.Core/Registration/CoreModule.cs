@@ -1,4 +1,6 @@
 ﻿using Autofac;
+using Utils.Core.Diagnostics;
+using Utils.Core.ViewModels;
 
 namespace Utils.Core.Registration
 {
@@ -14,6 +16,8 @@ namespace Utils.Core.Registration
         protected override void Load(ContainerBuilder builder)
         {
             builder.RegisterType<CommandTreeItemViewMapper>().As<ICommandTreeItemViewMapper>().SingleInstance();
+            var logger = new LogViewModel();
+            builder.RegisterInstance(logger).As<ILogger>();
         }
     }
 }
