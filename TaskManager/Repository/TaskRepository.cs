@@ -10,6 +10,7 @@ using System.Windows.Controls;
 using Autofac;
 using TaskManager.Extension;
 using TaskManager.Model;
+using Utils.Core.Diagnostics;
 using Utils.Core.Registration;
 using Module = Autofac.Module;
 
@@ -17,11 +18,11 @@ namespace TaskManager.Repository
 {
     class TaskRepository : ITaskRepository
     {
-        public async Task<IEnumerable<TaskInfo>> GetTasksAsync(IServiceLocator serviceLocator)
+        public async Task<IEnumerable<TaskInfo>> GetTasksAsync(IServiceLocator serviceLocator, ILogger logger)
         {
             await Task.Delay(0);
             var taskList = new List<TaskInfo>();
-            foreach (var assembly in GetTaskAssemblies("*Task.dll"))
+            foreach (var assembly in GetTaskAssemblies("*Task.dll", logger))
             {
                 try
                 {
@@ -33,27 +34,43 @@ namespace TaskManager.Repository
                 }
                 catch (Exception e)
                 {
-                    // todo. collect and show as info.
-                    MessageBox.Show(e.ToString());
+                    logger.Error($"GetTasksAsync {e}");
                 }
             }
 
             return taskList;
         }
 
-        public async Task<IEnumerable<Module>> InitializeTaskModules(ContainerBuilder builder)
+        public async Task<IEnumerable<Module>> InitializeTaskModules(ContainerBuilder builder, ILogger logger)
         {
             await Task.Delay(0);
             var taskModules = new List<Module>();
-            foreach (var assembly in GetTaskAssemblies("*Task.dll"))
+            foreach (var assembly in GetTaskAssemblies("*Task.dll", logger))
             {
-                taskModules.AddRange(assembly.InitializeTaskAssemblyModules(builder));
+                logger.Debug($"Loading {assembly.FullName}");
+                try
+                {
+                    taskModules.AddRange(assembly.InitializeTaskAssemblyModules(builder));
+                }
+                catch (TargetInvocationException te)
+                {
+                    logger.Error($"Error Initialize {assembly.FullName} {te.InnerException}");
+                }
             }
 
-            foreach (var assembly in GetTaskAssemblies("*Startup.dll"))
+            foreach (var assembly in GetTaskAssemblies("*Startup.dll", logger))
             {
-                taskModules.AddRange(assembly.InitializeTaskAssemblyModules(builder));
+                logger.Debug($"Loading {assembly.FullName}");
+                try
+                {
+                    taskModules.AddRange(assembly.InitializeTaskAssemblyModules(builder));
+                }
+                catch (TargetInvocationException te)
+                {
+                    logger.Error($"Error Initialize {assembly.FullName} {te.InnerException}");
+                }
             }
+
             return taskModules;
         }
 
@@ -89,7 +106,7 @@ namespace TaskManager.Repository
             return null;
         }
 
-        private IEnumerable<Assembly> GetTaskAssemblies(string filter)
+        private IEnumerable<Assembly> GetTaskAssemblies(string filter, ILogger logger)
         {
             var taskAssemblies = new List<Assembly>();
             foreach (var dir in Directory.GetDirectories(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Tasks")))
@@ -100,9 +117,9 @@ namespace TaskManager.Repository
                     {
                         taskAssemblies.Add(Assembly.LoadFrom(taskAssembly));
                     }
-                    catch (Exception)
+                    catch (Exception e)
                     {
-                        // need to get this back to caller to show the errors.
+                        logger.Error($"GetTaskAssemblies {e}");
                     }
                 }
             }

@@ -24,22 +24,32 @@ namespace Utils.Core.ViewModels
 
         public void Error(string msg)
         {
-            this.AddMessage(new LogMessage()
+            this.AddMessage(new LogMessage
             {
                 DateTime =  DateTime.Now,
-                Level = "Error",
+                Level = LogLevel.Error,
                 Message = msg
             });
         }
 
         public void Debug(string msg)
         {
-            this.AddMessage(new LogMessage()
+            this.AddMessage(new LogMessage
             {
                 DateTime = DateTime.Now,
-                Level = "Debug",
+                Level = LogLevel.Debug,
+                Message = msg
+            });
+        }
+
+        public void Log(LogLevel level, string msg)
+        {
+            this.AddMessage(new LogMessage
+            {
+                DateTime = DateTime.Now,
+                Level = level,
                 Message = msg
             });
         }
     }
-}
+    }

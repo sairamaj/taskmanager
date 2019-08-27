@@ -10,18 +10,39 @@
         Title="Task Manager" Height="450" Width="800">
     <DockPanel>
         <Expander Header="Logger" DockPanel.Dock="Bottom">
-            <ListView ItemsSource="{Binding Logger.LogMessages}"  Height="150" >
-                <ListView.View>
-                    <GridView>
-                        <GridViewColumn  DisplayMemberBinding="{Binding Timestamp}">
-                            <GridViewColumnHeader Tag="Timestamp" Content="Timestamp" VerticalContentAlignment="Center"/>
-                        </GridViewColumn>
-                        <GridViewColumn  DisplayMemberBinding="{Binding Message}" Width="600">
-                            <GridViewColumnHeader Tag="Message" Content="Message" VerticalContentAlignment="Center"/>
-                        </GridViewColumn>
-                    </GridView>
-                </ListView.View>
-            </ListView>
+            <StackPanel>
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                    <TextBlock Text="Filter:" HorizontalAlignment="Center" FontWeight="Bold"/>
+                    <ComboBox ItemsSource="{Binding LogLevels}" 
+                              Width="80" Margin="5,0,0,0" HorizontalAlignment="Center" Height="20" SelectedItem="{Binding SelectedLogLevel}"/>
+                    <Button Content="Clear" Command="{Binding ClearCommand}" Margin="10,0,30,0" Height="20" Width="40"/>
+                </StackPanel>
+                <ListView ItemsSource="{Binding Logger.LogMessages}"  Height="150" >
+                    <ListView.View>
+                        <GridView>
+                            <GridViewColumn  DisplayMemberBinding="{Binding Timestamp}">
+                                <GridViewColumnHeader Tag="Timestamp" Content="Timestamp" VerticalContentAlignment="Center"/>
+                            </GridViewColumn>
+                            <GridViewColumn  DisplayMemberBinding="{Binding Level}">
+                                <GridViewColumnHeader Tag="Level" Content="Level" VerticalContentAlignment="Center"/>
+                            </GridViewColumn>
+                            <GridViewColumn  DisplayMemberBinding="{Binding Message}">
+                                <GridViewColumnHeader Tag="Message" Content="Message" VerticalContentAlignment="Center"/>
+                            </GridViewColumn>
+                        </GridView>
+                    </ListView.View>
+
+                    <ListView.ItemContainerStyle>
+                        <Style TargetType="{x:Type ListViewItem}">
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding Path=Level}" Value="Error">
+                                    <Setter Property="ListViewItem.Foreground" Value="Red" />
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </ListView.ItemContainerStyle>
+                </ListView>
+            </StackPanel>
         </Expander>
         <Grid DockPanel.Dock="Top">
             <Grid.ColumnDefinitions>

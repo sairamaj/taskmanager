@@ -7,6 +7,7 @@ using Autofac;
 using TaskManager.Repository;
 using TaskManager.ViewModels;
 using Utils.Core;
+using Utils.Core.Diagnostics;
 using Utils.Core.Extensions;
 
 namespace TaskManager
@@ -27,15 +28,23 @@ namespace TaskManager
 
             try
             {
+                var tempServiceLocator = ServiceLocatorFactory.Create(new ContainerBuilder());
+                var tempLogger = tempServiceLocator.Resolve<ILogger>();
                 var builder = new ContainerBuilder();
-                new TaskRepository().InitializeTaskModules(builder).Wait();
+                new TaskRepository().InitializeTaskModules(builder, tempLogger).Wait();
                 builder.RegisterModule(new TaskModule());
                 var serviceLocator = ServiceLocatorFactory.Create(builder);
+                // transfer temp logger to real logger
+                var finalLogger = serviceLocator.Resolve<ILogger>();
+                tempLogger.LogMessages.ToList().ForEach(l =>
+                {
+                    finalLogger.Log(l.Level, l.Message);
+                });
                 var win = new MainWindow(serviceLocator.Resolve<ICommandTreeItemViewMapper>())
                 {
                     DataContext = new MainViewModel(
                         serviceLocator,
-                        serviceLocator.Resolve<ICommandTreeItemViewMapper>(), 
+                        serviceLocator.Resolve<ICommandTreeItemViewMapper>(),
                         serviceLocator.Resolve<ITaskRepository>())
                 };
 

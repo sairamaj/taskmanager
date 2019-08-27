@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using TaskManager.Repository;
 using Utils.Core;
+using Utils.Core.Diagnostics;
 using Utils.Core.Registration;
 using Utils.Core.ViewModels;
 
@@ -25,7 +26,7 @@ namespace TaskManager.ViewModels
             ICommandTreeItemViewMapper mapper, 
             ITaskRepository taskRepository)
         {
-            foreach (var task in await taskRepository.GetTasksAsync(serviceLocator))
+            foreach (var task in await taskRepository.GetTasksAsync(serviceLocator, serviceLocator.Resolve<ILogger>()))
             {
                 this.Tasks.Add(
                     new TaskViewModel(task.Name, task.Tag, task.DataContext));

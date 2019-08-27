@@ -58,6 +58,7 @@
     <Compile Include="Extensions\ExceptionExtension.cs" />
     <Compile Include="ICommandTreeItemViewMapper.cs" />
     <Compile Include="Diagnostics\ILogger.cs" />
+    <Compile Include="Model\LogLevel.cs" />
     <Compile Include="Model\LogMessage.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Registration\CoreModule.cs" />

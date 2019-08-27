@@ -1,4 +1,5 @@
-﻿using Autofac;
+﻿using System;
+using Autofac;
 using Demo1Task.Repository;
 
 namespace Demo1Task

@@ -4,11 +4,13 @@ namespace Utils.Core.Model
 {
     public class LogMessage
     {
-        public string Level { get; set; }
-        public string LevelString { get; set; }
+        public LogLevel Level { get; set; }
+
+        public string LevelString => Level.ToString();
+
         public DateTime DateTime { get; set; }
         public string Message { get; set; }
-        public string Time => DateTime.ToString("HH:mm:ss");
+        public string Timestamp => DateTime.ToString("HH:mm:ss");
     }
 }
                                        

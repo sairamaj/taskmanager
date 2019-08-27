@@ -5,8 +5,10 @@ namespace Utils.Core.Diagnostics
 {
     public interface ILogger
     {
-        void Error(string msg);
-        void Debug(string msg);
+        void Error(string message);
+        void Debug(string message);
+        void Log(LogLevel level, string message);
+        void Clear();
         ObservableCollection<LogMessage> LogMessages { get; }
     }
 }
