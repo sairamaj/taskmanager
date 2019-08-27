@@ -9,5 +9,8 @@
     <StackPanel Orientation="Vertical">
         <TextBlock Text="This is Sample demo task1" />
         <TextBlock Text="{Binding DemoName}" />
+        <Button Content="Log Debug" Command="{Binding LogDebugCommand}" Width="80"/>
+        <Button Content="Log Error" Command="{Binding LogErrorCommand}" Width="80"/>
+        <Button Content="Log Info" Command="{Binding LogInfoCommand}" Width="80"/>
     </StackPanel>
 </UserControl>

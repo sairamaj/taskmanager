@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Collections.ObjectModel;
+using System.Linq;
 using System.Windows.Input;
 using TaskManager.Repository;
 using Utils.Core;
@@ -12,9 +13,11 @@ namespace TaskManager.ViewModels
 {
     class MainViewModel : CoreViewModel
     {
+        private string _selectedLogLevel;
+        private SafeObservableCollection<LogMessage> _filteredLogMessages = new SafeObservableCollection<LogMessage>();
         public MainViewModel(
             IServiceLocator serviceLocator,
-            ICommandTreeItemViewMapper mapper, 
+            ICommandTreeItemViewMapper mapper,
             ITaskRepository taskRepository)
         {
             this.TaskContainer = new TaskContainerViewModel(serviceLocator, mapper, taskRepository);
@@ -22,13 +25,47 @@ namespace TaskManager.ViewModels
             this.ClearCommand = new DelegateCommand(() =>
             {
                 this.Logger.Clear();
+                this._filteredLogMessages.Clear();
             });
             this.SelectedLogLevel = LogLevels.First();
+            this.Logger.LogMessages.CollectionChanged += (s, e) =>
+            {
+                if (this.SelectedLogLevel == "All")
+                {
+                    return;     // If ALL items then no need to maintain our filtered messages.
+                }
+
+                if (e.NewItems == null)
+                {
+                    this._filteredLogMessages.Clear();
+                }
+                else
+                {
+                    e.NewItems.OfType<LogMessage>()
+                    .Where(l => l.Level.ToString() == this._selectedLogLevel)
+                    .ToList()
+                    .ForEach(l => this._filteredLogMessages.Add(l));
+                }
+
+            };
         }
 
         public TaskContainerViewModel TaskContainer { get; set; }
         public ILogger Logger { get; private set; }
         public ICommand ClearCommand { get; set; }
+
+        public ObservableCollection<LogMessage> LogMessages
+        {
+            get
+            {
+                if (this.SelectedLogLevel == "All")
+                {
+                    return this.Logger.LogMessages;
+                }
+
+                return _filteredLogMessages;
+            }
+        }
 
         public string[] LogLevels => new string[]
         {
@@ -38,6 +75,25 @@ namespace TaskManager.ViewModels
             LogLevel.Info.ToString(),
         };
 
-        public string SelectedLogLevel { get; set; }
+        public string SelectedLogLevel
+        {
+            get => _selectedLogLevel;
+            set
+            {
+                _selectedLogLevel = value;
+                if (value == "All")
+                {
+                    _filteredLogMessages.Clear();
+                }
+                else
+                {
+                    _filteredLogMessages =
+                        new SafeObservableCollection<LogMessage>(
+                            this.Logger.LogMessages.Where(l => l.Level.ToString() == value).ToList());
+                }
+
+                OnPropertyChanged(() => LogMessages);
+            }
+        }
     }
 }

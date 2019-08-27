@@ -17,7 +17,7 @@
                               Width="80" Margin="5,0,0,0" HorizontalAlignment="Center" Height="20" SelectedItem="{Binding SelectedLogLevel}"/>
                     <Button Content="Clear" Command="{Binding ClearCommand}" Margin="10,0,30,0" Height="20" Width="40"/>
                 </StackPanel>
-                <ListView ItemsSource="{Binding Logger.LogMessages}"  Height="150" >
+                <ListView ItemsSource="{Binding LogMessages}"  Height="150" >
                     <ListView.View>
                         <GridView>
                             <GridViewColumn  DisplayMemberBinding="{Binding Timestamp}">

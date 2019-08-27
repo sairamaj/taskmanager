@@ -7,6 +7,7 @@ namespace Utils.Core.Diagnostics
     {
         void Error(string message);
         void Debug(string message);
+        void Info(string message);
         void Log(LogLevel level, string message);
         void Clear();
         ObservableCollection<LogMessage> LogMessages { get; }
