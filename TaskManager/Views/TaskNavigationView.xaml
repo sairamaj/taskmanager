@@ -20,13 +20,15 @@
 
                 <HierarchicalDataTemplate DataType="{x:Type viewModels:TaskGroupViewModel}"  ItemsSource="{Binding Children}">
                     <StackPanel Orientation="Horizontal">
-                        <TextBlock Text="{Binding Name}" />
+                        <Image Source="../images/group.png"/>
+                        <TextBlock Text="{Binding Name}" Margin="3,0,0,0" />
                     </StackPanel>
                 </HierarchicalDataTemplate>
 
                 <HierarchicalDataTemplate DataType="{x:Type viewModels:TaskViewModel}"  ItemsSource="{Binding Children}">
                     <StackPanel Orientation="Horizontal">
-                        <TextBlock Text="{Binding Name}" />
+                        <Image Source="../images/task.png"/>
+                        <TextBlock Text="{Binding Name}" Margin="3,0,0,0" />
                     </StackPanel>
                 </HierarchicalDataTemplate>
             </TreeView.Resources>

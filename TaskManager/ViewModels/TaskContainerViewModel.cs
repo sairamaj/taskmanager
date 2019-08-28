@@ -1,4 +1,5 @@
 ﻿using System.Collections.ObjectModel;
+using System.Linq;
 using System.Threading.Tasks;
 using TaskManager.Model;
 using TaskManager.Repository;
@@ -29,7 +30,7 @@ namespace TaskManager.ViewModels
         {
             foreach (var task in await taskRepository.GetTasksAsync(serviceLocator, serviceLocator.Resolve<ILogger>()))
             {
-                if (task.Type == TaskType.TaskGroup)
+                if (task.Type == TaskType.TaskGroup && task.Tasks.Any())
                 {
                     this.Tasks.Add(new TaskGroupViewModel(mapper, task.Name, task.Tag, task.Tasks));
                     mapper.Add(task.Tag, task.View);

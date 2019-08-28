@@ -4,10 +4,10 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{ADA071A3-C24C-4B71-8EF0-9D95462C3620}</ProjectGuid>
+    <ProjectGuid>{7FA82668-9904-4BE2-B91A-389DDA0AA12E}</ProjectGuid>
     <OutputType>WinExe</OutputType>
-    <RootNamespace>TaskManager</RootNamespace>
-    <AssemblyName>TaskManager</AssemblyName>
+    <RootNamespace>Demo3</RootNamespace>
+    <AssemblyName>Demo3</AssemblyName>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
@@ -20,7 +20,7 @@
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
+    <OutputPath>..\..\TaskManager\bin\Debug\Tasks\Group1\SubGroup1\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -35,9 +35,6 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Autofac, Version=4.9.4.0, Culture=neutral, PublicKeyToken=17863af14b0044da, processorArchitecture=MSIL">
-      <HintPath>..\packages\Autofac.4.9.4\lib\net45\Autofac.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
@@ -58,18 +55,9 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="Extension\TaskAssemblyExtension.cs" />
-    <Compile Include="Model\TaskInfo.cs" />
-    <Compile Include="Model\TaskType.cs" />
-    <Compile Include="Repository\TaskRepository.cs" />
-    <Compile Include="Repository\ITaskRepository.cs" />
-    <Compile Include="TaskModule.cs" />
-    <Compile Include="ViewModels\MainViewModel.cs" />
-    <Compile Include="ViewModels\TaskContainerViewModel.cs" />
-    <Compile Include="ViewModels\TaskGroupViewModel.cs" />
-    <Compile Include="ViewModels\TaskViewModel.cs" />
-    <Compile Include="Views\TaskNavigationView.xaml.cs">
-      <DependentUpon>TaskNavigationView.xaml</DependentUpon>
+    <Compile Include="ViewModels\RootViewModel.cs" />
+    <Compile Include="Views\RootView.xaml.cs">
+      <DependentUpon>RootView.xaml</DependentUpon>
     </Compile>
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
@@ -83,7 +71,7 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Page Include="Views\TaskNavigationView.xaml">
+    <Page Include="Views\RootView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -106,7 +94,6 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -115,20 +102,6 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Tasks\Group1\" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Utils.Core\Utils.Core.csproj">
-      <Project>{1fff3f27-60c6-4e3f-af4b-c7bffd3f8154}</Project>
-      <Name>Utils.Core</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="images\group.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="images\task.png" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
