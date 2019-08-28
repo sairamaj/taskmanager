@@ -60,6 +60,7 @@
     </ApplicationDefinition>
     <Compile Include="Extension\TaskAssemblyExtension.cs" />
     <Compile Include="Model\TaskInfo.cs" />
+    <Compile Include="Model\TaskType.cs" />
     <Compile Include="Repository\TaskRepository.cs" />
     <Compile Include="Repository\ITaskRepository.cs" />
     <Compile Include="TaskModule.cs" />
@@ -67,12 +68,6 @@
     <Compile Include="ViewModels\TaskContainerViewModel.cs" />
     <Compile Include="ViewModels\TaskGroupViewModel.cs" />
     <Compile Include="ViewModels\TaskViewModel.cs" />
-    <Compile Include="Views\DummyTask1View.xaml.cs">
-      <DependentUpon>DummyTask1View.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\DummyTask2View.xaml.cs">
-      <DependentUpon>DummyTask2View.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Views\TaskNavigationView.xaml.cs">
       <DependentUpon>TaskNavigationView.xaml</DependentUpon>
     </Compile>
@@ -88,14 +83,6 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Page Include="Views\DummyTask1View.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Views\DummyTask2View.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
     <Page Include="Views\TaskNavigationView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

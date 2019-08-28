@@ -38,6 +38,9 @@
                                 <DataTrigger Binding="{Binding Path=Level}" Value="Error">
                                     <Setter Property="ListViewItem.Foreground" Value="Red" />
                                 </DataTrigger>
+                                <DataTrigger Binding="{Binding Path=Level}" Value="Info">
+                                    <Setter Property="ListViewItem.Foreground" Value="Blue" />
+                                </DataTrigger>
                             </Style.Triggers>
                         </Style>
                     </ListView.ItemContainerStyle>

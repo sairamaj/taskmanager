@@ -1,5 +1,6 @@
 ﻿using System.Collections.ObjectModel;
 using System.Threading.Tasks;
+using TaskManager.Model;
 using TaskManager.Repository;
 using Utils.Core;
 using Utils.Core.Diagnostics;
@@ -28,9 +29,11 @@ namespace TaskManager.ViewModels
         {
             foreach (var task in await taskRepository.GetTasksAsync(serviceLocator, serviceLocator.Resolve<ILogger>()))
             {
-                this.Tasks.Add(
-                    new TaskViewModel(task.Name, task.Tag, task.DataContext));
-                mapper.Add(task.Tag, task.View);
+                if (task.Type == TaskType.TaskGroup)
+                {
+                    this.Tasks.Add(new TaskGroupViewModel(mapper, task.Name, task.Tag, task.Tasks));
+                    mapper.Add(task.Tag, task.View);
+                }
             }
         }
     }

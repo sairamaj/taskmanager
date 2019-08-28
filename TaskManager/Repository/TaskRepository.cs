@@ -7,6 +7,7 @@ using System.Reflection;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Documents;
 using Autofac;
 using TaskManager.Extension;
 using TaskManager.Model;
@@ -22,20 +23,36 @@ namespace TaskManager.Repository
         {
             await Task.Delay(0);
             var taskList = new List<TaskInfo>();
-            foreach (var assembly in GetTaskAssemblies("*Task.dll", logger))
+            foreach (var dir in Directory.GetDirectories(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Tasks")))
             {
-                try
+                var parentTask = new TaskInfo
                 {
-                    var taskInfo = GetTaskInfo(assembly, serviceLocator);
-                    if (taskInfo != null)
+                    Type = TaskType.TaskGroup,
+                    Name = Path.GetFileName(dir),
+                    Tag = dir,
+                    Tasks = new List<TaskInfo>()
+                };
+
+                taskList.Add(parentTask);
+
+                var subTasks = new List<TaskInfo>();
+                foreach (var assembly in GetTaskAssemblies(dir, "*Task.dll", logger))
+                {
+                    try
                     {
-                        taskList.Add(taskInfo);
+                        var taskInfo = GetTaskInfo(assembly, serviceLocator);
+                        if (taskInfo != null)
+                        {
+                            subTasks.Add(taskInfo);
+                        }
+                    }
+                    catch (Exception e)
+                    {
+                        logger.Error($"GetTasksAsync {e}");
                     }
                 }
-                catch (Exception e)
-                {
-                    logger.Error($"GetTasksAsync {e}");
-                }
+
+                parentTask.Tasks = subTasks;
             }
 
             return taskList;
@@ -45,7 +62,7 @@ namespace TaskManager.Repository
         {
             await Task.Delay(0);
             var taskModules = new List<Module>();
-            foreach (var assembly in GetTaskAssemblies("*Task.dll", logger))
+            foreach (var assembly in GetTaskAssemblies(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Tasks"), "*Task.dll", logger))
             {
                 logger.Debug($"Loading {assembly.FullName}");
                 try
@@ -58,7 +75,7 @@ namespace TaskManager.Repository
                 }
             }
 
-            foreach (var assembly in GetTaskAssemblies("*Startup.dll", logger))
+            foreach (var assembly in GetTaskAssemblies(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Tasks"), "*Startup.dll", logger))
             {
                 logger.Debug($"Loading {assembly.FullName}");
                 try
@@ -96,6 +113,7 @@ namespace TaskManager.Repository
 
                 return new TaskInfo()
                 {
+                    Type = TaskType.Task,
                     Name = name,
                     Tag = tag,
                     View = rootViewType.Assembly.CreateInstance(rootViewType.FullName) as UserControl,
@@ -106,21 +124,18 @@ namespace TaskManager.Repository
             return null;
         }
 
-        private IEnumerable<Assembly> GetTaskAssemblies(string filter, ILogger logger)
+        private IEnumerable<Assembly> GetTaskAssemblies(string path, string filter, ILogger logger)
         {
             var taskAssemblies = new List<Assembly>();
-            foreach (var dir in Directory.GetDirectories(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Tasks")))
+            foreach (var taskAssembly in Directory.GetFiles(path, filter,SearchOption.AllDirectories))
             {
-                foreach (var taskAssembly in Directory.GetFiles(dir, filter))
+                try
                 {
-                    try
-                    {
-                        taskAssemblies.Add(Assembly.LoadFrom(taskAssembly));
-                    }
-                    catch (Exception e)
-                    {
-                        logger.Error($"GetTaskAssemblies {e}");
-                    }
+                    taskAssemblies.Add(Assembly.LoadFrom(taskAssembly));
+                }
+                catch (Exception e)
+                {
+                    logger.Error($"GetTaskAssemblies {e}");
                 }
             }
 
