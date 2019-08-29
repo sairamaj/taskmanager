@@ -5,9 +5,9 @@ namespace Demo1.Views
     /// <summary>
     /// Interaction logic for DemoTaskView.xaml
     /// </summary>
-    public partial class RootView : UserControl
+    public partial class TaskDemoView : UserControl
     {
-        public RootView()
+        public TaskDemoView()
         {
             InitializeComponent();
         }

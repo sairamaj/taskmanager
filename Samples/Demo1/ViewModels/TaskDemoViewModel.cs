@@ -1,15 +1,14 @@
 ﻿using System;
 using System.Windows.Input;
 using Demo1Task.Repository;
-using DemoStartup;
 using Utils.Core.Command;
 using Utils.Core.Diagnostics;
 
 namespace Demo1Task.ViewModels
 {
-    public class RootViewModel 
+    public class TaskDemoViewModel
     {
-        public RootViewModel(IDemoRepository demoRepository, ILogger logger)
+        public TaskDemoViewModel(IDemoRepository demoRepository, ILogger logger)
         {
             if (demoRepository == null)
             {

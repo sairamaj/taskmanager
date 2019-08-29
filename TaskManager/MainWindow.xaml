@@ -7,7 +7,7 @@
         xmlns:views="clr-namespace:TaskManager.Views"
         xmlns:views1="clr-namespace:Utils.Core.Views;assembly=Utils.Core"
         mc:Ignorable="d"
-        Title="Task Manager" Height="450" Width="800">
+        Title="Task Manager" Height="450" Width="1200">
     <DockPanel>
         <Expander Header="Logger" DockPanel.Dock="Bottom">
             <StackPanel>
