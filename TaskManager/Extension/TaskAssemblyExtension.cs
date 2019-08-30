@@ -69,7 +69,7 @@ namespace TaskManager.Extension
                         Name = viewTuple.Item1,
                         View = viewTuple.Item2.Assembly.CreateInstance(viewTuple.Item2.FullName) as UserControl,
                         DataContext = dataContext,
-                        Tag = viewTuple.Item2.Assembly.ToString()
+                        Tag = viewTuple.Item2.FullName
                     };
                 }
             }
