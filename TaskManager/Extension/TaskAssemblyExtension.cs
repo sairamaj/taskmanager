@@ -9,13 +9,12 @@ using Autofac;
 using TaskManager.Model;
 using Utils.Core.Diagnostics;
 using Utils.Core.Registration;
-using Module = Autofac.Module;
 
 namespace TaskManager.Extension
 {
     internal static class TaskAssemblyExtension
     {
-        public static IEnumerable<Module> InitializeTaskAssemblyModules(this Assembly assembly, ContainerBuilder builder)
+        public static void InitializeTaskAssemblyModules(this Assembly assembly, ContainerBuilder builder, ILogger logger)
         {
             if (assembly == null)
             {
@@ -28,9 +27,14 @@ namespace TaskManager.Extension
                 .FirstOrDefault(m => m.IsStatic && m.Name == "Initialize");
             if (initializeMethod != null)
             {
+                logger.Info($"Invoking {initializeMethod.Name} in {assembly.FullName}");
                 initializeMethod.Invoke(null, new[] { builder });
             }
-            return new List<Module>();
+            else
+            {
+                logger.Warn($"No Initializer found in {assembly.FullName}");
+            }
+
         }
 
         public static IEnumerable<TaskInfo> GetViewViewModels(this Assembly assembly, IServiceLocator serviceLocator, ILogger logger)

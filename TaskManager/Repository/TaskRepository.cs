@@ -1,11 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.IO;
-using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
-using System.Windows.Controls;
 using Autofac;
 using TaskManager.Extension;
 using TaskManager.Model;
@@ -55,7 +52,7 @@ namespace TaskManager.Repository
             return taskList;
         }
 
-        public async Task<IEnumerable<Module>> InitializeTaskModules(ContainerBuilder builder, ILogger logger)
+        public async Task InitializeTaskModulesAsync(ContainerBuilder builder, ILogger logger)
         {
             await Task.Delay(0);
             var taskModules = new List<Module>();
@@ -64,7 +61,7 @@ namespace TaskManager.Repository
                 logger.Debug($"Loading {assembly.FullName}");
                 try
                 {
-                    taskModules.AddRange(assembly.InitializeTaskAssemblyModules(builder));
+                    assembly.InitializeTaskAssemblyModules(builder, logger);
                 }
                 catch (TargetInvocationException te)
                 {
@@ -77,15 +74,13 @@ namespace TaskManager.Repository
                 logger.Debug($"Loading {assembly.FullName}");
                 try
                 {
-                    taskModules.AddRange(assembly.InitializeTaskAssemblyModules(builder));
+                    assembly.InitializeTaskAssemblyModules(builder, logger);
                 }
                 catch (TargetInvocationException te)
                 {
                     logger.Error($"Error Initialize {assembly.FullName} {te.InnerException}");
                 }
             }
-
-            return taskModules;
         }
 
     

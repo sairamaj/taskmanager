@@ -31,7 +31,7 @@ namespace TaskManager
                 var tempServiceLocator = ServiceLocatorFactory.Create(new ContainerBuilder());
                 var tempLogger = tempServiceLocator.Resolve<ILogger>();
                 var builder = new ContainerBuilder();
-                new TaskRepository().InitializeTaskModules(builder, tempLogger).Wait();
+                new TaskRepository().InitializeTaskModulesAsync(builder, tempLogger).Wait();
                 builder.RegisterModule(new TaskModule());
                 var serviceLocator = ServiceLocatorFactory.Create(builder);
                 // transfer temp logger to real logger

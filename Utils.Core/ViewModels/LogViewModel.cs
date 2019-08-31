@@ -52,6 +52,16 @@ namespace Utils.Core.ViewModels
             });
         }
 
+        public void Warn(string message)
+        {
+            this.AddMessage(new LogMessage
+            {
+                DateTime = DateTime.Now,
+                Level = LogLevel.Warn,
+                Message = message
+            });
+        }
+
         public void Log(LogLevel level, string msg)
         {
             this.AddMessage(new LogMessage

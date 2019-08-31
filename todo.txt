@@ -1,0 +1,2 @@
+- Autofac module window should be added
+- Http traffic window should be added

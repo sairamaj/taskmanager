@@ -10,6 +10,6 @@ namespace TaskManager.Repository
     interface ITaskRepository
     {
         Task<IEnumerable<TaskInfo>> GetTasksAsync(IServiceLocator serviceLocator, ILogger logger);
-        Task<IEnumerable<Module>> InitializeTaskModules(ContainerBuilder builder, ILogger logger);
+        Task InitializeTaskModulesAsync(ContainerBuilder builder, ILogger logger);
     }
 }
