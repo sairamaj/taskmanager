@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Windows.Controls;
 
 namespace TaskManager.Model
@@ -7,6 +8,7 @@ namespace TaskManager.Model
     {
         public TaskType Type { get; set; }
         public string Name { get; set; }
+        public Exception TaskCreationException { get; set; }
         public string Tag { get; set; }
         public UserControl View{ get; set; }
         public object DataContext { get; set; }

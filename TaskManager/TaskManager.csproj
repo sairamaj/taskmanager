@@ -69,9 +69,13 @@
     <Compile Include="ViewModels\MainViewModel.cs" />
     <Compile Include="ViewModels\TaskContainerViewModel.cs" />
     <Compile Include="ViewModels\TaskGroupViewModel.cs" />
+    <Compile Include="ViewModels\TaskWithErrorViewModel.cs" />
     <Compile Include="ViewModels\TaskViewModel.cs" />
     <Compile Include="Views\TaskNavigationView.xaml.cs">
       <DependentUpon>TaskNavigationView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\TaskWithErrorView.xaml.cs">
+      <DependentUpon>TaskWithErrorView.xaml</DependentUpon>
     </Compile>
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
@@ -86,6 +90,10 @@
       <SubType>Code</SubType>
     </Compile>
     <Page Include="Views\TaskNavigationView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\TaskWithErrorView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

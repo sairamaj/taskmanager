@@ -3,6 +3,7 @@
     internal enum TaskType
     {
         Task,
+        TaskWithError,
         TaskGroup
     }
 }

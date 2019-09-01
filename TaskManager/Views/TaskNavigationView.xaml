@@ -31,6 +31,14 @@
                         <TextBlock Text="{Binding Name}" Margin="3,0,0,0" />
                     </StackPanel>
                 </HierarchicalDataTemplate>
+
+                <HierarchicalDataTemplate DataType="{x:Type viewModels:TaskWithErrorViewModel}"  ItemsSource="{Binding Children}">
+                    <StackPanel Orientation="Horizontal">
+                        <Image Source="../images/task.png"/>
+                        <TextBlock Text="{Binding Name}" Margin="3,0,0,0"  Foreground="Red"/>
+                    </StackPanel>
+                </HierarchicalDataTemplate>
+
             </TreeView.Resources>
         </TreeView>
     </Grid>

@@ -60,20 +60,33 @@ namespace TaskManager.Extension
                 {
                     foundCount++;
 
-                    var dataContext = viewModel.Assembly.CreateInstance(
-                        viewModel.FullName,
-                        true,
-                        BindingFlags.Instance | BindingFlags.Public,
-                        null,
-                        CreateConstructorParameters(viewModel, serviceLocator),
-                        CultureInfo.CurrentCulture, null);
+                    UserControl taskView = null;
+                    object dataModelContext = null;
+                    Exception taskCreationException = null;
+                    try
+                    {
+                        dataModelContext = viewModel.Assembly.CreateInstance(
+                            viewModel.FullName,
+                            true,
+                            BindingFlags.Instance | BindingFlags.Public,
+                            null,
+                            CreateConstructorParameters(viewModel, serviceLocator),
+                            CultureInfo.CurrentCulture, null);
+                        taskView = viewTuple.Item2.Assembly.CreateInstance(viewTuple.Item2.FullName) as UserControl;
+                    }
+                    catch (Exception e)
+                    {
+                        taskCreationException = e;
+                    }
 
                     yield return new TaskInfo()
                     {
+                        Type = taskCreationException == null ? TaskType.Task : TaskType.TaskWithError,
                         Name = viewTuple.Item1,
-                        View = viewTuple.Item2.Assembly.CreateInstance(viewTuple.Item2.FullName) as UserControl,
-                        DataContext = dataContext,
-                        Tag = viewTuple.Item2.FullName
+                        View = taskView,
+                        DataContext = dataModelContext,
+                        Tag = viewTuple.Item2.FullName,
+                        TaskCreationException = taskCreationException
                     };
                 }
             }
