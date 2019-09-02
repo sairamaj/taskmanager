@@ -60,6 +60,7 @@
     <Compile Include="Diagnostics\ILogger.cs" />
     <Compile Include="Model\LogLevel.cs" />
     <Compile Include="Model\LogMessage.cs" />
+    <Compile Include="Model\RegistrationInfo.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Registration\CoreModule.cs" />
     <Compile Include="Registration\IServiceLocator.cs" />

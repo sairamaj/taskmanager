@@ -1,4 +1,6 @@
-﻿using System.Collections.ObjectModel;
+﻿using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows.Input;
 using TaskManager.Repository;
@@ -46,8 +48,9 @@ namespace TaskManager.ViewModels
                     .ToList()
                     .ForEach(l => this._filteredLogMessages.Add(l));
                 }
-
             };
+
+            this.Registrations = serviceLocator.GetRegisteredTypes().OrderBy(t=>t.InterfaceType.FullName);
         }
 
         public TaskContainerViewModel TaskContainer { get; set; }
@@ -95,5 +98,7 @@ namespace TaskManager.ViewModels
                 OnPropertyChanged(() => LogMessages);
             }
         }
+
+        public IEnumerable<RegistrationInfo> Registrations { get; private set; }
     }
 }
