@@ -1,6 +1,7 @@
 ﻿using Autofac;
 using Utils.Core.Diagnostics;
 using Utils.Core.ViewModels;
+using Utils.Core.Views;
 
 namespace Utils.Core.Registration
 {
@@ -17,7 +18,9 @@ namespace Utils.Core.Registration
         {
             builder.RegisterType<CommandTreeItemViewMapper>().As<ICommandTreeItemViewMapper>().SingleInstance();
             var logger = new LogViewModel();
+            var tokenClient = new TokenClient(HttpMessagesViewModel.Instance);
             builder.RegisterInstance(logger).As<ILogger>();
+            builder.RegisterInstance(tokenClient).As<ITokenClient>();
         }
     }
 }

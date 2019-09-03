@@ -15,6 +15,7 @@
                     <views:LogMessagesView />
                 </TabItem>
                 <TabItem Header="Http">
+                    <views:HttpMessagesView DataContext="{Binding HttpMessagesViewModel}" />
                 </TabItem>
                 <TabItem Header="Registrations">
                     <views:RegistrationView />

@@ -100,5 +100,7 @@ namespace TaskManager.ViewModels
         }
 
         public IEnumerable<RegistrationInfo> Registrations { get; private set; }
+
+        public HttpMessagesViewModel HttpMessagesViewModel => Utils.Core.ViewModels.HttpMessagesViewModel.Instance;
     }
 }

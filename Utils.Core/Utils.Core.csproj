@@ -34,12 +34,21 @@
     <Reference Include="Autofac, Version=4.9.4.0, Culture=neutral, PublicKeyToken=17863af14b0044da, processorArchitecture=MSIL">
       <HintPath>..\packages\Autofac.4.9.4\lib\net45\Autofac.dll</HintPath>
     </Reference>
+    <Reference Include="IdentityModel, Version=3.10.10.0, Culture=neutral, PublicKeyToken=e7877f4675df049f, processorArchitecture=MSIL">
+      <HintPath>..\packages\IdentityModel.3.10.10\lib\net452\IdentityModel.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=11.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.11.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.ServiceModel" />
+    <Reference Include="System.Text.Encodings.Web, Version=4.0.3.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Text.Encodings.Web.4.5.0\lib\netstandard2.0\System.Text.Encodings.Web.dll</HintPath>
+    </Reference>
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xaml" />
     <Reference Include="System.Xml.Linq" />
@@ -56,8 +65,11 @@
     <Compile Include="Command\DelegateCommand.cs" />
     <Compile Include="Extensions\DispatcherExtension.cs" />
     <Compile Include="Extensions\ExceptionExtension.cs" />
+    <Compile Include="Extensions\HttpRequestMessageExtension.cs" />
+    <Compile Include="Extensions\HttpResponseMessageExtension.cs" />
     <Compile Include="ICommandTreeItemViewMapper.cs" />
     <Compile Include="Diagnostics\ILogger.cs" />
+    <Compile Include="ITokenClient.cs" />
     <Compile Include="Model\LogLevel.cs" />
     <Compile Include="Model\LogMessage.cs" />
     <Compile Include="Model\RegistrationInfo.cs" />
@@ -67,11 +79,13 @@
     <Compile Include="Registration\ServiceLocator.cs" />
     <Compile Include="SafeObservableCollection.cs" />
     <Compile Include="ServiceLocatorFactory.cs" />
+    <Compile Include="TokenClient2.cs" />
     <Compile Include="ViewModels\ChildChangedEventArgs.cs" />
     <Compile Include="ViewModels\CommandTreeViewModel.cs" />
     <Compile Include="ViewModels\CoreViewModel.cs" />
     <Compile Include="ViewModels\ErrorInfoViewModel.cs" />
     <Compile Include="ViewModels\ExceptionTreeViewItemViewModel.cs" />
+    <Compile Include="ViewModels\HttpRequestResponseMessageViewModel.cs" />
     <Compile Include="ViewModels\LogViewModel.cs" />
     <Compile Include="ViewModels\NameValueTreeViewModel.cs" />
     <Compile Include="ViewModels\TreeViewItemViewModel.cs" />
@@ -81,6 +95,7 @@
     <Compile Include="Views\DetailViewContainer.xaml.cs">
       <DependentUpon>DetailViewContainer.xaml</DependentUpon>
     </Compile>
+    <Compile Include="ViewModels\HttpMessagesViewModel.cs" />
     <Compile Include="Views\TreeViewBehavior.cs" />
   </ItemGroup>
   <ItemGroup>
