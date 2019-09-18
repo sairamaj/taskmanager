@@ -88,6 +88,7 @@
     <Compile Include="ViewModels\HttpRequestResponseMessageViewModel.cs" />
     <Compile Include="ViewModels\LogViewModel.cs" />
     <Compile Include="ViewModels\NameValueTreeViewModel.cs" />
+    <Compile Include="ViewModels\NameValueViewModel.cs" />
     <Compile Include="ViewModels\TreeViewItemViewModel.cs" />
     <Compile Include="ViewModels\ViewModelEventArgs.cs" />
     <Compile Include="ViewModels\WorkInProgressCommandTreeViewModel.cs" />
@@ -96,10 +97,17 @@
       <DependentUpon>DetailViewContainer.xaml</DependentUpon>
     </Compile>
     <Compile Include="ViewModels\HttpMessagesViewModel.cs" />
+    <Compile Include="Views\DataEntryFormView.xaml.cs">
+      <DependentUpon>DataEntryFormView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\TreeViewBehavior.cs" />
   </ItemGroup>
   <ItemGroup>
     <Page Include="Views\DetailViewContainer.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\DataEntryFormView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
