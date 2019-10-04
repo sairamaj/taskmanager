@@ -34,6 +34,9 @@
     <Reference Include="Autofac, Version=4.9.4.0, Culture=neutral, PublicKeyToken=17863af14b0044da, processorArchitecture=MSIL">
       <HintPath>..\packages\Autofac.4.9.4\lib\net45\Autofac.dll</HintPath>
     </Reference>
+    <Reference Include="FluentAssertions, Version=5.9.0.0, Culture=neutral, PublicKeyToken=33f2691a05b67b6a, processorArchitecture=MSIL">
+      <HintPath>..\packages\FluentAssertions.5.9.0\lib\net47\FluentAssertions.dll</HintPath>
+    </Reference>
     <Reference Include="IdentityModel, Version=3.10.10.0, Culture=neutral, PublicKeyToken=e7877f4675df049f, processorArchitecture=MSIL">
       <HintPath>..\packages\IdentityModel.3.10.10\lib\net452\IdentityModel.dll</HintPath>
     </Reference>
@@ -43,6 +46,7 @@
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
     <Reference Include="System" />
+    <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.ServiceModel" />
@@ -79,6 +83,10 @@
     <Compile Include="Registration\ServiceLocator.cs" />
     <Compile Include="SafeObservableCollection.cs" />
     <Compile Include="ServiceLocatorFactory.cs" />
+    <Compile Include="Test\JsonExecutor.cs" />
+    <Compile Include="Test\MethodProxy.cs" />
+    <Compile Include="Test\TestConfig.cs" />
+    <Compile Include="Test\TestInfo.cs" />
     <Compile Include="TokenClient2.cs" />
     <Compile Include="ViewModels\ChildChangedEventArgs.cs" />
     <Compile Include="ViewModels\CommandTreeViewModel.cs" />
