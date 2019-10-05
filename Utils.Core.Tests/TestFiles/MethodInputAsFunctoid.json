@@ -1,0 +1,10 @@
+[
+  {
+    "Name": "Math.Add",
+    "Api": "add",
+    "Parameters": {
+      "num1": "${random()}",
+      "num2": 20
+    }
+  }
+]

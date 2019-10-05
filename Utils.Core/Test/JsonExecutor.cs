@@ -5,6 +5,7 @@ using System.Linq.Expressions;
 using System.Reflection;
 using FluentAssertions;
 using Newtonsoft.Json;
+using Utils.Core.Expressions;
 
 namespace Utils.Core.Test
 {
@@ -22,6 +23,18 @@ namespace Utils.Core.Test
 
         }
 
+        public IDictionary<string,object> Execute(IDictionary<string, string> variables)
+        {
+            IDictionary<string,object> results = new Dictionary<string, object>();
+            foreach (var test in _tests)
+            {
+                var newParameters = EvaluateParameters(test.Parameters, new Dictionary<string, string>());
+                results[test.Name]  = this._methodProxy.Execute(test.Api, newParameters);
+            }
+
+            return results;
+        }
+
         public void ExecuteAndVerify(IDictionary<string, string> variables)
         {
             foreach (var test in _tests)
@@ -30,11 +43,79 @@ namespace Utils.Core.Test
                 test.LogParameters();
                 test.LogExpected();
 
-                var result = this._methodProxy.Execute(test.Api, test.Parameters);
-                Console.WriteLine(result);
-                Verify(test, ()=> result, test.ReturnValue);
+                var newParameters = EvaluateParameters(test.Parameters,new Dictionary<string, string>());
+                var result = this._methodProxy.Execute(test.Api, newParameters);
+                if (result == null)
+                {
+                    continue;       // nothing to verify.
+                }
+
+                if (result.GetType().IsPrimitive)
+                {
+                    Console.WriteLine(result);
+                    Verify(test, () => result, test.ReturnValue);
+                }
+                else if (result is IDictionary<string, object>)
+                {
+                    // Verify dictionary.
+                    (result as IDictionary<string,object>).Should().BeEquivalentTo(test.Expected);
+                }
+                else
+                {
+                    throw new NotSupportedException($"{test.Api} returning {result.GetType()} is not supported for ");
+                }
             }
         }
+
+        IDictionary<string, object> EvaluateParameters(IDictionary<string, object> parameters, IDictionary<string, string> variables)
+        {
+            var newParameterValues = new Dictionary<string, object>();
+            foreach (var parameter in parameters)
+            {
+                if (parameter.Value != null && parameter.Value.ToString().StartsWith("${"))
+                {
+                    var mInfo = Evaluator.Parse(parameter.Value.ToString().Substring("${".Length).TrimEnd('$'));
+                    var evaluatedParameters = new Dictionary<string, object>(StringComparer.InvariantCultureIgnoreCase);
+                    foreach (var arg in mInfo.Arguments)
+                    {
+                        evaluatedParameters[arg.Name] = EvaluateValue(arg, variables);
+                    }
+
+                    var val = _methodProxy.Execute(mInfo.Name, evaluatedParameters);
+                    newParameterValues[parameter.Key] = val;
+                }
+                else
+                {
+                    newParameterValues[parameter.Key] = parameter.Value;
+                }
+            }
+
+            return newParameterValues;
+        }
+
+        private string EvaluateValue(Argument arg, IDictionary<string, string> variables)
+        {
+            var value = arg.Val?.ToString();
+            if (value == null)
+            {
+                return null;
+            }
+
+            if (!arg.IsVariable)
+            {
+                return value;
+            }
+
+            var variablename = arg.Val;
+            string variableValue;
+            if (variables.TryGetValue(variablename, out variableValue))
+            {
+                return variableValue;
+            }
+
+            return string.Empty;
+        }
+
 
         public void Verify<T>(TestInfo test, Expression<Func<T>> selectorExpression, object expectedValue)
         {

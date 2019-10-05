@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Configuration;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -22,8 +23,12 @@ namespace Utils.Core.Test
                 }
 
                 var asm = Assembly.Load(parts[1]);
-                return asm.GetTypes().SelectMany(t => t.GetMethods(BindingFlags.Static | BindingFlags.Public));
+                return asm.GetTypes()
+                    .Where(t => t.FullName == parts[0])
+                    .SelectMany(t => t.GetMethods(BindingFlags.Static | BindingFlags.Public));
             });
+
+            methods.ToList().ForEach(m=> Console.WriteLine(m.Name));
 
             _methods = methods.ToDictionary(m => m.Name, m => m, StringComparer.CurrentCultureIgnoreCase);
             _methods.ToList().ForEach(m =>
