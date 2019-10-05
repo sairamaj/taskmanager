@@ -63,6 +63,35 @@ namespace Utils.Core.Tests
                 { "mynum1", 99}
             });
         }
+
+        [Test(Description = "Functoids in Expected values.")]
+        public void FunctoidsInExpected()
+        {
+            var tester = new JsonExecutor(ReadTestFile("MathFuctionsInExpected.json"), ReadTestFile("config.json"));
+            tester.ExecuteAndVerify(new Dictionary<string, object>() { });
+        }
+
+        [Test(Description = "Functoids in Expected values which return dictionary.")]
+        public void FunctoidsInExpectedWhichReturnsDictionary()
+        {
+            var tester = new JsonExecutor(ReadTestFile("MathFuctionsInExpected.json"), ReadTestFile("config.json"));
+            tester.ExecuteAndVerify(new Dictionary<string, object>() { });
+        }
+
+        [Test(Description = "Methods can return dictionary and expected values having functoids.")]
+        public void TestWithMethodReturnDictionaryHavingExpectedFunctiods()
+        {
+            var tester = new JsonExecutor(ReadTestFile("MethodReturnDictionaryWithFunctoidsInExpected.json"), ReadTestFile("config.json"));
+            tester.ExecuteAndVerify(new Dictionary<string, object>() { });
+        }
+
+        [Test(Description = "Methods can return string array in dictionary.")]
+        public void TestWithMethodReturnStringArrayInDictionary()
+        {
+            var tester = new JsonExecutor(ReadTestFile("MethodReturnStringArrayDictionary.json"), ReadTestFile("config.json"));
+            tester.ExecuteAndVerify(new Dictionary<string, object>() { });
+        }
+        
         private string ReadTestFile(string fileName)
         {
             return 

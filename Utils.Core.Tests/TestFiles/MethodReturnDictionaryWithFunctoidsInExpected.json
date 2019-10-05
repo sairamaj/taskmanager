@@ -1,0 +1,16 @@
+[
+  {
+    "Name": "Sample.GetInfo",
+    "Api": "getinfo",
+    "Parameters": {
+      "num1": 10,
+      "num2": 20
+    },
+    "Expected": {
+      "result": "${add(num1=-1,num2=1)}",
+      "val1": "val1",
+      "val2": true,
+      "val3":  1.0
+    }
+  }
+]

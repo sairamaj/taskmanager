@@ -52,12 +52,17 @@ namespace Utils.Core.Test
                 if (result.GetType().IsPrimitive)
                 {
                     Console.WriteLine(result);
-                    Verify(test, () => result, test.ReturnValue);
+                    var finalExpectedValue = EvaluateParameters(new Dictionary<string, object>()
+                    {
+                        {"result", test.ReturnValue}
+                    }, variables).First();
+                    Verify(test, () => result, finalExpectedValue.Value);
                 }
                 else if (result is IDictionary<string, object>)
                 {
                     Console.WriteLine("============ Expected ===============");
-                    foreach (var kv in test.GetExpectedResults())
+                    var evaluatedExpectedValues = EvaluateParameters(test.GetExpectedResults(), variables);
+                    foreach (var kv in evaluatedExpectedValues)
                     {
                         Console.WriteLine($"--> {kv.Key}  |{kv.Value}|{kv.Value?.GetType()}");
                     }
@@ -69,7 +74,7 @@ namespace Utils.Core.Test
                     }
                     Console.WriteLine("===========================");
                     // Verify dictionary.
-                    (result as IDictionary<string,object>).Should().BeEquivalentTo(test.GetExpectedResults());
+                    (result as IDictionary<string,object>).Should().BeEquivalentTo(evaluatedExpectedValues);
                 }
                 else
                 {
