@@ -11,37 +11,45 @@ namespace Utils.Core.Tests
         [Test(Description = "Method with no arguments")]
         public void MethodWithNoArguments()
         {
-            var methodInfo = Evaluator.Parse("random()");
-            methodInfo.Should().NotBeNull();
-            methodInfo.Name.Should().Be("random");
-            methodInfo.Arguments.Count().Should().Be(0);
+            var expressionInfo = Evaluator.Parse("random()");
+            expressionInfo.MethodData.Should().NotBeNull();
+            expressionInfo.MethodData.Name.Should().Be("random");
+            expressionInfo.MethodData.Arguments.Count().Should().Be(0);
         }
 
         [Test(Description = "Method with multiple arguments")]
         public void MethodWithMultipleArguments()
         {
-            var methodInfo = Evaluator.Parse("add(10,20)");
-            methodInfo.Should().NotBeNull();
-            methodInfo.Name.Should().Be("add");
-            methodInfo.Arguments.Should().BeEquivalentTo(new Argument("arg1","10",1){IsVariable = false}, new Argument("arg2","20",2){IsVariable = false});
+            var expressionInfo = Evaluator.Parse("add(10,20)");
+            expressionInfo.MethodData.Should().NotBeNull();
+            expressionInfo.MethodData.Name.Should().Be("add");
+            expressionInfo.MethodData.Arguments.Should().BeEquivalentTo(new Argument("arg1","10",1){IsVariable = false}, new Argument("arg2","20",2){IsVariable = false});
         }
 
         [Test(Description = "Method with named arguments")]
         public void MethodWithNamedArguments()
         {
-            var methodInfo = Evaluator.Parse("add(num1=10,num2=20)");
-            methodInfo.Should().NotBeNull();
-            methodInfo.Name.Should().Be("add");
-            methodInfo.Arguments.Should().BeEquivalentTo(new Argument("num1","10",1){IsVariable = false}, new Argument("num2","20",2){IsVariable = false});
+            var expressionInfo = Evaluator.Parse("add(num1=10,num2=20)");
+            expressionInfo.MethodData.Should().NotBeNull();
+            expressionInfo.MethodData.Name.Should().Be("add");
+            expressionInfo.MethodData.Arguments.Should().BeEquivalentTo(new Argument("num1","10",1){IsVariable = false}, new Argument("num2","20",2){IsVariable = false});
         }
 
         [Test(Description = "Method with variables in arguments")]
         public void MethodWithVariablesArguments()
         {
-            var methodInfo = Evaluator.Parse("add(num1=var.mynum1,num2=var.mynum2)");
-            methodInfo.Should().NotBeNull();
-            methodInfo.Name.Should().Be("add");
-            methodInfo.Arguments.Should().BeEquivalentTo(new Argument("num1","mynum1",1){IsVariable = true}, new Argument("num2","mynum2",2){IsVariable = true});
+            var expressionInfo = Evaluator.Parse("add(num1=var.mynum1,num2=var.mynum2)");
+            expressionInfo.MethodData.Should().NotBeNull();
+            expressionInfo.MethodData.Name.Should().Be("add");
+            expressionInfo.MethodData.Arguments.Should().BeEquivalentTo(new Argument("num1","mynum1",1){IsVariable = true}, new Argument("num2","mynum2",2){IsVariable = true});
+        }
+
+        [Test(Description = "Variable declaration")]
+        public void VariableDeclaration()
+        {
+            var expressionInfo = Evaluator.Parse("var.mynum1");
+            expressionInfo.Variable.Should().NotBeNull();
+            expressionInfo.Variable.Name.Should().Be("mynum1");
         }
     }
 }

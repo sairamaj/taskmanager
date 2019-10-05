@@ -11,6 +11,7 @@ namespace Utils.Core.Expressions
         private bool _methodInvocationVisited;
         private bool _methodNameExtracted;
         private MethodData _methodData;
+        private Variable _variable;
         private int _currentArgumentCount;
 
 
@@ -20,6 +21,7 @@ namespace Utils.Core.Expressions
         }
 
         public MethodData Method => _methodData;
+        public Variable Variable => _variable;
 
         public override void Visit(SyntaxNode node)
         {
@@ -40,6 +42,7 @@ namespace Utils.Core.Expressions
                 _methodData = new MethodData(node.GetText().ToString());
                 _methodNameExtracted = true;
             }
+            
 
             base.VisitIdentifierName(node);
         }
@@ -69,6 +72,17 @@ namespace Utils.Core.Expressions
 
             _methodData.AddParameter(argName, argData, _currentArgumentCount);
             base.VisitArgument(node);
+        }
+
+        public override void VisitMemberAccessExpression(MemberAccessExpressionSyntax node)
+        {
+            if (_methodData == null)
+            {
+                // must be variable
+                _variable = new Variable(node.GetText()?.ToString());
+            }
+
+            base.VisitMemberAccessExpression(node);
         }
     }
 }

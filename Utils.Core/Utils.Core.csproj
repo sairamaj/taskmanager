@@ -130,9 +130,11 @@
     <Compile Include="Command\DelegateCommand.cs" />
     <Compile Include="Expressions\Argument.cs" />
     <Compile Include="Expressions\Evaluator.cs" />
+    <Compile Include="Expressions\ExpressionInfo.cs" />
     <Compile Include="Expressions\InvalidSyntaxException.cs" />
     <Compile Include="Expressions\MethodData.cs" />
     <Compile Include="Expressions\MethodExtractWalker.cs" />
+    <Compile Include="Expressions\Variable.cs" />
     <Compile Include="Extensions\DispatcherExtension.cs" />
     <Compile Include="Extensions\ExceptionExtension.cs" />
     <Compile Include="Extensions\HttpRequestMessageExtension.cs" />

@@ -72,17 +72,30 @@ namespace Utils.Core.Test
             var newParameterValues = new Dictionary<string, object>();
             foreach (var parameter in parameters)
             {
-                if (parameter.Value != null && parameter.Value.ToString().StartsWith("${"))
+                if (parameter.Value != null 
+                    && parameter.Value.ToString().StartsWith("${")
+                    && parameter.Value.ToString().EndsWith("}"))          // todo extract to method.
                 {
-                    var mInfo = Evaluator.Parse(parameter.Value.ToString().Substring("${".Length).TrimEnd('$'));
+                    var expressionInfo = Evaluator.Parse(parameter.Value.ToString().Substring("${".Length).TrimEnd('}'));
                     var evaluatedParameters = new Dictionary<string, object>(StringComparer.InvariantCultureIgnoreCase);
-                    foreach (var arg in mInfo.Arguments)
+                    if (expressionInfo.MethodData != null)
                     {
-                        evaluatedParameters[arg.Name] = EvaluateValue(arg, variables);
-                    }
+                        foreach (var arg in expressionInfo.MethodData.Arguments)
+                        {
+                            evaluatedParameters[arg.Name] = EvaluateValue(arg, variables);
+                        }
 
-                    var val = _methodProxy.Execute(mInfo.Name, evaluatedParameters);
-                    newParameterValues[parameter.Key] = val;
+                        var val = _methodProxy.Execute(expressionInfo.MethodData.Name, evaluatedParameters);
+                        newParameterValues[parameter.Key] = val;
+                    }
+                    else if (expressionInfo.Variable != null)
+                    {
+                        newParameterValues[parameter.Key] = EvaluateValue(expressionInfo.Variable, variables);
+                    }
+                    else
+                    {
+                        throw new NotSupportedException($"Expression {parameter.Value} is neither method nor variable");
+                    }
                 }
                 else
                 {
@@ -91,6 +104,17 @@ namespace Utils.Core.Test
             }
 
             return newParameterValues;
+        }
+
+        private object EvaluateValue(Variable variable, IDictionary<string, object> variables)
+        {
+            object variableValue;
+            if (variables.TryGetValue(variable.Name, out variableValue))
+            {
+                return variableValue;
+            }
+
+            return null;
         }
 
         private object EvaluateValue(Argument arg, IDictionary<string, object> variables)
