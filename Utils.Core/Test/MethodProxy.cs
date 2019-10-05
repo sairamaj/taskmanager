@@ -3,9 +3,6 @@ using System.Collections.Generic;
 using System.Configuration;
 using System.Linq;
 using System.Reflection;
-using System.Runtime.InteropServices;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Utils.Core.Test
 {
@@ -28,7 +25,7 @@ namespace Utils.Core.Test
                     .SelectMany(t => t.GetMethods(BindingFlags.Static | BindingFlags.Public));
             });
 
-            methods.ToList().ForEach(m=> Console.WriteLine(m.Name));
+            methods.ToList().ForEach(m => Console.WriteLine(m.Name));
 
             _methods = methods.ToDictionary(m => m.Name, m => m, StringComparer.CurrentCultureIgnoreCase);
             _methods.ToList().ForEach(m =>
@@ -39,7 +36,12 @@ namespace Utils.Core.Test
 
         public object Execute(string name, IDictionary<string, object> parameters)
         {
-            if(!_methods.TryGetValue(name, out var foundMethod))
+            if (string.IsNullOrWhiteSpace(name))
+            {
+                throw new ArgumentException($"method name cannot be empty or null", nameof(name));
+            }
+
+            if (!_methods.TryGetValue(name, out var foundMethod))
             {
                 throw new Exception($"Method {name} not found.");
             }
@@ -57,6 +59,13 @@ namespace Utils.Core.Test
 
             try
             {
+                var index = 0;
+                Console.WriteLine($"{foundMethod.Name}");
+                foreach (var p in foundMethod.GetParameters())
+                {
+                    Console.WriteLine($"\t{p.Name} {methodInputs[index]}");
+                    index++;
+                }
                 return foundMethod.Invoke(null, methodInputs);
             }
             catch (TargetInvocationException te)

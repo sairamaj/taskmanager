@@ -48,7 +48,7 @@ namespace Utils.Core.Test
         {
             foreach (var kv in this.GetExpectedResults())
             {
-                Console.WriteLine($"{kv.Key}:|{kv.Value}|{kv.Value.GetType()}");
+                Console.WriteLine($"{kv.Key}:|{kv.Value}|{kv.Value?.GetType()}");
             }
         }
 
@@ -108,7 +108,7 @@ namespace Utils.Core.Test
             return this.Expected.ToDictionary(
                 kv => kv.Key.ToLowerInvariant(), kv =>
                 {
-                    if (kv.Value.GetType() == typeof(JArray))
+                    if (kv.Value != null && kv.Value.GetType() == typeof(JArray))
                     {
                         return ((JArray)kv.Value).Select(k => k?.ToString()).ToArray();
                     }

@@ -20,7 +20,6 @@ namespace Utils.Core.Test
             this._tests = JsonConvert.DeserializeObject<IEnumerable<TestInfo>>(dataJson);
             var config = JsonConvert.DeserializeObject<IEnumerable<TestConfig>>(configJson);
             _methodProxy = new MethodProxy(config.Select(c=>c.TypeName));
-
         }
 
         public IDictionary<string,object> Execute(IDictionary<string, object> variables)
@@ -57,6 +56,18 @@ namespace Utils.Core.Test
                 }
                 else if (result is IDictionary<string, object>)
                 {
+                    Console.WriteLine("============ Expected ===============");
+                    foreach (var kv in test.Expected)
+                    {
+                        Console.WriteLine($"--> {kv.Key}  |{kv.Value}|");
+                    }
+                    Console.WriteLine("===========================");
+                    Console.WriteLine("============ Actual ===============");
+                    foreach (var kv in result as IDictionary<string, object>)
+                    {
+                        Console.WriteLine($"--> {kv.Key}  |{kv.Value}|");
+                    }
+                    Console.WriteLine("===========================");
                     // Verify dictionary.
                     (result as IDictionary<string,object>).Should().BeEquivalentTo(test.Expected);
                 }
@@ -69,7 +80,12 @@ namespace Utils.Core.Test
 
         IDictionary<string, object> EvaluateParameters(IDictionary<string, object> parameters, IDictionary<string, object> variables)
         {
-            var newParameterValues = new Dictionary<string, object>();
+            var newParameterValues = new Dictionary<string, object>(StringComparer.InvariantCultureIgnoreCase);
+            if (parameters == null)
+            {
+                return newParameterValues;
+            }
+
             foreach (var parameter in parameters)
             {
                 if (parameter.Value != null 
