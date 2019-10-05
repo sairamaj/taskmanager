@@ -2,7 +2,7 @@
 
 namespace Utils.Core.Expressions
 {
-    internal class Evaluator
+    public class Evaluator
     {
         public static MethodData Parse(string expression)
         {

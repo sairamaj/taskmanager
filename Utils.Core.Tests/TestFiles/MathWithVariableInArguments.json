@@ -1,0 +1,13 @@
+[
+  {
+    "Name": "Math.Add",
+    "Api": "add",
+    "Parameters": {
+      "num1": "${var.mynum1}",
+      "num2": 20
+    },
+    "Expected": {
+      "result": 30
+    }
+  }
+]

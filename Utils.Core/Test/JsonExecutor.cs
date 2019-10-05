@@ -23,19 +23,19 @@ namespace Utils.Core.Test
 
         }
 
-        public IDictionary<string,object> Execute(IDictionary<string, string> variables)
+        public IDictionary<string,object> Execute(IDictionary<string, object> variables)
         {
             IDictionary<string,object> results = new Dictionary<string, object>();
             foreach (var test in _tests)
             {
-                var newParameters = EvaluateParameters(test.Parameters, new Dictionary<string, string>());
+                var newParameters = EvaluateParameters(test.Parameters, variables);
                 results[test.Name]  = this._methodProxy.Execute(test.Api, newParameters);
             }
 
             return results;
         }
 
-        public void ExecuteAndVerify(IDictionary<string, string> variables)
+        public void ExecuteAndVerify(IDictionary<string, object> variables)
         {
             foreach (var test in _tests)
             {
@@ -43,7 +43,7 @@ namespace Utils.Core.Test
                 test.LogParameters();
                 test.LogExpected();
 
-                var newParameters = EvaluateParameters(test.Parameters,new Dictionary<string, string>());
+                var newParameters = EvaluateParameters(test.Parameters, variables);
                 var result = this._methodProxy.Execute(test.Api, newParameters);
                 if (result == null)
                 {
@@ -67,7 +67,7 @@ namespace Utils.Core.Test
             }
         }
 
-        IDictionary<string, object> EvaluateParameters(IDictionary<string, object> parameters, IDictionary<string, string> variables)
+        IDictionary<string, object> EvaluateParameters(IDictionary<string, object> parameters, IDictionary<string, object> variables)
         {
             var newParameterValues = new Dictionary<string, object>();
             foreach (var parameter in parameters)
@@ -93,9 +93,9 @@ namespace Utils.Core.Test
             return newParameterValues;
         }
 
-        private string EvaluateValue(Argument arg, IDictionary<string, string> variables)
+        private object EvaluateValue(Argument arg, IDictionary<string, object> variables)
         {
-            var value = arg.Val?.ToString();
+            var value = arg.Val;
             if (value == null)
             {
                 return null;
@@ -107,13 +107,13 @@ namespace Utils.Core.Test
             }
 
             var variablename = arg.Val;
-            string variableValue;
+            object variableValue;
             if (variables.TryGetValue(variablename, out variableValue))
             {
                 return variableValue;
             }
 
-            return string.Empty;
+            return null;
         }
 
 
