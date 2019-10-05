@@ -57,19 +57,19 @@ namespace Utils.Core.Test
                 else if (result is IDictionary<string, object>)
                 {
                     Console.WriteLine("============ Expected ===============");
-                    foreach (var kv in test.Expected)
+                    foreach (var kv in test.GetExpectedResults())
                     {
-                        Console.WriteLine($"--> {kv.Key}  |{kv.Value}|");
+                        Console.WriteLine($"--> {kv.Key}  |{kv.Value}|{kv.Value?.GetType()}");
                     }
                     Console.WriteLine("===========================");
                     Console.WriteLine("============ Actual ===============");
                     foreach (var kv in result as IDictionary<string, object>)
                     {
-                        Console.WriteLine($"--> {kv.Key}  |{kv.Value}|");
+                        Console.WriteLine($"--> {kv.Key}  |{kv.Value}|{kv.Value?.GetType()}");
                     }
                     Console.WriteLine("===========================");
                     // Verify dictionary.
-                    (result as IDictionary<string,object>).Should().BeEquivalentTo(test.Expected);
+                    (result as IDictionary<string,object>).Should().BeEquivalentTo(test.GetExpectedResults());
                 }
                 else
                 {

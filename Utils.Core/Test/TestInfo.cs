@@ -98,7 +98,7 @@ namespace Utils.Core.Test
             }
         }
 
-        private IDictionary<string, object> GetExpectedResults()
+        public IDictionary<string, object> GetExpectedResults()
         {
             if (this.Expected == null || this.Expected.Values == null)
             {
@@ -106,7 +106,7 @@ namespace Utils.Core.Test
             }
 
             return this.Expected.ToDictionary(
-                kv => kv.Key.ToLowerInvariant(), kv =>
+                kv => kv.Key, kv =>
                 {
                     if (kv.Value != null && kv.Value.GetType() == typeof(JArray))
                     {
