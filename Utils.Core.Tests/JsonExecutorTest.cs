@@ -91,6 +91,13 @@ namespace Utils.Core.Tests
             var tester = new JsonExecutor(ReadTestFile("MethodReturnStringArrayDictionary.json"), ReadTestFile("config.json"));
             tester.ExecuteAndVerify(new Dictionary<string, object>() { });
         }
+
+        [Test(Description = "Methods can return string array in dictionary.")]
+        public void TestWithMethodReturnStringArrayWithFunctoidsInDictionary()
+        {
+            var tester = new JsonExecutor(ReadTestFile("MethodReturnStringArrayDictionaryWithFunctoids.json"), ReadTestFile("config.json"));
+            tester.ExecuteAndVerify(new Dictionary<string, object>() { });
+        }
         
         private string ReadTestFile(string fileName)
         {

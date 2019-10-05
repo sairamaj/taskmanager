@@ -1,0 +1,20 @@
+[
+  {
+    "Name": "Sample.GetInfo",
+    "Api": "getinforeturnarrayindictionary",
+    "Parameters": {
+      "num1": 10,
+      "num2": 20
+    },
+    "Expected": {
+      "val1": [
+        "${concat(val1=item1,val2=_1)}",
+        "item1_2"
+      ],
+      "val2": [
+        "item2_1",
+        "item2_2"
+      ]
+    }
+  }
+]

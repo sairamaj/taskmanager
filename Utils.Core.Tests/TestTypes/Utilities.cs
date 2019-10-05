@@ -10,5 +10,9 @@ namespace Utils.Core.Tests.TestTypes
             return new Random().Next(1000);
         }
 
+        public static string ConCat(string val1, string val2)
+        {
+            return val1 + val2;
+        }
     }
 }

@@ -19,16 +19,16 @@ namespace Utils.Core.Test
             Console.WriteLine(configJson);
             this._tests = JsonConvert.DeserializeObject<IEnumerable<TestInfo>>(dataJson);
             var config = JsonConvert.DeserializeObject<IEnumerable<TestConfig>>(configJson);
-            _methodProxy = new MethodProxy(config.Select(c=>c.TypeName));
+            _methodProxy = new MethodProxy(config.Select(c => c.TypeName));
         }
 
-        public IDictionary<string,object> Execute(IDictionary<string, object> variables)
+        public IDictionary<string, object> Execute(IDictionary<string, object> variables)
         {
-            IDictionary<string,object> results = new Dictionary<string, object>();
+            IDictionary<string, object> results = new Dictionary<string, object>();
             foreach (var test in _tests)
             {
                 var newParameters = EvaluateParameters(test.Parameters, variables);
-                results[test.Name]  = this._methodProxy.Execute(test.Api, newParameters);
+                results[test.Name] = this._methodProxy.Execute(test.Api, newParameters);
             }
 
             return results;
@@ -74,7 +74,7 @@ namespace Utils.Core.Test
                     }
                     Console.WriteLine("===========================");
                     // Verify dictionary.
-                    (result as IDictionary<string,object>).Should().BeEquivalentTo(evaluatedExpectedValues);
+                    (result as IDictionary<string, object>).Should().BeEquivalentTo(evaluatedExpectedValues);
                 }
                 else
                 {
@@ -93,38 +93,56 @@ namespace Utils.Core.Test
 
             foreach (var parameter in parameters)
             {
-                if (parameter.Value != null 
-                    && parameter.Value.ToString().StartsWith("${")
-                    && parameter.Value.ToString().EndsWith("}"))          // todo extract to method.
+                if (parameter.Value is System.String[])
                 {
-                    var expressionInfo = Evaluator.Parse(parameter.Value.ToString().Substring("${".Length).TrimEnd('}'));
-                    var evaluatedParameters = new Dictionary<string, object>(StringComparer.InvariantCultureIgnoreCase);
-                    if (expressionInfo.MethodData != null)
+                    var evaluatedItems = new List<string>();
+                    foreach (var val in parameter.Value as System.String[])
                     {
-                        foreach (var arg in expressionInfo.MethodData.Arguments)
+                        if (TryExpression(val, out var expression))
                         {
-                            evaluatedParameters[arg.Name] = EvaluateValue(arg, variables);
+                            evaluatedItems.Add(Evaluate(expression, variables)?.ToString());
                         }
+                        else
+                        {
+                            evaluatedItems.Add(val);
+                        }
+                    }
+                    newParameterValues[parameter.Key] = evaluatedItems.ToArray();
+                    continue;
+                }
 
-                        var val = _methodProxy.Execute(expressionInfo.MethodData.Name, evaluatedParameters);
-                        newParameterValues[parameter.Key] = val;
-                    }
-                    else if (expressionInfo.Variable != null)
-                    {
-                        newParameterValues[parameter.Key] = EvaluateValue(expressionInfo.Variable, variables);
-                    }
-                    else
-                    {
-                        throw new NotSupportedException($"Expression {parameter.Value} is neither method nor variable");
-                    }
-                }
-                else
+                var value = parameter.Value;
+                if (TryExpression(value?.ToString(), out var expression2))
                 {
-                    newParameterValues[parameter.Key] = parameter.Value;
+                    value = Evaluate(expression2, variables);
                 }
+
+                newParameterValues[parameter.Key] = value;
             }
 
             return newParameterValues;
+        }
+
+        private object Evaluate(string expression, IDictionary<string, object> variables)
+        {
+            object evaluatedValue = expression;
+            var expressionInfo = Evaluator.Parse(expression);
+            var evaluatedParameters = new Dictionary<string, object>(StringComparer.InvariantCultureIgnoreCase);
+            if (expressionInfo.MethodData != null)
+            {
+                foreach (var arg in expressionInfo.MethodData.Arguments)
+                {
+                    evaluatedParameters[arg.Name] = EvaluateValue(arg, variables);
+                }
+
+                evaluatedValue = _methodProxy.Execute(expressionInfo.MethodData.Name, evaluatedParameters);
+            }
+            else if (expressionInfo.Variable != null)
+            {
+                evaluatedValue = EvaluateValue(expressionInfo.Variable, variables);
+            }
+
+            return evaluatedValue;
         }
 
         private object EvaluateValue(Variable variable, IDictionary<string, object> variables)
@@ -187,6 +205,23 @@ namespace Utils.Core.Test
             {
                 actual.Should().Be(expectedValue, $"{test.Name} {propertyName} did fail");
             }
+        }
+
+        private bool TryExpression(string val, out string expression)
+        {
+            expression = null;
+            if (val == null)
+            {
+                return false;
+            }
+
+            if (val.StartsWith("${") && val.EndsWith("}"))
+            {
+                expression = val.Substring("${".Length).TrimEnd('}');
+                return true;
+            }
+
+            return false;
         }
     }
 }
