@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Configuration;
 using System.Linq;
 using System.Reflection;
 
@@ -8,30 +7,36 @@ namespace Utils.Core.Test
 {
     class MethodProxy
     {
+        private readonly Action<string> _traceInfo;
         private readonly IDictionary<string, MethodInfo> _methods;
-        public MethodProxy(IEnumerable<string> typeInfo)
+        public MethodProxy(IEnumerable<string> typeInfo, Action<string> traceInfo)
         {
+            _traceInfo = traceInfo ?? throw new ArgumentNullException(nameof(traceInfo));
             var methods = typeInfo.SelectMany(info =>
             {
                 var parts = info.Split(',');
                 if (parts.Length < 2)
                 {
-                    throw new ConfigurationErrorsException($"TypeName should be of form type,assembly");
+                    // load the current assembly
+                    return AppDomain.CurrentDomain.GetAssemblies()
+                        .Where(a=> !( a.FullName.Contains("System") || a.FullName.Contains("mscorlib")) )
+                        .SelectMany(a=> a.GetTypes()).SelectMany(t => t.GetMethods(BindingFlags.Static | BindingFlags.Public));
                 }
+                else
+                {
+                    var asm = Assembly.Load(parts[1]);
+                    return asm.GetTypes()
+                        .Where(t => t.FullName == parts[0])
+                        .SelectMany(t => t.GetMethods(BindingFlags.Static | BindingFlags.Public));
+                }
+            }).ToList();
 
-                var asm = Assembly.Load(parts[1]);
-                return asm.GetTypes()
-                    .Where(t => t.FullName == parts[0])
-                    .SelectMany(t => t.GetMethods(BindingFlags.Static | BindingFlags.Public));
-            });
-
-            methods.ToList().ForEach(m => Console.WriteLine(m.Name));
-
-            _methods = methods.ToDictionary(m => m.Name, m => m, StringComparer.CurrentCultureIgnoreCase);
-            _methods.ToList().ForEach(m =>
+            _methods = new Dictionary<string, MethodInfo>(StringComparer.InvariantCultureIgnoreCase);
+            foreach (var m in methods.OrderBy(m => m.Name))
             {
-                Console.WriteLine($"|{m.Key}| {m.Value}");
-            });
+                _methods[m.Name] = m;
+                _methods[$"{m.ReflectedType?.Name}.{m.Name}"] = m;
+            }
         }
 
         public object Execute(string name, IDictionary<string, object> parameters)
@@ -60,12 +65,14 @@ namespace Utils.Core.Test
             try
             {
                 var index = 0;
-                Console.WriteLine($"{foundMethod.Name}");
+                var traceMessage = $"{foundMethod.Name} ";
                 foreach (var p in foundMethod.GetParameters())
                 {
-                    Console.WriteLine($"\t{p.Name} {methodInputs[index]}");
+                    traceMessage += $"\t{p.Name} {methodInputs[index]} ";
                     index++;
                 }
+
+                _traceInfo(traceMessage);
                 return foundMethod.Invoke(null, methodInputs);
             }
             catch (TargetInvocationException te)

@@ -14,12 +14,12 @@ namespace Utils.Core.Test
         private readonly IEnumerable<TestInfo> _tests;
         private readonly MethodProxy _methodProxy;
 
-        public JsonExecutor(string dataJson, string configJson)
+        public JsonExecutor(string dataJson, string configJson, Action<string> traceAction)
         {
             Console.WriteLine(configJson);
             this._tests = JsonConvert.DeserializeObject<IEnumerable<TestInfo>>(dataJson);
             var config = JsonConvert.DeserializeObject<IEnumerable<TestConfig>>(configJson);
-            _methodProxy = new MethodProxy(config.Select(c => c.TypeName));
+            _methodProxy = new MethodProxy(config.Select(c => c.TypeName), traceAction);
         }
 
         public IDictionary<string, object> Execute(IDictionary<string, object> variables)
@@ -27,8 +27,7 @@ namespace Utils.Core.Test
             IDictionary<string, object> results = new Dictionary<string, object>();
             foreach (var test in _tests)
             {
-                var newParameters = EvaluateParameters(test.Parameters, variables);
-                results[test.Name] = this._methodProxy.Execute(test.Api, newParameters);
+                results[test.Name] = ExecuteTest(test, variables, out _);
             }
 
             return results;
@@ -38,51 +37,48 @@ namespace Utils.Core.Test
         {
             foreach (var test in _tests)
             {
-                Console.WriteLine($"Executing {test.Name}");
-                test.LogParameters();
-                test.LogExpected();
-
-                var newParameters = EvaluateParameters(test.Parameters, variables);
-                var result = this._methodProxy.Execute(test.Api, newParameters);
-                if (result == null)
+                var results = ExecuteTest(test, variables, out var resultsType);
+                if (resultsType == ResultsType.Primitive)
                 {
-                    continue;       // nothing to verify.
-                }
-
-                if (result.GetType().IsPrimitive)
-                {
-                    Console.WriteLine(result);
                     var finalExpectedValue = EvaluateParameters(new Dictionary<string, object>()
                     {
                         {"result", test.ReturnValue}
                     }, variables).First();
+                    var result = results.First().Value;
                     Verify(test, () => result, finalExpectedValue.Value);
                 }
-                else if (result is IDictionary<string, object>)
+                else 
                 {
-                    Console.WriteLine("============ Expected ===============");
                     var evaluatedExpectedValues = EvaluateParameters(test.GetExpectedResults(), variables);
-                    foreach (var kv in evaluatedExpectedValues)
-                    {
-                        Console.WriteLine($"--> {kv.Key}  |{kv.Value}|{kv.Value?.GetType()}");
-                    }
-                    Console.WriteLine("===========================");
-                    Console.WriteLine("============ Actual ===============");
-                    foreach (var kv in result as IDictionary<string, object>)
-                    {
-                        Console.WriteLine($"--> {kv.Key}  |{kv.Value}|{kv.Value?.GetType()}");
-                    }
                     Console.WriteLine("===========================");
                     // Verify dictionary.
-                    (result as IDictionary<string, object>).Should().BeEquivalentTo(evaluatedExpectedValues);
-                }
-                else
-                {
-                    throw new NotSupportedException($"{test.Api} returning {result.GetType()} is not supported for ");
+                    results.Should().BeEquivalentTo(evaluatedExpectedValues);
                 }
             }
         }
 
+        private IDictionary<string, object> ExecuteTest(TestInfo test, IDictionary<string, object> variables, out ResultsType resultsType)
+        {
+            var newParameters = EvaluateParameters(test.Parameters, variables);
+            var output = this._methodProxy.Execute(test.Api, newParameters);
+            if (output.GetType().IsPrimitive)
+            {
+                resultsType = ResultsType.Primitive;
+                return new Dictionary<string, object>
+                {
+                    {"result", output}
+                };
+            }
+
+            if (output is IDictionary<string, object>)
+            {
+                resultsType = ResultsType.Dictionary;
+                return output as IDictionary<string, object>;
+            }
+
+            throw new NotSupportedException($"{test.Api} returning {output.GetType()} is not supported for ");
+
+        }
         IDictionary<string, object> EvaluateParameters(IDictionary<string, object> parameters, IDictionary<string, object> variables)
         {
             var newParameterValues = new Dictionary<string, object>(StringComparer.InvariantCultureIgnoreCase);

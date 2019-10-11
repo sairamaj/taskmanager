@@ -6,17 +6,53 @@
              xmlns:local="clr-namespace:JsonExecutorTasks.Views"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
+    <UserControl.Resources>
+        <Style x:Key="ResultsViewStyle">
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding IsError}" Value="True">
+                    <Setter Property="Control.Foreground" Value="Red"/>
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+
+        <Style x:Key="DataHeaderStyle" TargetType="{x:Type GridViewColumnHeader}">
+            <Setter Property="Visibility" Value="Collapsed" />
+        </Style>
+
+    </UserControl.Resources>
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition />
-            <RowDefinition Height="20"/>
+            <RowDefinition Height="25"/>
+            <RowDefinition Height="3"/>
+            <RowDefinition />
             <RowDefinition Height="3"/>
             <RowDefinition />
         </Grid.RowDefinitions>
 
         <TextBox Grid.Row="0" Grid.Column="0" Text="{Binding Data}" TextWrapping="Wrap" AcceptsReturn="True"/>
-        <Button Grid.Row="1" Grid.Column="0" Content="Run" Width="20" />
+        <StackPanel Grid.Row="1" Grid.Column="0" Orientation="Horizontal">
+            <Button Content="Run" Width="30" Height="18" VerticalAlignment="Center" Margin="10,0,0,0" Command="{Binding RunTestFileCommand}"/>
+            <Button Content="Run With Verify" Width="110" Height="18" VerticalAlignment="Center" Margin="10,0,0,0" Command="{Binding RunTestFileWithVerifyCommand}"/>
+        </StackPanel>
         <GridSplitter Grid.Row="2" Grid.Column="0"  HorizontalAlignment="Stretch" VerticalAlignment="Stretch" />
-        <TextBox Grid.Row="3" Grid.Column="0" Text="{Binding Data}" TextWrapping="Wrap" AcceptsReturn="True"/>
+        <TextBox Grid.Row="3" Grid.Column="0" Text="{Binding ResultsData}" TextWrapping="Wrap" AcceptsReturn="True" Style="{StaticResource ResultsViewStyle}"/>
+        <GridSplitter Grid.Row="4" Grid.Column="0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" />
+        <ListView Grid.Row="5" Grid.Column="0" ItemsSource="{Binding TraceMessages}">
+            <ListView.View >
+                <GridView ColumnHeaderContainerStyle="{StaticResource DataHeaderStyle}">
+                    <GridViewColumn>
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock  Text="{Binding}"/>
+                                </StackPanel>
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+                </GridView>
+            </ListView.View>
+        </ListView>
+
     </Grid>
 </UserControl>

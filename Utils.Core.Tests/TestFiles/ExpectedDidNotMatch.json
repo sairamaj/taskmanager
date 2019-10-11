@@ -1,13 +1,13 @@
 [
   {
-    "Name": "Math.Sub",
-    "Api": "math.sub",
+    "Name": "Math.Add",
+    "Api": "add",
     "Parameters": {
       "num1": 10,
       "num2": 20
     },
     "Expected": {
-      "result": "${add(num1=-1,num2=-9)}"
+      "result": 130
     }
   }
 ]

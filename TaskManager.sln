@@ -42,6 +42,9 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "StackTasks", "StackTasks", "{D8A1472E-207F-4183-A188-7FFF9EB91963}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JsonExecutorTasks", "StackTasks\JsonExecutorTasks\JsonExecutorTasks.csproj", "{3EA82ACF-D3FF-4964-992F-3DB9875AFD36}"
+	ProjectSection(ProjectDependencies) = postProject
+		{ADA071A3-C24C-4B71-8EF0-9D95462C3620} = {ADA071A3-C24C-4B71-8EF0-9D95462C3620}
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -32,6 +32,7 @@ namespace Utils.Core.Expressions
         public override void VisitInvocationExpression(InvocationExpressionSyntax node)
         {
             this._methodInvocationVisited = true;
+            Console.WriteLine(node.GetText().ToString());
             base.VisitInvocationExpression(node);
         }
 
@@ -78,8 +79,18 @@ namespace Utils.Core.Expressions
         {
             if (_methodData == null)
             {
-                // must be variable
-                _variable = new Variable(node.GetText()?.ToString());
+                var text = node.GetText()?.ToString();
+                if (text.StartsWith("var.", StringComparison.CurrentCultureIgnoreCase))
+                {
+                    // must be variable
+                    this._variable = new Variable(text);
+                }
+                else
+                {
+                    this._methodData = new MethodData(node.GetText().ToString());
+                    this._methodNameExtracted = true;
+                    this._methodInvocationVisited = true;
+                }
             }
 
             base.VisitMemberAccessExpression(node);

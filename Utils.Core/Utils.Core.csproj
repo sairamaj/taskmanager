@@ -142,6 +142,7 @@
     <Compile Include="ICommandTreeItemViewMapper.cs" />
     <Compile Include="Diagnostics\ILogger.cs" />
     <Compile Include="ITokenClient.cs" />
+    <Compile Include="KeyEqualityComparer.cs" />
     <Compile Include="Model\LogLevel.cs" />
     <Compile Include="Model\LogMessage.cs" />
     <Compile Include="Model\RegistrationInfo.cs" />
@@ -153,6 +154,7 @@
     <Compile Include="ServiceLocatorFactory.cs" />
     <Compile Include="Test\JsonExecutor.cs" />
     <Compile Include="Test\MethodProxy.cs" />
+    <Compile Include="Test\ResultsType.cs" />
     <Compile Include="Test\TestConfig.cs" />
     <Compile Include="Test\TestInfo.cs" />
     <Compile Include="TokenClient2.cs" />

@@ -51,5 +51,14 @@ namespace Utils.Core.Tests
             expressionInfo.Variable.Should().NotBeNull();
             expressionInfo.Variable.Name.Should().Be("mynum1");
         }
+
+        [Test(Description = "Method with type name ")]
+        public void MethodWithTypeNameShouldGetWithTypeName()
+        {
+            var expressionInfo = Evaluator.Parse("math.add(num1=10,num2=20)");
+            expressionInfo.MethodData.Should().NotBeNull();
+            expressionInfo.MethodData.Name.Should().Be("math.add");
+            expressionInfo.MethodData.Arguments.Should().BeEquivalentTo(new Argument("num1", "10", 1) { IsVariable = false }, new Argument("num2", "20", 2) { IsVariable = false });
+        }
     }
 }
