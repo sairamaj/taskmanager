@@ -39,6 +39,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProblemTasks", "Samples\Pro
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Utils.Core.Tests", "Utils.Core.Tests\Utils.Core.Tests.csproj", "{8320A8FE-4DA7-4E68-A003-93EFB9279B48}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "StackTasks", "StackTasks", "{D8A1472E-207F-4183-A188-7FFF9EB91963}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JsonExecutorTasks", "StackTasks\JsonExecutorTasks\JsonExecutorTasks.csproj", "{3EA82ACF-D3FF-4964-992F-3DB9875AFD36}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -81,6 +85,10 @@ Global
 		{8320A8FE-4DA7-4E68-A003-93EFB9279B48}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8320A8FE-4DA7-4E68-A003-93EFB9279B48}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8320A8FE-4DA7-4E68-A003-93EFB9279B48}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3EA82ACF-D3FF-4964-992F-3DB9875AFD36}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3EA82ACF-D3FF-4964-992F-3DB9875AFD36}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3EA82ACF-D3FF-4964-992F-3DB9875AFD36}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3EA82ACF-D3FF-4964-992F-3DB9875AFD36}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -96,6 +104,7 @@ Global
 		{4BD29541-73C2-4C98-A1FF-CEB4182CC320} = {2FF85C23-5D31-4E49-A6B0-02D96B7D396F}
 		{B22F8748-B1B1-4E8F-8ED3-DB2331F8F320} = {A20CFD42-9A52-43E5-8A94-8431C96DF3C6}
 		{A748ECE8-DB9A-44CF-B299-D6E2344E5D13} = {B22F8748-B1B1-4E8F-8ED3-DB2331F8F320}
+		{3EA82ACF-D3FF-4964-992F-3DB9875AFD36} = {D8A1472E-207F-4183-A188-7FFF9EB91963}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {E3F8B47E-936D-452C-AF12-85A8974A5C54}
