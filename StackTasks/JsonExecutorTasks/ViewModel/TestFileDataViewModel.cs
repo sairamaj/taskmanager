@@ -4,6 +4,8 @@ using System.Collections.ObjectModel;
 using System.IO;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using FluentAssertions.Execution;
+using JsonExecutorTasks.Model;
 using Newtonsoft.Json;
 using Utils.Core;
 using Utils.Core.Command;
@@ -28,13 +30,13 @@ namespace JsonExecutorTasks.ViewModel
             this.TraceMessages = new SafeObservableCollection<string>();
             this.RunTestFileCommand = new DelegateCommand(async () => { await Execute(false); });
             this.RunTestFileWithVerifyCommand = new DelegateCommand(async () => { await Execute(true); });
-            
+            this.TestStatus = TestStatus.None;
         }
 
         public string Name { get; }
         public string Data { get; set; }
         public string ResultsData { get; set; }
-        public bool IsError { get; set; }
+        public TestStatus TestStatus{ get; set; }
         public ICommand RunTestFileCommand { get; }
         public ICommand RunTestFileWithVerifyCommand { get; }
         
@@ -74,7 +76,8 @@ namespace JsonExecutorTasks.ViewModel
             {
                 try
                 {
-                    this.IsError = false;
+                    this.TraceMessages.Clear();
+                    this.TestStatus = TestStatus.Running;
                     var executor = new JsonExecutor(this.Data, this.ConfigJson, TraceAction);
                     if (isVerify)
                     {
@@ -86,16 +89,22 @@ namespace JsonExecutorTasks.ViewModel
                         var output = executor.Execute(this.Variables);
                         this.ResultsData = JsonConvert.SerializeObject(output);
                     }
+                    this.TestStatus = TestStatus.Success;
+                }
+                catch (AssertionFailedException ae)
+                {
+                    this.TestStatus = TestStatus.Error;
+                    this.ResultsData = ae.Message;      // good with message.
                 }
                 catch (Exception e)
                 {
-                    this.IsError = true;
+                    this.TestStatus = TestStatus.Error;
                     this.ResultsData = e.ToString();
                 }
                 finally
                 {
                     OnPropertyChanged(()=> this.ResultsData);
-                    OnPropertyChanged(() => this.IsError);
+                    OnPropertyChanged(() => this.TestStatus);
                 }
             });
         }

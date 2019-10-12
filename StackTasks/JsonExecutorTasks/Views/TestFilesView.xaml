@@ -8,28 +8,75 @@
              d:DesignHeight="450" d:DesignWidth="800">
 
     <UserControl.Resources>
+        <Style x:Key="RunButtonStyles">
+            <Setter Property="Control.IsEnabled" Value="True"/>
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding IsRunning}" Value="True">
+                    <Setter Property="Control.IsEnabled" Value="False"/>
+                </DataTrigger>
+            </Style.Triggers>
+
+        </Style>
+
+        <Style x:Key="ResultsViewStyle">
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding TestStatus}" Value="Error">
+                    <Setter Property="Control.Foreground" Value="Red"/>
+                </DataTrigger>
+                <DataTrigger Binding="{Binding TestStatus}" Value="Success">
+                    <Setter Property="Control.Foreground" Value="Green"/>
+                </DataTrigger>
+                <DataTrigger Binding="{Binding TestStatus}" Value="Running">
+                    <Setter Property="Control.Foreground" Value="Purple"/>
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
         <Style x:Key="DataHeaderStyle" TargetType="{x:Type GridViewColumnHeader}">
             <Setter Property="Visibility" Value="Collapsed" />
         </Style>
     </UserControl.Resources>
-    
+
     <Grid Margin="0,20,0,0">
         <StackPanel>
+            <StackPanel Orientation="Vertical"  HorizontalAlignment="Right" Style="{StaticResource RunButtonStyles}">
+                <StackPanel Orientation="Horizontal">
+                    <Button Content="Select All" Command="{Binding SelectAllCommand}"/>
+                    <Button Content="Select None"  Command="{Binding SelectNoneCommand}" Margin="10,0,0,0"/>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" Margin="0,10,0,0"  HorizontalAlignment="Right">
+                    <Button Content="Run" Command="{Binding RunCommand}"/>
+                    <Button Content="RunVerify" Command="{Binding RunVerifyCommand}" Margin="10,0,0,0"/>
+                </StackPanel>
+            </StackPanel>
             <ListView ItemsSource="{Binding TestFiles}" SelectedItem="{Binding SelectedTestFile}" BorderThickness="0">
                 <ListView.View >
                     <GridView ColumnHeaderContainerStyle="{StaticResource DataHeaderStyle}">
                         <GridViewColumn>
                             <GridViewColumn.CellTemplate>
                                 <DataTemplate>
-                                    <StackPanel Orientation="Horizontal">
+                                    <StackPanel Orientation="Horizontal" Style="{StaticResource ResultsViewStyle}">
                                         <CheckBox IsChecked="{Binding IsEnabled}" />
-                                        <TextBlock  Text="{Binding Name}" Margin="3,0,0,0"/>
+                                        <TextBlock  Text="{Binding Name}" Margin="3,0,0,0" />
                                     </StackPanel>
                                 </DataTemplate>
                             </GridViewColumn.CellTemplate>
                         </GridViewColumn>
                     </GridView>
                 </ListView.View>
+                <ListView.ContextMenu>
+                    <ContextMenu Name="ZoneIformationList" StaysOpen="true" Background="WhiteSmoke">
+                        <ContextMenu.BitmapEffect>
+                            <BitmapEffectGroup/>
+                        </ContextMenu.BitmapEffect>
+                        <MenuItem Header="Run" DataContext="{Binding PlacementTarget.SelectedItem,  RelativeSource={RelativeSource AncestorType=ContextMenu}}"
+                                  Command="{Binding RunCommand}"
+                                  CommandParameter="{Binding}"	/>
+                        <MenuItem Header="RunWithVerify" DataContext="{Binding PlacementTarget.SelectedItem,  RelativeSource={RelativeSource AncestorType=ContextMenu}}"
+                                  Command="{Binding RunVerifyCommand}"
+                                  CommandParameter="{Binding}"							  
+                        />
+                    </ContextMenu>
+                </ListView.ContextMenu>
             </ListView>
         </StackPanel>
     </Grid>
