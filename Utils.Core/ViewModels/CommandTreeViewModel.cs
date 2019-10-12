@@ -31,6 +31,11 @@
         public string Tag { get; set; }
 
         /// <summary>
+        /// Gets or sets data context associated.
+        /// </summary>
+        public object DataContext { get; set; }
+
+        /// <summary>
         /// The clear.
         /// </summary>
         public virtual void Clear()

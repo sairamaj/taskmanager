@@ -19,7 +19,7 @@ namespace Utils.Core.Test
             Console.WriteLine(configJson);
             this._tests = JsonConvert.DeserializeObject<IEnumerable<TestInfo>>(dataJson);
             var config = JsonConvert.DeserializeObject<IEnumerable<TestConfig>>(configJson);
-            _methodProxy = new MethodProxy(config.Select(c => c.TypeName), traceAction);
+            _methodProxy = new MethodProxy(config?.Select(c => c.TypeName), traceAction);
         }
 
         public IDictionary<string, object> Execute(IDictionary<string, object> variables)

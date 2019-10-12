@@ -1,0 +1,24 @@
+[
+  {
+    "Name": "Math.Add",
+    "Api": "math.add",
+    "Parameters": {
+      "num1": 10,
+      "num2": 20
+    },
+    "Expected": {
+      "result": 20
+    }
+  },
+  {
+    "Name": "Math.Sub",
+    "Api": "math.sub",
+    "Parameters": {
+      "num1": 10,
+      "num2": 20
+    },
+    "Expected": {
+      "result": "${math.add(num1=-1,num2=-9)}"
+    }
+  }
+]

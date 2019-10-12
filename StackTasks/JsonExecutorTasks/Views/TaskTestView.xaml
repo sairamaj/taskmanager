@@ -4,6 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:views="clr-namespace:JsonExecutorTasks.Views"
+             xmlns:views1="clr-namespace:Utils.Core.Views;assembly=Utils.Core"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
 
@@ -14,8 +15,10 @@
             <ColumnDefinition />
         </Grid.ColumnDefinitions>
 
-        <views:TestFilesView Grid.Row="0" Grid.Column="0" />
+        <!--<views:TestFilesView Grid.Row="0" Grid.Column="0" />-->
+        <views:TestFilesContainerView Grid.Row="0" Grid.Column="0" x:Name="TestFilesContainerView"/>
         <GridSplitter Grid.Row="0" Grid.Column="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
-        <views:TestView Grid.Row="0" Grid.Column="2" DataContext="{Binding SelectedTestFileDataViewModel}"/>
+        <!--<views:TestView Grid.Row="0" Grid.Column="2" DataContext="{Binding SelectedTestFileDataViewModel}"/>-->
+        <views1:DetailViewContainer Grid.Row="0" Grid.Column="2" x:Name="DetailViewContainer"/>
     </Grid>
 </UserControl>

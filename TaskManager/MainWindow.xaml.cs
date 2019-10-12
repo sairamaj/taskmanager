@@ -1,8 +1,6 @@
 ﻿using System.Windows;
-using TaskManager.Repository;
 using TaskManager.ViewModels;
 using Utils.Core;
-using Utils.Core.ViewModels;
 
 namespace TaskManager
 {

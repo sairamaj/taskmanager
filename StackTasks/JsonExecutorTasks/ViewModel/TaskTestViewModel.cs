@@ -24,31 +24,43 @@ namespace JsonExecutorTasks.ViewModel
             this.TestFiles = new SafeObservableCollection<TestFileViewModel>();
             if (Directory.Exists(testFilesPath))
             {
-                Directory.GetFiles(testFilesPath, "*.json")
-                    .Where(t => !(t.Contains("config.json") || t.Contains("variables.json")))
-                    .Select(t => new TestFileViewModel(t, true, async (testViewModel,verify) =>
-                    {
-                        await Execute(this.TestFileDataViewModels[testViewModel.Name], testViewModel,verify);
-                    })).ToList()
-                    .ForEach(t => this.TestFiles.Add(t));
-                this.TestFileDataViewModels = new Dictionary<string, TestFileDataViewModel>();
-                this.TestFiles.ToList().ForEach(t => this.TestFileDataViewModels.Add(t.Name, new TestFileDataViewModel(t.Name, t.TestFile)));
-                this.SelectedTestFile = this.TestFiles.FirstOrDefault();
+                Load(testFilesPath);
             }
 
             this.SelectAllCommand = new DelegateCommand(() =>
             {
-                this.TestFiles.ToList().ForEach(t => t.IsEnabled = true);
+                this.TestFileContainers.ToList().ForEach(container => container.SelectAll());
             });
 
             this.SelectNoneCommand = new DelegateCommand(() =>
             {
-                this.TestFiles.ToList().ForEach(t => t.IsEnabled = false);
+                this.TestFileContainers.ToList().ForEach(container => container.SelectNone());
             });
 
 
-            this.RunCommand = new DelegateCommand(async () => await Run(false));
+            this.RunCommand = new DelegateCommand(async () =>
+            {
+                await Run(false);
+            });
             this.RunVerifyCommand = new DelegateCommand(async () => await Run(true));
+        }
+
+        private void Load(string rootPath)
+        {
+            this.TestFileContainers = new SafeObservableCollection<TestFileContainerViewModel>();
+            Directory.GetDirectories(rootPath).ToList().ForEach(d=> this.TestFileContainers.Add(new TestFileContainerViewModel(d)));
+                 
+            return;
+            //Directory.GetFiles(rootPath, "*.json")
+            //    .Where(t => !(t.Contains("config.json") || t.Contains("variables.json")))
+            //    .Select(t => new TestFileViewModel(t, true, async (testViewModel, verify) =>
+            //    {
+            //        await Execute(this.TestFileDataViewModels[testViewModel.Name], testViewModel, verify);
+            //    })).ToList()
+            //    .ForEach(t => this.TestFiles.Add(t));
+            //this.TestFileDataViewModels = new Dictionary<string, TestFileDataViewModel>();
+            //this.TestFiles.ToList().ForEach(t => this.TestFileDataViewModels.Add(t.Name, new TestFileDataViewModel(t.Name, t.TestFile)));
+            //this.SelectedTestFile = this.TestFiles.FirstOrDefault();
         }
 
         public ICommand SelectAllCommand { get; set; }
@@ -67,6 +79,8 @@ namespace JsonExecutorTasks.ViewModel
         }
 
         public ObservableCollection<TestFileViewModel> TestFiles { get; set; }
+        public ObservableCollection<TestFileContainerViewModel> TestFileContainers { get; set; }
+        
 
         public TestFileViewModel SelectedTestFile
         {
@@ -82,28 +96,14 @@ namespace JsonExecutorTasks.ViewModel
         public TestFileDataViewModel SelectedTestFileDataViewModel { get; set; }
 
         public IDictionary<string,TestFileDataViewModel> TestFileDataViewModels { get; set; }
-
-        private async Task Execute(TestFileDataViewModel dataViewModel, TestFileViewModel fileViewModel, bool verify)
-        {
-            try
-            {
-                fileViewModel.TestStatus = TestStatus.Running;
-                await dataViewModel.Execute(verify);
-            }
-            finally
-            {
-                fileViewModel.TestStatus = dataViewModel.TestStatus;
-            }
-        }
-
         private async Task Run(bool verify)
         {
             try
             {
                 this.IsRunning = true;
-                foreach (var viewModel in this.TestFiles.Where(t => t.IsEnabled))
+                foreach (var viewModel in this.TestFileContainers)
                 {
-                    await Execute(this.TestFileDataViewModels[viewModel.Name], viewModel, verify);
+                    await viewModel.RunAsync(verify);
                 }
             }
             finally

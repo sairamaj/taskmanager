@@ -12,24 +12,36 @@ namespace Utils.Core.Test
         public MethodProxy(IEnumerable<string> typeInfo, Action<string> traceInfo)
         {
             _traceInfo = traceInfo ?? throw new ArgumentNullException(nameof(traceInfo));
-            var methods = typeInfo.SelectMany(info =>
+            IEnumerable<MethodInfo> methods;
+            if (typeInfo == null)
             {
-                var parts = info.Split(',');
-                if (parts.Length < 2)
+                // load the current assembly
+                methods = AppDomain.CurrentDomain.GetAssemblies()
+                    .Where(a => !(a.FullName.Contains("System") || a.FullName.Contains("mscorlib")))
+                    .SelectMany(a => a.GetTypes()).SelectMany(t => t.GetMethods(BindingFlags.Static | BindingFlags.Public));
+            }
+            else
+            {
+                methods = typeInfo.SelectMany(info =>
                 {
-                    // load the current assembly
-                    return AppDomain.CurrentDomain.GetAssemblies()
-                        .Where(a=> !( a.FullName.Contains("System") || a.FullName.Contains("mscorlib")) )
-                        .SelectMany(a=> a.GetTypes()).SelectMany(t => t.GetMethods(BindingFlags.Static | BindingFlags.Public));
-                }
-                else
-                {
-                    var asm = Assembly.Load(parts[1]);
-                    return asm.GetTypes()
-                        .Where(t => t.FullName == parts[0])
-                        .SelectMany(t => t.GetMethods(BindingFlags.Static | BindingFlags.Public));
-                }
-            }).ToList();
+                    var parts = info.Split(',');
+                    if (parts.Length < 2)
+                    {
+                        // load the current assembly
+                        return AppDomain.CurrentDomain.GetAssemblies()
+                            .Where(a => !(a.FullName.Contains("System") || a.FullName.Contains("mscorlib")))
+                            .SelectMany(a => a.GetTypes())
+                            .SelectMany(t => t.GetMethods(BindingFlags.Static | BindingFlags.Public));
+                    }
+                    else
+                    {
+                        var asm = Assembly.Load(parts[1]);
+                        return asm.GetTypes()
+                            .Where(t => t.FullName == parts[0])
+                            .SelectMany(t => t.GetMethods(BindingFlags.Static | BindingFlags.Public));
+                    }
+                }).ToList();
+            }
 
             _methods = new Dictionary<string, MethodInfo>(StringComparer.InvariantCultureIgnoreCase);
             foreach (var m in methods.OrderBy(m => m.Name))

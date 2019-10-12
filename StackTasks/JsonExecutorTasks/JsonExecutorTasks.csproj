@@ -58,10 +58,14 @@
     <Compile Include="Model\TestStatus.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ViewModel\TaskTestViewModel.cs" />
+    <Compile Include="ViewModel\TestFileContainerViewModel.cs" />
     <Compile Include="ViewModel\TestFileDataViewModel.cs" />
     <Compile Include="ViewModel\TestFileViewModel.cs" />
     <Compile Include="Views\TaskTestView.xaml.cs">
       <DependentUpon>TaskTestView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\TestFilesContainerView.xaml.cs">
+      <DependentUpon>TestFilesContainerView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\TestFilesView.xaml.cs">
       <DependentUpon>TestFilesView.xaml</DependentUpon>
@@ -81,6 +85,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Views\TestFilesContainerView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\TestFilesView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -92,22 +100,31 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
-    <None Include="TestFiles\MathAddWithVariablesTest.json">
+    <None Include="TestFiles\ErrorTestCases\config.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="TestFiles\MethodReturnStringArrayDictionary.json">
+    <None Include="TestFiles\ErrorTestCases\MathAddFail.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="TestFiles\StringTest.json">
+    <None Include="TestFiles\ErrorTestCases\variables.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="TestFiles\MathAddTest.json">
+    <None Include="TestFiles\SuccessTestCases\MathAddWithVariablesTest.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="TestFiles\config.json">
+    <None Include="TestFiles\SuccessTestCases\MethodReturnStringArrayDictionary.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="TestFiles\variables.json">
+    <None Include="TestFiles\SuccessTestCases\StringTest.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestFiles\SuccessTestCases\MathAddTest.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestFiles\SuccessTestCases\config.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestFiles\SuccessTestCases\variables.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>
