@@ -115,6 +115,9 @@
     <None Include="TestFiles\SuccessTestCases\MethodReturnStringArrayDictionary.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Include="TestFiles\SuccessTestCases\MethodTakingArrayOfInt.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="TestFiles\SuccessTestCases\StringTest.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>

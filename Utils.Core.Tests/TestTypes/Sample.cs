@@ -1,7 +1,22 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using Newtonsoft.Json;
 
 namespace Utils.Core.Tests.TestTypes
 {
+    public class Person
+    {
+        [JsonConstructor]
+        public Person(string name, int age)
+        {
+            Name = name;
+            Age = age;
+        }
+
+        public string Name { get; }
+        public int Age { get; }
+
+    }
     public static class Sample
     {
         public static IDictionary<string,object> GetInfo()
@@ -22,7 +37,22 @@ namespace Utils.Core.Tests.TestTypes
                 {"val1", new string[]{"item1_1","item1_2"} },
                 {"val2", new string[]{"item2_1","item2_2"} },
             };
+        }
 
+        public static int GetGuidLength(Guid val)
+        {
+            return val.ToString().Length;
+        }
+
+        public static string ProcessPersons(Guid id, IEnumerable<Person> persons)
+        {
+            var ret = string.Empty;
+            foreach (var p in persons)
+            {
+                ret += $"{p.Name}-{p.Age}-";
+            }
+
+            return ret.TrimEnd('-');
         }
 
     }

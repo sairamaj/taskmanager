@@ -155,6 +155,7 @@
     <Compile Include="Test\JsonExecutor.cs" />
     <Compile Include="Test\MethodProxy.cs" />
     <Compile Include="Test\ResultsType.cs" />
+    <Compile Include="Test\BuiltinHelperType.cs" />
     <Compile Include="Test\TestConfig.cs" />
     <Compile Include="Test\TestInfo.cs" />
     <Compile Include="TokenClient2.cs" />

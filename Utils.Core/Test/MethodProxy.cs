@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using Newtonsoft.Json;
 
 namespace Utils.Core.Test
 {
@@ -43,6 +44,7 @@ namespace Utils.Core.Test
                 }).ToList();
             }
 
+            methods = methods.Union(typeof(BuiltinHelperType).GetMethods());
             _methods = new Dictionary<string, MethodInfo>(StringComparer.InvariantCultureIgnoreCase);
             foreach (var m in methods.OrderBy(m => m.Name))
             {
@@ -63,15 +65,30 @@ namespace Utils.Core.Test
                 throw new Exception($"Method {name} not found.");
             }
 
+            var argIndex = 0;
             var methodInputs = foundMethod.GetParameters().Select(p =>
             {
-                if (parameters.ContainsKey(p.Name))
+                argIndex++;
+                object val = null;
+                if (!parameters.TryGetValue(p.Name, out val))           // try named parameter
                 {
-                    parameters[p.Name] = Convert.ChangeType(parameters[p.Name], p.ParameterType);
-                    return parameters[p.Name];
+                    if (!parameters.TryGetValue($"arg{argIndex}", out val))  // try positional parameter
+                    {
+                        return null;
+                    }
                 }
 
-                return null;
+                if (p.ParameterType.IsPrimitive || p.ParameterType == typeof(string))
+                {
+                    parameters[p.Name] = Convert.ChangeType(val, p.ParameterType);
+                    return parameters[p.Name];
+                }
+                if (p.ParameterType == typeof(Guid))
+                {
+                    return Guid.Parse(val?.ToString());
+                }
+
+                return JsonConvert.DeserializeObject(parameters[p.Name]?.ToString(), p.ParameterType);
             }).ToArray();
 
             try

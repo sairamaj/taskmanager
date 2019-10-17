@@ -108,6 +108,27 @@ namespace Utils.Core.Tests
             verify.Should().Throw<AssertionException>().WithMessage("Expected actual to be 130L because Math.Add result did fail, but found 30.");
         }
 
+        [Test(Description = "Method taking IEnumerable<int>")]
+        public void WithEnumOfInts()
+        {
+            var tester = new JsonExecutor(ReadTestFile("MethodTakingArrayOfInt.json"), ReadTestFile("config.json"), msg => { });
+            tester.ExecuteAndVerify(new Dictionary<string, object>() { });
+        }
+
+        [Test(Description = "Method taking Guid")]
+        public void WithGuidAsInput()
+        {
+            var tester = new JsonExecutor(ReadTestFile("MethodTakingGuid.json"), ReadTestFile("config.json"), msg => { });
+            tester.ExecuteAndVerify(new Dictionary<string, object>() { });
+        }
+
+        [Test(Description = "Method IEnumerable<Person>")]
+        public void WithTypeCollections()
+        {
+            var tester = new JsonExecutor(ReadTestFile("MethodTakingPersonCollections.json"), ReadTestFile("config.json"), msg => { });
+            tester.ExecuteAndVerify(new Dictionary<string, object>() { });
+        }
+
         private string ReadTestFile(string fileName)
         {
             return 

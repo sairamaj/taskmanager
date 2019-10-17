@@ -1,0 +1,12 @@
+[
+  {
+    "Name": "Sample.GetGuidLength",
+    "Api": "Sample.GetGuidLength",
+    "Parameters": {
+      "val": "5A88CDDC-64A2-4749-9491-EDC7FD9B453D"
+    },
+    "Expected": {
+      "result": 36
+    }
+  }
+]

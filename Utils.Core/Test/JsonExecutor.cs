@@ -52,7 +52,7 @@ namespace Utils.Core.Test
                     var evaluatedExpectedValues = EvaluateParameters(test.GetExpectedResults(), variables);
                     Console.WriteLine("===========================");
                     // Verify dictionary.
-                    results.Should().BeEquivalentTo(evaluatedExpectedValues);
+                    results.Should().BeEquivalentTo(evaluatedExpectedValues,test.Name);
                 }
             }
         }
@@ -64,6 +64,15 @@ namespace Utils.Core.Test
             if (output.GetType().IsPrimitive)
             {
                 resultsType = ResultsType.Primitive;
+                return new Dictionary<string, object>
+                {
+                    {"result", output}
+                };
+            }
+
+            if (output is string)
+            {
+                resultsType = ResultsType.String;
                 return new Dictionary<string, object>
                 {
                     {"result", output}
