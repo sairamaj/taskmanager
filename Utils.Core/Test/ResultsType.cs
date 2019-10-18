@@ -4,6 +4,8 @@
     {
         Primitive,
         String,
-        Dictionary
+        Void,
+        Dictionary,
+        Object
     }
 }

@@ -47,12 +47,29 @@ namespace Utils.Core.Test
                     var result = results.First().Value;
                     Verify(test, () => result, finalExpectedValue.Value);
                 }
-                else 
+                else if (resultsType == ResultsType.Void)
+                {
+                    // Nothing to verify.
+                }
+                else if (resultsType == ResultsType.Object)
                 {
                     var evaluatedExpectedValues = EvaluateParameters(test.GetExpectedResults(), variables);
+                    if (evaluatedExpectedValues.Any())
+                    {
+                        var returnObject = results.First().Value;
+                        var expectedObjectJson = JsonConvert.SerializeObject(evaluatedExpectedValues.First().Value);
+                        Console.WriteLine(expectedObjectJson);
+                        var expectedObject = JsonConvert.DeserializeObject(expectedObjectJson?.ToString(), returnObject.GetType());
+                        // Verify dictionary.
+                        returnObject.Should().BeEquivalentTo(expectedObject, test.Name);
+                    }
+                }
+                else
+                {
+                    var evaluatedExpectedValues = EvaluateParameters(test.GetExpectedResults(true), variables);
                     Console.WriteLine("===========================");
                     // Verify dictionary.
-                    results.Should().BeEquivalentTo(evaluatedExpectedValues,test.Name);
+                    results.Should().BeEquivalentTo(evaluatedExpectedValues, test.Name);
                 }
             }
         }
@@ -61,6 +78,12 @@ namespace Utils.Core.Test
         {
             var newParameters = EvaluateParameters(test.Parameters, variables);
             var output = this._methodProxy.Execute(test.Api, newParameters);
+            if (output == null)
+            {
+                resultsType = ResultsType.Void;
+                return new Dictionary<string, object>();
+            }
+
             if (output.GetType().IsPrimitive)
             {
                 resultsType = ResultsType.Primitive;
@@ -84,6 +107,12 @@ namespace Utils.Core.Test
                 resultsType = ResultsType.Dictionary;
                 return output as IDictionary<string, object>;
             }
+
+            resultsType = ResultsType.Object;
+            return new Dictionary<string, object>
+            {
+                {"result", output}
+            };
 
             throw new NotSupportedException($"{test.Api} returning {output.GetType()} is not supported for ");
 

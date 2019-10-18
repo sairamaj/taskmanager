@@ -55,5 +55,14 @@ namespace Utils.Core.Tests.TestTypes
             return ret.TrimEnd('-');
         }
 
+        public static IEnumerable<Person> GetPersons(Guid id)
+        {
+            return new Person[]
+            {
+                new Person("person1", 10),
+                new Person("person2", 20),
+            };
+        }
+
     }
 }

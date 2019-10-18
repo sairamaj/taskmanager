@@ -111,6 +111,12 @@ namespace Utils.Core.Test
                     throw te.InnerException;
                 }
 
+                if (te.InnerException is NullReferenceException exception)
+                {
+                    // Lets get the call stack here.
+                    throw new Exception(exception.ToString(), exception.InnerException);
+                }
+
                 throw;
             }
 

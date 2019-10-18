@@ -98,11 +98,16 @@ namespace Utils.Core.Test
             }
         }
 
-        public IDictionary<string, object> GetExpectedResults()
+        public IDictionary<string, object> GetExpectedResults(bool convertJArray = false)
         {
             if (this.Expected == null || this.Expected.Values == null)
             {
                 return new Dictionary<string, object>();
+            }
+
+            if (!convertJArray)
+            {
+                return this.Expected;
             }
 
             return this.Expected.ToDictionary(

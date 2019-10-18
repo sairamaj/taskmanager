@@ -129,6 +129,15 @@ namespace Utils.Core.Tests
             tester.ExecuteAndVerify(new Dictionary<string, object>() { });
         }
 
+
+        [Test(Description = "Method returning IEnumerable<Person>")]
+        public void WithTypeReturningCollections()
+        {
+            var tester = new JsonExecutor(ReadTestFile("MethodReturningPersonCollections.json"), ReadTestFile("config.json"), msg => { });
+            tester.ExecuteAndVerify(new Dictionary<string, object>() { });
+        }
+
+        
         private string ReadTestFile(string fileName)
         {
             return 
