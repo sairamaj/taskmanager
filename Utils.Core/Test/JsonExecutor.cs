@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 using FluentAssertions;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using Utils.Core.Expressions;
 
 namespace Utils.Core.Test
@@ -57,6 +59,8 @@ namespace Utils.Core.Test
                     if (evaluatedExpectedValues.Any())
                     {
                         var returnObject = results.First().Value;
+                        var output = JsonConvert.SerializeObject(returnObject, Formatting.Indented);
+                        File.WriteAllText(@"c:\temp\test.json",output);
                         var expectedObjectJson = JsonConvert.SerializeObject(evaluatedExpectedValues.First().Value);
                         Console.WriteLine(expectedObjectJson);
                         var expectedObject = JsonConvert.DeserializeObject(expectedObjectJson?.ToString(), returnObject.GetType());
@@ -145,6 +149,12 @@ namespace Utils.Core.Test
                     continue;
                 }
 
+                if (parameter.Value is JArray array)
+                {
+                    newParameterValues[parameter.Key] = ProcessJArray(array, variables);
+                    continue;
+                }
+
                 var value = parameter.Value;
                 if (TryExpression(value?.ToString(), out var expression2))
                 {
@@ -155,6 +165,47 @@ namespace Utils.Core.Test
             }
 
             return newParameterValues;
+        }
+
+        private JArray ProcessJArray(JArray array, IDictionary<string, object> variables)
+        {
+            JArray newArray = new JArray();
+            foreach (var token in array)
+            {
+                var modifiedToken = ProcessJToken(token, variables);
+                newArray.Add(modifiedToken);
+            }
+
+            return newArray;
+        }
+
+        private JToken ProcessJToken(JToken token, IDictionary<string, object> variables)
+        {
+            if (!token.Children().Any())
+            {
+                return token;
+            }
+
+            var newToken = new JObject();
+            foreach (var childToken in token.Children())
+            {
+                if( childToken is JProperty property)
+                {
+                    if (TryExpression(property.Value?.ToString(), out var expression))
+                    {
+                        newToken.Add(new JProperty(property.Name, Evaluate(expression, variables)?.ToString()));
+                    }
+                    else
+                    {
+                        newToken.Add(property);
+                    }
+                }
+                else
+                {
+                    newToken.Add(childToken);
+                }
+            }
+            return newToken;
         }
 
         private object Evaluate(string expression, IDictionary<string, object> variables)

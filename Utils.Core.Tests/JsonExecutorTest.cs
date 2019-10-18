@@ -129,7 +129,6 @@ namespace Utils.Core.Tests
             tester.ExecuteAndVerify(new Dictionary<string, object>() { });
         }
 
-
         [Test(Description = "Method returning IEnumerable<Person>")]
         public void WithTypeReturningCollections()
         {
@@ -137,7 +136,13 @@ namespace Utils.Core.Tests
             tester.ExecuteAndVerify(new Dictionary<string, object>() { });
         }
 
-        
+        [Test(Description = "Method returning IEnumerable<Person> Having Functions")]
+        public void WithTypeReturningCollectionsHavingFunctions()
+        {
+            var tester = new JsonExecutor(ReadTestFile("MethodReturningPersonCollectionsHavingFunctions.json"), ReadTestFile("config.json"), msg => { });
+            tester.ExecuteAndVerify(new Dictionary<string, object>() { });
+        }
+
         private string ReadTestFile(string fileName)
         {
             return 
