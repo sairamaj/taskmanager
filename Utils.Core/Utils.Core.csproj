@@ -104,6 +104,7 @@
     <Reference Include="System.Runtime.CompilerServices.Unsafe, Version=4.0.4.1, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Runtime.CompilerServices.Unsafe.4.5.2\lib\netstandard2.0\System.Runtime.CompilerServices.Unsafe.dll</HintPath>
     </Reference>
+    <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.ServiceModel" />
     <Reference Include="System.Text.Encoding.CodePages, Version=4.1.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Text.Encoding.CodePages.4.5.1\lib\net461\System.Text.Encoding.CodePages.dll</HintPath>
@@ -139,6 +140,7 @@
     <Compile Include="Extensions\ExceptionExtension.cs" />
     <Compile Include="Extensions\HttpRequestMessageExtension.cs" />
     <Compile Include="Extensions\HttpResponseMessageExtension.cs" />
+    <Compile Include="Extensions\ObjectExtensions.cs" />
     <Compile Include="ICommandTreeItemViewMapper.cs" />
     <Compile Include="Diagnostics\ILogger.cs" />
     <Compile Include="ITokenClient.cs" />
@@ -152,12 +154,14 @@
     <Compile Include="Registration\ServiceLocator.cs" />
     <Compile Include="SafeObservableCollection.cs" />
     <Compile Include="ServiceLocatorFactory.cs" />
+    <Compile Include="Test\ExecuteTraceInfo.cs" />
     <Compile Include="Test\JsonExecutor.cs" />
     <Compile Include="Test\MethodProxy.cs" />
     <Compile Include="Test\ResultsType.cs" />
     <Compile Include="Test\BuiltinHelperType.cs" />
     <Compile Include="Test\TestConfig.cs" />
     <Compile Include="Test\TestInfo.cs" />
+    <Compile Include="Test\TraceType.cs" />
     <Compile Include="TokenClient2.cs" />
     <Compile Include="ViewModels\ChildChangedEventArgs.cs" />
     <Compile Include="ViewModels\CommandTreeViewModel.cs" />
@@ -168,6 +172,8 @@
     <Compile Include="ViewModels\LogViewModel.cs" />
     <Compile Include="ViewModels\NameValueTreeViewModel.cs" />
     <Compile Include="ViewModels\NameValueViewModel.cs" />
+    <Compile Include="ViewModels\ObjectContainerViewModel.cs" />
+    <Compile Include="ViewModels\ObjectTreeViewModel.cs" />
     <Compile Include="ViewModels\TreeViewItemViewModel.cs" />
     <Compile Include="ViewModels\ViewModelEventArgs.cs" />
     <Compile Include="ViewModels\WorkInProgressCommandTreeViewModel.cs" />

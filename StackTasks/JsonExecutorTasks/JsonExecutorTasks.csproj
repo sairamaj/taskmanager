@@ -57,10 +57,12 @@
     <Compile Include="Code\Sample.cs" />
     <Compile Include="Model\TestStatus.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ViewModel\MethodInputViewModel.cs" />
     <Compile Include="ViewModel\TaskTestViewModel.cs" />
     <Compile Include="ViewModel\TestFileContainerViewModel.cs" />
     <Compile Include="ViewModel\TestFileDataViewModel.cs" />
     <Compile Include="ViewModel\TestFileViewModel.cs" />
+    <Compile Include="ViewModel\MethodTreeViewModel.cs" />
     <Compile Include="Views\TaskTestView.xaml.cs">
       <DependentUpon>TaskTestView.xaml</DependentUpon>
     </Compile>
@@ -72,6 +74,9 @@
     </Compile>
     <Compile Include="Views\TestView.xaml.cs">
       <DependentUpon>TestView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\TraceView.xaml.cs">
+      <DependentUpon>TraceView.xaml</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup>
@@ -97,6 +102,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Views\TraceView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
@@ -116,6 +125,9 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="TestFiles\SuccessTestCases\MethodTakingArrayOfInt.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestFiles\SuccessTestCases\MethodTakingPersonCollections.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="TestFiles\SuccessTestCases\StringTest.json">

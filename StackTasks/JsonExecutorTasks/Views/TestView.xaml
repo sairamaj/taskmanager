@@ -21,9 +21,7 @@
             </Style.Triggers>
         </Style>
 
-        <Style x:Key="DataHeaderStyle" TargetType="{x:Type GridViewColumnHeader}">
-            <Setter Property="Visibility" Value="Collapsed" />
-        </Style>
+
 
     </UserControl.Resources>
     <Grid>
@@ -43,21 +41,7 @@
             </Grid.RowDefinitions>
             <TextBox Grid.Row="0" Grid.Column="0" Text="{Binding ResultsData}" TextWrapping="Wrap" AcceptsReturn="True" Style="{StaticResource ResultsViewStyle}"/>
             <GridSplitter Grid.Row="1" Grid.Column="0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" />
-            <ListView Grid.Row="2" Grid.Column="0" ItemsSource="{Binding TraceMessages}">
-                <ListView.View >
-                    <GridView ColumnHeaderContainerStyle="{StaticResource DataHeaderStyle}">
-                        <GridViewColumn>
-                            <GridViewColumn.CellTemplate>
-                                <DataTemplate>
-                                    <StackPanel Orientation="Horizontal">
-                                        <TextBlock  Text="{Binding}"/>
-                                    </StackPanel>
-                                </DataTemplate>
-                            </GridViewColumn.CellTemplate>
-                        </GridViewColumn>
-                    </GridView>
-                </ListView.View>
-            </ListView>
+            <local:TraceView Grid.Row="2" Grid.Column="0" />
         </Grid>
     </Grid>
 </UserControl>

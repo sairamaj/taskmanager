@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.Windows.Input;
 using FluentAssertions.Execution;
 using JsonExecutorTasks.Model;
+using JsonExecutorTasks.Views;
 using Newtonsoft.Json;
 using Utils.Core;
 using Utils.Core.Command;
@@ -27,7 +28,7 @@ namespace JsonExecutorTasks.ViewModel
             {
                 this.Data = File.ReadAllText(fileName);
             }
-            this.TraceMessages = new SafeObservableCollection<string>();
+            this.TraceMessages = new SafeObservableCollection<TreeViewItemViewModel>();
             this.RunTestFileCommand = new DelegateCommand(async () => { await Execute(false); });
             this.RunTestFileWithVerifyCommand = new DelegateCommand(async () => { await Execute(true); });
             this.TestStatus = TestStatus.None;
@@ -40,7 +41,7 @@ namespace JsonExecutorTasks.ViewModel
         public ICommand RunTestFileCommand { get; }
         public ICommand RunTestFileWithVerifyCommand { get; }
         
-        public ObservableCollection<string> TraceMessages { get;  }
+        public ObservableCollection<TreeViewItemViewModel> TraceMessages { get;  }
 
         public string ConfigJson
         {
@@ -109,9 +110,9 @@ namespace JsonExecutorTasks.ViewModel
             });
         }
 
-        private void TraceAction(string message)
+        private void TraceAction(ExecuteTraceInfo traceInfo)
         {
-            ExecuteAsync(() => { this.TraceMessages.Add(message); });
+            ExecuteAsync(() => { this.TraceMessages.Add(new MethodTreeViewModel(traceInfo)); });
         }
     }
 }

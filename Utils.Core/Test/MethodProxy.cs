@@ -6,11 +6,11 @@ using Newtonsoft.Json;
 
 namespace Utils.Core.Test
 {
-    class MethodProxy
+    internal class MethodProxy
     {
-        private readonly Action<string> _traceInfo;
+        private readonly Action<ExecuteTraceInfo> _traceInfo;
         private readonly IDictionary<string, MethodInfo> _methods;
-        public MethodProxy(IEnumerable<string> typeInfo, Action<string> traceInfo)
+        public MethodProxy(IEnumerable<string> typeInfo, Action<ExecuteTraceInfo> traceInfo)
         {
             _traceInfo = traceInfo ?? throw new ArgumentNullException(nameof(traceInfo));
             IEnumerable<MethodInfo> methods;
@@ -34,13 +34,11 @@ namespace Utils.Core.Test
                             .SelectMany(a => a.GetTypes())
                             .SelectMany(t => t.GetMethods(BindingFlags.Static | BindingFlags.Public));
                     }
-                    else
-                    {
-                        var asm = Assembly.Load(parts[1]);
-                        return asm.GetTypes()
-                            .Where(t => t.FullName == parts[0])
-                            .SelectMany(t => t.GetMethods(BindingFlags.Static | BindingFlags.Public));
-                    }
+
+                    var asm = Assembly.Load(parts[1]);
+                    return asm.GetTypes()
+                        .Where(t => t.FullName == parts[0])
+                        .SelectMany(t => t.GetMethods(BindingFlags.Static | BindingFlags.Public));
                 }).ToList();
             }
 
@@ -91,35 +89,43 @@ namespace Utils.Core.Test
                 return JsonConvert.DeserializeObject(parameters[p.Name]?.ToString(), p.ParameterType);
             }).ToArray();
 
+            object returnValue = null;
+            Exception methodException = null;
+            IDictionary<string, object> inputs = null;
             try
             {
                 var index = 0;
-                var traceMessage = $"{foundMethod.Name} ";
-                foreach (var p in foundMethod.GetParameters())
-                {
-                    traceMessage += $"\t{p.Name} {methodInputs[index]} ";
-                    index++;
-                }
+                inputs = foundMethod.GetParameters().ToDictionary(p => p.Name, p => methodInputs[index++]);
+                returnValue = foundMethod.Invoke(null, methodInputs);
 
-                _traceInfo(traceMessage);
-                return foundMethod.Invoke(null, methodInputs);
+                return returnValue;
             }
             catch (TargetInvocationException te)
             {
                 if (te.InnerException != null)
                 {
-                    throw te.InnerException;
-                }
+                    methodException = te.InnerException;
+                    if (te.InnerException is NullReferenceException exception)
+                    {
+                        // Lets get the call stack here.
+                        throw new Exception(exception.ToString(), exception.InnerException);
+                    }
 
-                if (te.InnerException is NullReferenceException exception)
-                {
-                    // Lets get the call stack here.
-                    throw new Exception(exception.ToString(), exception.InnerException);
+                    throw te.InnerException;
                 }
 
                 throw;
             }
-
+            finally
+            {
+                _traceInfo(new ExecuteTraceInfo(TraceType.MethodFinsihed)
+                {
+                    MethodName = foundMethod.Name,
+                    MethodReturnValue = returnValue,
+                    MethodParameters = inputs,
+                    MethodException = methodException
+                });
+            }
         }
     }
 }

@@ -16,7 +16,7 @@ namespace Utils.Core.Test
         private readonly IEnumerable<TestInfo> _tests;
         private readonly MethodProxy _methodProxy;
 
-        public JsonExecutor(string dataJson, string configJson, Action<string> traceAction)
+        public JsonExecutor(string dataJson, string configJson, Action<ExecuteTraceInfo> traceAction)
         {
             Console.WriteLine(configJson);
             this._tests = JsonConvert.DeserializeObject<IEnumerable<TestInfo>>(dataJson);

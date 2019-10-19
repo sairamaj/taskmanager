@@ -1,5 +1,14 @@
 [
   {
     "TypeName": "JsonExecutorTasks.Code.Math"
+  },
+  {
+    "TypeName": "Utils.Core.Tests.TestTypes.Math,Utils.Core.Tests"
+  },
+  {
+    "TypeName": "Utils.Core.Tests.TestTypes.Sample,Utils.Core.Tests"
+  },
+  {
+    "TypeName": "Utils.Core.Tests.TestTypes.Utilities,Utils.Core.Tests"
   }
 ]
