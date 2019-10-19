@@ -12,11 +12,13 @@ namespace Utils.Core.Test
 {
     public class JsonExecutor
     {
+        private readonly Action<ExecuteTraceInfo> _traceAction;
         private readonly IEnumerable<TestInfo> _tests;
         private readonly MethodProxy _methodProxy;
 
         public JsonExecutor(string dataJson, string configJson, Action<ExecuteTraceInfo> traceAction)
         {
+            _traceAction = traceAction;
             this._tests = JsonConvert.DeserializeObject<IEnumerable<TestInfo>>(dataJson);
             var config = JsonConvert.DeserializeObject<IEnumerable<TestConfig>>(configJson);
             _methodProxy = new MethodProxy(config?.Select(c => c.TypeName), traceAction);
@@ -64,6 +66,7 @@ namespace Utils.Core.Test
                         var returnType = results["resultType"];
                         var expectedObject = JsonConvert.DeserializeObject(expectedObjectJson?.ToString(), returnType as Type);
                         // Verify dictionary.
+                        SendVerificationTraceInfo(test, returnObject, expectedObject);
                         returnObject.Should().BeEquivalentTo(expectedObject, test.Name);
                     }
                 }
@@ -73,6 +76,7 @@ namespace Utils.Core.Test
                     Console.WriteLine("===========================");
                     // Verify dictionary.
                     results.Remove("resultType");
+                    SendVerificationTraceInfo(test, results, evaluatedExpectedValues);
                     results.Should().BeEquivalentTo(evaluatedExpectedValues, test.Name);
                 }
             }
@@ -283,8 +287,8 @@ namespace Utils.Core.Test
                 return;
             }
 
+            SendVerificationTraceInfo(test, actual, expectedValue);
             var propertyName = body.Member.Name;
-
             if (actual != null && actual.GetType().IsArray)
             {
                 actual.Should().BeEquivalentTo(expectedValue, $"{test.Name} {propertyName} did fail");
@@ -310,6 +314,16 @@ namespace Utils.Core.Test
             }
 
             return false;
+        }
+
+        private void SendVerificationTraceInfo(TestInfo testInfo, object actual, object expected)
+        {
+            this._traceAction(new ExecuteTraceInfo(TraceType.Verification)
+            {
+                Actual = actual,
+                TestInfo = testInfo,
+                Expected = expected
+            });
         }
     }
 }

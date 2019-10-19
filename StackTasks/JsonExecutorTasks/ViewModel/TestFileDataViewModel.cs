@@ -114,7 +114,14 @@ namespace JsonExecutorTasks.ViewModel
         {
             ExecuteAsync(() =>
             {
-                this.TraceMessages.Add(new MethodTreeViewModel(traceInfo));
+                if (traceInfo.TraceType == TraceType.Verification)
+                {
+                    this.TraceMessages.Add(new VerificationViewModel(traceInfo));
+                }
+                else
+                {
+                    this.TraceMessages.Add(new MethodViewTreeViewModel(traceInfo));
+                }
             });
         }
     }

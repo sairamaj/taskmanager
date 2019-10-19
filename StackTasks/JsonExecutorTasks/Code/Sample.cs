@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace JsonExecutorTasks.Code
 {
@@ -28,6 +29,23 @@ namespace JsonExecutorTasks.Code
                 {"val1", new string[]{"item1_1","item1_2"} },
                 {"val2", new string[]{"item2_1","item2_2"} },
             };
+        }
+
+        public static string ProcessPersons(Guid id, IEnumerable<Person> persons)
+        {
+            var ret = string.Empty;
+            foreach (var p in persons)
+            {
+                ret += $"{p.Name}-{p.Age}-";
+            }
+
+            return ret.TrimEnd('-');
+        }
+
+
+        public static IEnumerable<Person> GetNullPersons(Guid id)
+        {
+            return null;
         }
 
         public static Person GetNullObject()

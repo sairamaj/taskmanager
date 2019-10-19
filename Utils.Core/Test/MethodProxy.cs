@@ -121,7 +121,7 @@ namespace Utils.Core.Test
             }
             finally
             {
-                _traceInfo(new ExecuteTraceInfo(TraceType.MethodFinsihed)
+                _traceInfo(new ExecuteTraceInfo(TraceType.MethodFinished)
                 {
                     MethodName = foundMethod.Name,
                     MethodReturnValue = returnValue,

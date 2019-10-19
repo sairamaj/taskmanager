@@ -15,7 +15,7 @@
     </UserControl.Resources>
     <TreeView ItemsSource="{Binding TraceMessages}">
         <TreeView.Resources>
-            <HierarchicalDataTemplate DataType="{x:Type viewModel:MethodTreeViewModel}"  ItemsSource="{Binding Children}">
+            <HierarchicalDataTemplate DataType="{x:Type viewModel:MethodViewTreeViewModel}"  ItemsSource="{Binding Children}">
                 <StackPanel Orientation="Horizontal">
                     <TextBlock Text="{Binding Name}" Margin="3,0,0,0" FontWeight="Bold"/>
                 </StackPanel>
@@ -62,6 +62,12 @@
                 <StackPanel Orientation="Horizontal">
                     <TextBlock Text="{Binding Name}"  Foreground="Red"/>
                     <TextBlock Text="{Binding Message}"  Foreground="Red" Margin="3,0,0,0"/>
+                </StackPanel>
+            </HierarchicalDataTemplate>
+
+            <HierarchicalDataTemplate DataType="{x:Type viewModel:VerificationViewModel}"  ItemsSource="{Binding Children}">
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Text="{Binding Name}"  Foreground="BlueViolet"/>
                 </StackPanel>
             </HierarchicalDataTemplate>
 

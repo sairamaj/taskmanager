@@ -166,7 +166,7 @@
     <Compile Include="ViewModels\ChildChangedEventArgs.cs" />
     <Compile Include="ViewModels\CommandTreeViewModel.cs" />
     <Compile Include="ViewModels\CoreViewModel.cs" />
-    <Compile Include="ViewModels\ErrorInfoViewModel - Copy.cs" />
+    <Compile Include="ViewModels\NullObjectViewModel.cs" />
     <Compile Include="ViewModels\ErrorInfoViewModel.cs" />
     <Compile Include="ViewModels\ExceptionTreeViewItemViewModel.cs" />
     <Compile Include="ViewModels\HttpRequestResponseMessageViewModel.cs" />

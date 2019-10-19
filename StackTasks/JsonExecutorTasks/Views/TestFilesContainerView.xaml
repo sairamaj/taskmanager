@@ -67,6 +67,7 @@
             <TreeView.Resources>
                 <HierarchicalDataTemplate DataType="{x:Type viewModel:TestFileContainerViewModel}"  ItemsSource="{Binding Children}">
                     <StackPanel Orientation="Horizontal">
+                        <CheckBox IsChecked="{Binding IsChecked}"/>
                         <TextBlock Text="{Binding Name}"/>
                     </StackPanel>
                 </HierarchicalDataTemplate>

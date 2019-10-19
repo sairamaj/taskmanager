@@ -9,7 +9,7 @@
         mc:Ignorable="d"
         Title="Task Manager" Height="750" Width="1200">
     <DockPanel>
-        <Expander Header="Logs" DockPanel.Dock="Bottom" IsExpanded="True">
+        <Expander Header="Logs" DockPanel.Dock="Bottom" IsExpanded="False">
             <TabControl>
                 <TabItem Header="Messages">
                     <views:LogMessagesView />

@@ -1,11 +1,7 @@
 ﻿using System;
-using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Windows.Input;
-using Utils.Core;
-using Utils.Core.Command;
 using Utils.Core.ViewModels;
 
 namespace JsonExecutorTasks.ViewModel
@@ -23,10 +19,24 @@ namespace JsonExecutorTasks.ViewModel
         public void SelectNone()
         {
             this.Children.OfType<TestFileViewModel>().ToList().ForEach(t => t.IsEnabled = false);
+            OnPropertyChanged(() => this.IsChecked);
         }
         public void SelectAll()
         {
             this.Children.OfType<TestFileViewModel>().ToList().ForEach(t => t.IsEnabled = true);
+            OnPropertyChanged(()=> this.IsChecked);
+        }
+
+        public bool IsChecked
+        {
+            get
+            {
+                return this.Children.OfType<TestFileViewModel>().All(c => c.IsEnabled);
+            }
+            set
+            {
+                this.Children.OfType<TestFileViewModel>().ToList().ForEach(t => t.IsEnabled = value);
+            }
         }
 
         public async Task RunAsync(bool verify)

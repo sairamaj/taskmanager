@@ -4,9 +4,9 @@ using Utils.Core.ViewModels;
 
 namespace JsonExecutorTasks.ViewModel
 {
-    class MethodTreeViewModel : TreeViewItemViewModel
+    class MethodViewTreeViewModel : TreeViewItemViewModel
     {
-        public MethodTreeViewModel(ExecuteTraceInfo executeTrace) : base(null, executeTrace.MethodName, true)
+        public MethodViewTreeViewModel(ExecuteTraceInfo executeTrace) : base(null, executeTrace.MethodName, true)
         {
             ExecuteTrace = executeTrace;
             this.IsExpanded = true;
@@ -25,7 +25,7 @@ namespace JsonExecutorTasks.ViewModel
                 }
                 else
                 {
-                    this.Children.Add(new NullObjectViewModel(this.ExecuteTrace.MethodReturnType));
+                    this.Children.Add(new NullObjectViewModel(this.ExecuteTrace.MethodReturnType?.ToString()));
                 }
                 
             }

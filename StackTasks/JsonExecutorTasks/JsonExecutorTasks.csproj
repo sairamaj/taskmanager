@@ -63,7 +63,8 @@
     <Compile Include="ViewModel\TestFileContainerViewModel.cs" />
     <Compile Include="ViewModel\TestFileDataViewModel.cs" />
     <Compile Include="ViewModel\TestFileViewModel.cs" />
-    <Compile Include="ViewModel\MethodTreeViewModel.cs" />
+    <Compile Include="ViewModel\MethodViewTreeViewModel.cs" />
+    <Compile Include="ViewModel\VerificationViewModel.cs" />
     <Compile Include="Views\TaskTestView.xaml.cs">
       <DependentUpon>TaskTestView.xaml</DependentUpon>
     </Compile>

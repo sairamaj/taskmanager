@@ -2,7 +2,7 @@
 {
     public enum TraceType
     {
-        MethodCalling,
-        MethodFinsihed
+        MethodFinished,
+        Verification,
     }
 }
