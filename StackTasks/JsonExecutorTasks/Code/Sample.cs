@@ -52,5 +52,11 @@ namespace JsonExecutorTasks.Code
         {
             return null;
         }
+
+        public static void GenerateException()
+        {
+            throw new ArgumentNullException($"this is simulated exception");
+        }
+
     }
 }

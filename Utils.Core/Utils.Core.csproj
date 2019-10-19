@@ -155,6 +155,7 @@
     <Compile Include="SafeObservableCollection.cs" />
     <Compile Include="ServiceLocatorFactory.cs" />
     <Compile Include="Test\ExecuteTraceInfo.cs" />
+    <Compile Include="Test\ExpectedExceptionInfo.cs" />
     <Compile Include="Test\JsonExecutor.cs" />
     <Compile Include="Test\MethodProxy.cs" />
     <Compile Include="Test\ResultsType.cs" />

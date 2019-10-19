@@ -68,5 +68,10 @@ namespace Utils.Core.Tests.TestTypes
         {
             return null;
         }
+
+        public static void GenerateException()
+        {
+            throw new ArgumentNullException($"this is simulated exception");
+        }
     }
 }

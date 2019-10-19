@@ -1,0 +1,13 @@
+[
+  {
+    "Name": "ExceptionTest",
+    "Api": "GenerateException",
+    "Parameters": {
+    },
+    "Expected": {
+      "exception": true,
+      "exceptionType": "System.ArgumentNullException",
+      "exceptionMessageLike": "this is simulated exception"
+    }
+  }
+]

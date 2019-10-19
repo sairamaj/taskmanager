@@ -150,7 +150,15 @@ namespace Utils.Core.Tests
             Action expectationsFailed = () => tester.ExecuteAndVerify(new Dictionary<string, object>() { });
             expectationsFailed.Should().Throw<AssertionException>();
         }
-        
+
+        [Test(Description = "Exception validation.")]
+        public void ExceptionTest()
+        {
+            var tester = new JsonExecutor(ReadTestFile("ExpectedExceptionTest.json"), ReadTestFile("config.json"), msg => { });
+            tester.ExecuteAndVerify(new Dictionary<string, object>() { });
+        }
+
+
         private string ReadTestFile(string fileName)
         {
             return 

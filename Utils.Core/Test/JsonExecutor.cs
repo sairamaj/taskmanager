@@ -39,47 +39,71 @@ namespace Utils.Core.Test
         {
             foreach (var test in _tests)
             {
-                var results = ExecuteTest(test, variables, out var resultsType);
-                if (resultsType == ResultsType.Primitive)
+                try
                 {
-                    var finalExpectedValue = EvaluateParameters(new Dictionary<string, object>()
+                    var results = ExecuteTest(test, variables, out var resultsType);
+                    if (resultsType == ResultsType.Primitive)
+                    {
+                        var finalExpectedValue = EvaluateParameters(new Dictionary<string, object>()
                     {
                         {"result", test.ReturnValue}
                     }, variables).First();
-                    var result = results["result"];
-                    Verify(test, () => result, finalExpectedValue.Value);
-                }
-                else if (resultsType == ResultsType.Void)
-                {
-                    // Nothing to verify.
-                }
-                else if (resultsType == ResultsType.Object)
-                {
-                    var evaluatedExpectedValues = EvaluateParameters(test.GetExpectedResults(), variables);
-                    if (evaluatedExpectedValues.Any())
+                        var result = results["result"];
+                        Verify(test, () => result, finalExpectedValue.Value);
+                    }
+                    else if (resultsType == ResultsType.Void)
                     {
-                        var returnObject = results["result"];
-                        var output = JsonConvert.SerializeObject(returnObject, Formatting.Indented);
-                        File.WriteAllText(@"c:\temp\test.json", output);
-                        var expectedObjectJson = JsonConvert.SerializeObject(evaluatedExpectedValues.First().Value);
-                        Console.WriteLine(expectedObjectJson);
-                        var returnType = results["resultType"];
-                        var expectedObject = JsonConvert.DeserializeObject(expectedObjectJson?.ToString(), returnType as Type);
+                        // Nothing to verify.
+                    }
+                    else if (resultsType == ResultsType.Object)
+                    {
+                        var evaluatedExpectedValues = EvaluateParameters(test.GetExpectedResults(), variables);
+                        if (evaluatedExpectedValues.Any())
+                        {
+                            var returnObject = results["result"];
+                            var output = JsonConvert.SerializeObject(returnObject, Formatting.Indented);
+                            File.WriteAllText(@"c:\temp\test.json", output);
+                            var expectedObjectJson = JsonConvert.SerializeObject(evaluatedExpectedValues.First().Value);
+                            Console.WriteLine(expectedObjectJson);
+                            var returnType = results["resultType"];
+                            var expectedObject = JsonConvert.DeserializeObject(expectedObjectJson?.ToString(), returnType as Type);
+                            // Verify dictionary.
+                            SendVerificationTraceInfo(test, returnObject, expectedObject);
+                            returnObject.Should().BeEquivalentTo(expectedObject, test.Name);
+                        }
+                    }
+                    else
+                    {
+                        var evaluatedExpectedValues = EvaluateParameters(test.GetExpectedResults(true), variables);
+                        Console.WriteLine("===========================");
                         // Verify dictionary.
-                        SendVerificationTraceInfo(test, returnObject, expectedObject);
-                        returnObject.Should().BeEquivalentTo(expectedObject, test.Name);
+                        results.Remove("resultType");
+                        SendVerificationTraceInfo(test, results, evaluatedExpectedValues);
+                        results.Should().BeEquivalentTo(evaluatedExpectedValues, test.Name);
                     }
                 }
-                else
+                catch (Exception e)
                 {
-                    var evaluatedExpectedValues = EvaluateParameters(test.GetExpectedResults(true), variables);
-                    Console.WriteLine("===========================");
-                    // Verify dictionary.
-                    results.Remove("resultType");
-                    SendVerificationTraceInfo(test, results, evaluatedExpectedValues);
-                    results.Should().BeEquivalentTo(evaluatedExpectedValues, test.Name);
+                    var expectedObjectJson = JsonConvert.DeserializeObject<ExpectedExceptionInfo>(
+                        JsonConvert.SerializeObject(test.GetExpectedResults()));
+                    Console.WriteLine(expectedObjectJson);
+                    if (expectedObjectJson.Exception)
+                    {
+                        VerifyException(test, expectedObjectJson, e);
+                    }
+                    else
+                    {
+                        throw;
+                    }
                 }
             }
+        }
+
+        private void VerifyException(TestInfo testInfo, ExpectedExceptionInfo expected, Exception exception)
+        {
+            SendVerificationTraceInfo(testInfo, exception, expected);
+            exception.GetType().ToString().Should().Be(expected.ExceptionType);
+            exception.Message.Should().Contain(expected.ExceptionMessageLike);
         }
 
         private IDictionary<string, object> ExecuteTest(TestInfo test, IDictionary<string, object> variables, out ResultsType resultsType)
