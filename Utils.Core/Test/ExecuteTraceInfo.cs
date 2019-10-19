@@ -20,5 +20,6 @@ namespace Utils.Core.Test
         public IDictionary<string,object> MethodParameters { get; set; }
         public object MethodReturnValue { get; set; }
         public Exception MethodException { get; set; }
+        public Type MethodReturnType { get; set; }
     }
 }

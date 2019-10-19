@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Linq.Expressions;
-using System.Reflection;
 using FluentAssertions;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -18,7 +17,6 @@ namespace Utils.Core.Test
 
         public JsonExecutor(string dataJson, string configJson, Action<ExecuteTraceInfo> traceAction)
         {
-            Console.WriteLine(configJson);
             this._tests = JsonConvert.DeserializeObject<IEnumerable<TestInfo>>(dataJson);
             var config = JsonConvert.DeserializeObject<IEnumerable<TestConfig>>(configJson);
             _methodProxy = new MethodProxy(config?.Select(c => c.TypeName), traceAction);
@@ -46,7 +44,7 @@ namespace Utils.Core.Test
                     {
                         {"result", test.ReturnValue}
                     }, variables).First();
-                    var result = results.First().Value;
+                    var result = results["result"];
                     Verify(test, () => result, finalExpectedValue.Value);
                 }
                 else if (resultsType == ResultsType.Void)
@@ -58,12 +56,13 @@ namespace Utils.Core.Test
                     var evaluatedExpectedValues = EvaluateParameters(test.GetExpectedResults(), variables);
                     if (evaluatedExpectedValues.Any())
                     {
-                        var returnObject = results.First().Value;
+                        var returnObject = results["result"];
                         var output = JsonConvert.SerializeObject(returnObject, Formatting.Indented);
-                        File.WriteAllText(@"c:\temp\test.json",output);
+                        File.WriteAllText(@"c:\temp\test.json", output);
                         var expectedObjectJson = JsonConvert.SerializeObject(evaluatedExpectedValues.First().Value);
                         Console.WriteLine(expectedObjectJson);
-                        var expectedObject = JsonConvert.DeserializeObject(expectedObjectJson?.ToString(), returnObject.GetType());
+                        var returnType = results["resultType"];
+                        var expectedObject = JsonConvert.DeserializeObject(expectedObjectJson?.ToString(), returnType as Type);
                         // Verify dictionary.
                         returnObject.Should().BeEquivalentTo(expectedObject, test.Name);
                     }
@@ -73,6 +72,7 @@ namespace Utils.Core.Test
                     var evaluatedExpectedValues = EvaluateParameters(test.GetExpectedResults(true), variables);
                     Console.WriteLine("===========================");
                     // Verify dictionary.
+                    results.Remove("resultType");
                     results.Should().BeEquivalentTo(evaluatedExpectedValues, test.Name);
                 }
             }
@@ -82,28 +82,36 @@ namespace Utils.Core.Test
         {
             var newParameters = EvaluateParameters(test.Parameters, variables);
             var output = this._methodProxy.Execute(test.Api, newParameters);
+            var results = new Dictionary<string, object>()
+            {
+                {"resultType", this._methodProxy.ReturnType}
+            };
+
             if (output == null)
             {
-                resultsType = ResultsType.Void;
-                return new Dictionary<string, object>();
+                if (this._methodProxy.ReturnType == null)
+                {
+                    resultsType = ResultsType.Void;
+                    return results;
+                }
+
+                resultsType = ResultsType.Object;
+                results["result"] = null;
+                return results;
             }
 
             if (output.GetType().IsPrimitive)
             {
                 resultsType = ResultsType.Primitive;
-                return new Dictionary<string, object>
-                {
-                    {"result", output}
-                };
+                results["result"] = output;
+                return results;
             }
 
             if (output is string)
             {
                 resultsType = ResultsType.String;
-                return new Dictionary<string, object>
-                {
-                    {"result", output}
-                };
+                results["result"] = output;
+                return results;
             }
 
             if (output is IDictionary<string, object>)
@@ -113,13 +121,8 @@ namespace Utils.Core.Test
             }
 
             resultsType = ResultsType.Object;
-            return new Dictionary<string, object>
-            {
-                {"result", output}
-            };
-
-            throw new NotSupportedException($"{test.Api} returning {output.GetType()} is not supported for ");
-
+            results["result"] = output;
+            return results;
         }
         IDictionary<string, object> EvaluateParameters(IDictionary<string, object> parameters, IDictionary<string, object> variables)
         {
@@ -189,7 +192,7 @@ namespace Utils.Core.Test
             var newToken = new JObject();
             foreach (var childToken in token.Children())
             {
-                if( childToken is JProperty property)
+                if (childToken is JProperty property)
                 {
                     if (TryExpression(property.Value?.ToString(), out var expression))
                     {

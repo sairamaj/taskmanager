@@ -51,6 +51,8 @@ namespace Utils.Core.Test
             }
         }
 
+        public Type ReturnType { get ; set; }
+
         public object Execute(string name, IDictionary<string, object> parameters)
         {
             if (string.IsNullOrWhiteSpace(name))
@@ -63,6 +65,7 @@ namespace Utils.Core.Test
                 throw new Exception($"Method {name} not found.");
             }
 
+            this.ReturnType = foundMethod.ReturnType;   // todo need to move to ctor
             var argIndex = 0;
             var methodInputs = foundMethod.GetParameters().Select(p =>
             {
@@ -123,7 +126,8 @@ namespace Utils.Core.Test
                     MethodName = foundMethod.Name,
                     MethodReturnValue = returnValue,
                     MethodParameters = inputs,
-                    MethodException = methodException
+                    MethodException = methodException,
+                    MethodReturnType = foundMethod.ReturnType
                 });
             }
         }

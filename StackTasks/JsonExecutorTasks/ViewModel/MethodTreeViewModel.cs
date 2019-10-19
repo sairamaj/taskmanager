@@ -1,4 +1,5 @@
-﻿using Utils.Core.Test;
+﻿using System.Threading;
+using Utils.Core.Test;
 using Utils.Core.ViewModels;
 
 namespace JsonExecutorTasks.ViewModel
@@ -16,6 +17,23 @@ namespace JsonExecutorTasks.ViewModel
         protected override void LoadChildren()
         {
             this.Children.Add(new MethodInputViewModel(this.ExecuteTrace.MethodParameters));
+            if (this.ExecuteTrace.MethodReturnType != null )
+            {
+                if (this.ExecuteTrace.MethodReturnValue != null)
+                {
+                    this.Children.Add(new MethodOutputViewModel(this.ExecuteTrace.MethodReturnValue));
+                }
+                else
+                {
+                    this.Children.Add(new NullObjectViewModel(this.ExecuteTrace.MethodReturnType));
+                }
+                
+            }
+
+            if (this.ExecuteTrace.MethodException != null)
+            {
+                this.Children.Add(new ExceptionTreeViewItemViewModel(this, this.ExecuteTrace.MethodException));
+            }
         }
     }
 }

@@ -64,5 +64,9 @@ namespace Utils.Core.Tests.TestTypes
             };
         }
 
+        public static IEnumerable<Person> GetNullPersons(Guid id)
+        {
+            return null;
+        }
     }
 }

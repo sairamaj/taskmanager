@@ -2,6 +2,12 @@
 
 namespace JsonExecutorTasks.Code
 {
+    public class Person
+    {
+        public string Name { get; set; }
+        public int Age { get; set; }
+    }
+
     public static class Sample
     {
         public static IDictionary<string,object> GetInfo()
@@ -22,8 +28,11 @@ namespace JsonExecutorTasks.Code
                 {"val1", new string[]{"item1_1","item1_2"} },
                 {"val2", new string[]{"item2_1","item2_2"} },
             };
-
         }
 
+        public static Person GetNullObject()
+        {
+            return null;
+        }
     }
 }

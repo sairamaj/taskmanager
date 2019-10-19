@@ -1,0 +1,21 @@
+[
+  {
+    "Name": "Sample.GetPersons",
+    "Api": "Sample.GetNullPersons",
+    "Parameters": {
+      "Id": "C76AF5BAF8DE485DBB265B9A2DC778BD"
+    },
+    "Expected": {
+      "results": [
+        {
+          "Name": "person1",
+          "Age": 10
+        },
+        {
+          "Name": "person2",
+          "Age": 20
+        }
+      ]
+    }
+  }
+]

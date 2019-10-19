@@ -17,15 +17,21 @@
         <TreeView.Resources>
             <HierarchicalDataTemplate DataType="{x:Type viewModel:MethodTreeViewModel}"  ItemsSource="{Binding Children}">
                 <StackPanel Orientation="Horizontal">
-                    <TextBlock Text="{Binding Name}" Margin="3,0,0,0" />
+                    <TextBlock Text="{Binding Name}" Margin="3,0,0,0" FontWeight="Bold"/>
                 </StackPanel>
             </HierarchicalDataTemplate>
 
             <HierarchicalDataTemplate DataType="{x:Type viewModel:MethodInputViewModel}"  ItemsSource="{Binding Children}">
                 <StackPanel Orientation="Horizontal">
-                    <TextBlock Text="{Binding Name}" Margin="3,0,0,0" />
+                    <TextBlock Text="{Binding Name}" Margin="3,0,0,0"  Foreground="Blue"/>
                 </StackPanel>
             </HierarchicalDataTemplate>
+
+            <HierarchicalDataTemplate DataType="{x:Type viewModel:MethodOutputViewModel}"  ItemsSource="{Binding Children}">
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Text="{Binding Name}" Margin="3,0,0,0" Foreground="Green"/>
+                </StackPanel>
+            </HierarchicalDataTemplate>            
 
             <HierarchicalDataTemplate DataType="{x:Type viewModels:ObjectContainerViewModel}"  ItemsSource="{Binding Children}">
                 <StackPanel Orientation="Horizontal">
@@ -43,6 +49,19 @@
                 <StackPanel Orientation="Horizontal">
                     <TextBlock Text="{Binding Name}" Margin="3,0,0,0" />
                     <TextBlock Text="{Binding Value}" Margin="3,0,0,0" FontWeight="Bold"/>
+                </StackPanel>
+            </HierarchicalDataTemplate>
+
+            <HierarchicalDataTemplate DataType="{x:Type viewModels:ExceptionTreeViewItemViewModel}"  ItemsSource="{Binding Children}">
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Text="{Binding Name}"  Foreground="Red"/>
+                </StackPanel>
+            </HierarchicalDataTemplate>
+
+            <HierarchicalDataTemplate DataType="{x:Type viewModels:NullObjectViewModel}"  ItemsSource="{Binding Children}">
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Text="{Binding Name}"  Foreground="Red"/>
+                    <TextBlock Text="{Binding Message}"  Foreground="Red" Margin="3,0,0,0"/>
                 </StackPanel>
             </HierarchicalDataTemplate>
 

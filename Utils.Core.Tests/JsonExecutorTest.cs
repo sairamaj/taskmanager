@@ -143,6 +143,14 @@ namespace Utils.Core.Tests
             tester.ExecuteAndVerify(new Dictionary<string, object>() { });
         }
 
+        [Test(Description = "Method returning null but test case expecting non null")]
+        public void WithMethodReturnNullButTestCaseExpectingNonNull()
+        {
+            var tester = new JsonExecutor(ReadTestFile("MethodReturningNullExpectingNonNull.json"), ReadTestFile("config.json"), msg => { });
+            Action expectationsFailed = () => tester.ExecuteAndVerify(new Dictionary<string, object>() { });
+            expectationsFailed.Should().Throw<AssertionException>();
+        }
+        
         private string ReadTestFile(string fileName)
         {
             return 

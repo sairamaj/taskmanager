@@ -14,7 +14,6 @@ namespace Utils.Core.Expressions
         private Variable _variable;
         private int _currentArgumentCount;
 
-
         public MethodExtractWalker(string expression)
         {
             _expression = expression;

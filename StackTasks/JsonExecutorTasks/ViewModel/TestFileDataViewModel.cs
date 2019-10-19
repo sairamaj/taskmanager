@@ -112,7 +112,10 @@ namespace JsonExecutorTasks.ViewModel
 
         private void TraceAction(ExecuteTraceInfo traceInfo)
         {
-            ExecuteAsync(() => { this.TraceMessages.Add(new MethodTreeViewModel(traceInfo)); });
+            ExecuteAsync(() =>
+            {
+                this.TraceMessages.Add(new MethodTreeViewModel(traceInfo));
+            });
         }
     }
 }
