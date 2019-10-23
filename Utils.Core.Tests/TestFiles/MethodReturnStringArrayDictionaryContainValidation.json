@@ -1,0 +1,18 @@
+[
+  {
+    "Name": "Sample.GetInfo",
+    "Api": "getinforeturnarrayindictionary",
+    "Parameters": {
+      "num1": 10,
+      "num2": 20
+    },
+    "Expected": {
+      "val1": [
+        "item1_1"
+      ],
+      "val2": [
+        "item2_1"
+      ]
+    }
+  }
+]

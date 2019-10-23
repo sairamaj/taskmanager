@@ -158,7 +158,13 @@ namespace Utils.Core.Tests
             tester.ExecuteAndVerify(new Dictionary<string, object>() { });
         }
 
-
+        [Test(Description = "Partial array validation.")]
+        public void ForPartialArrayValidation()
+        {
+            var tester = new JsonExecutor(ReadTestFile("MethodReturnStringArrayDictionaryContainValidation.json"), ReadTestFile("config.json"), msg => { });
+            tester.ExecuteAndVerify(new Dictionary<string, object>() { });
+        }
+        
         private string ReadTestFile(string fileName)
         {
             return 

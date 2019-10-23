@@ -82,6 +82,9 @@
     <None Include="TestFiles\MethodReturningPersonCollectionsHavingFunctions.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Include="TestFiles\MethodReturnStringArrayDictionaryContainValidation.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="TestFiles\MethodReturnStringArrayDictionaryWithFunctoids.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
