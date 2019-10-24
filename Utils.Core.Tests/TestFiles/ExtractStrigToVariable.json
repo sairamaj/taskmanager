@@ -1,0 +1,20 @@
+[
+  {
+    "Name": "ExtractVariable Test",
+    "Api": "EchoString",
+    "Parameters": {
+      "input" :  "echo this one." 
+    }
+  },
+  {
+    "Name": "UsingVariable From previous test",
+    "Api": "EchoString",
+    "Parameters": {
+      "input": "${extract(key=result)}"
+    },
+    "Expected": {
+      "result": "echo this one."
+    }
+  }
+
+]

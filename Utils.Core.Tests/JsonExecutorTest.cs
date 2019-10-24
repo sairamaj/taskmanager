@@ -159,12 +159,19 @@ namespace Utils.Core.Tests
         }
 
         [Test(Description = "Partial array validation.")]
+        [Ignore("This partial validation is not done yet.")]
         public void ForPartialArrayValidation()
         {
             var tester = new JsonExecutor(ReadTestFile("MethodReturnStringArrayDictionaryContainValidation.json"), ReadTestFile("config.json"), msg => { });
             tester.ExecuteAndVerify(new Dictionary<string, object>() { });
         }
-        
+
+        [Test(Description = "Variables extract.")]
+        public void ExtractPlainStringReturnMethodInToVariableAndUseInNextTest()
+        {
+            var tester = new JsonExecutor(ReadTestFile("ExtractStrigToVariable.json"), ReadTestFile("config.json"), msg => { });
+            tester.ExecuteAndVerify(new Dictionary<string, object>() { });
+        }
         private string ReadTestFile(string fileName)
         {
             return 

@@ -66,7 +66,7 @@ namespace Utils.Core.ViewModels
         {
             if (_isOneProperty)
                 return;
-            if (_depth > 4)
+            if (_depth > 2)
                 return;
             if (_obj == null || _obj.GetType() == typeof(string) || _obj.GetType().IsValueType)
                 return;
@@ -211,7 +211,7 @@ namespace Utils.Core.ViewModels
             if (val != null)
             {
                 _isOneProperty = true;
-                return String.Format("{0} ({1})", typeName, val);
+                return $"{typeName} ({val})";
             }
             return typeName;
         }

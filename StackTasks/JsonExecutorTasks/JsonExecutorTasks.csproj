@@ -123,6 +123,9 @@
     <None Include="TestFiles\SuccessTestCases\ExpectedExceptionTest.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Include="TestFiles\SuccessTestCases\ExtractStrigToVariable.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="TestFiles\SuccessTestCases\MethodReturnNull.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>

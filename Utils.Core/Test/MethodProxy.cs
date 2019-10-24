@@ -89,6 +89,11 @@ namespace Utils.Core.Test
                     return Guid.Parse(val?.ToString());
                 }
 
+                if (p.ParameterType == typeof(IDictionary<string, object>))
+                {
+                    return parameters[p.Name];
+                }
+
                 return JsonConvert.DeserializeObject(parameters[p.Name]?.ToString(), p.ParameterType);
             }).ToArray();
 

@@ -74,6 +74,16 @@ namespace Utils.Core.Tests.TestTypes
             throw new ArgumentNullException($"this is simulated exception");
         }
 
-        
+        public static string GetRandomString()
+        {
+            return new Random().Next(Int32.MaxValue).ToString();
+        }
+
+    
+
+        public static void DisplayString(string input)
+        {
+            Console.WriteLine($"Input is:{input}");
+        }
     }
 }

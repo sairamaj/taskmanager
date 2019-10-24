@@ -29,7 +29,7 @@ namespace Utils.Core.Test
             IDictionary<string, object> results = new Dictionary<string, object>();
             foreach (var test in _tests)
             {
-                results[test.Name] = ExecuteTest(test, variables, out _);
+                results[test.Name] = ExecuteTest(test, variables, results, out _);
             }
 
             return results;
@@ -37,50 +37,14 @@ namespace Utils.Core.Test
 
         public void ExecuteAndVerify(IDictionary<string, object> variables)
         {
+            IDictionary<string,object> previousTestResults = new Dictionary<string, object>();
             foreach (var test in _tests)
             {
                 try
                 {
-                    var results = ExecuteTest(test, variables, out var resultsType);
-                    if (resultsType == ResultsType.Primitive)
-                    {
-                        var finalExpectedValue = EvaluateParameters(new Dictionary<string, object>()
-                    {
-                        {"result", test.ReturnValue}
-                    }, variables).First();
-                        var result = results["result"];
-                        Verify(test, () => result, finalExpectedValue.Value);
-                    }
-                    else if (resultsType == ResultsType.Void)
-                    {
-                        // Nothing to verify.
-                    }
-                    else if (resultsType == ResultsType.Object)
-                    {
-                        var evaluatedExpectedValues = EvaluateParameters(test.GetExpectedResults(), variables);
-                        if (evaluatedExpectedValues.Any())
-                        {
-                            var returnObject = results["result"];
-                            var output = JsonConvert.SerializeObject(returnObject, Formatting.Indented);
-                            File.WriteAllText(@"c:\temp\test.json", output);
-                            var expectedObjectJson = JsonConvert.SerializeObject(evaluatedExpectedValues.First().Value);
-                            Console.WriteLine(expectedObjectJson);
-                            var returnType = results["resultType"];
-                            var expectedObject = JsonConvert.DeserializeObject(expectedObjectJson?.ToString(), returnType as Type);
-                            // Verify dictionary.
-                            SendVerificationTraceInfo(test, returnObject, expectedObject);
-                            returnObject.Should().BeEquivalentTo(expectedObject, test.Name);
-                        }
-                    }
-                    else
-                    {
-                        var evaluatedExpectedValues = EvaluateParameters(test.GetExpectedResults(true), variables);
-                        Console.WriteLine("===========================");
-                        // Verify dictionary.
-                        results.Remove("resultType");
-                        SendVerificationTraceInfo(test, results, evaluatedExpectedValues);
-                        results.Should().BeEquivalentTo(evaluatedExpectedValues, test.Name);
-                    }
+                    var results = ExecuteTest(test, variables, previousTestResults, out var resultsType);
+                    previousTestResults["result"] = results;
+                    VerifyResults(test, resultsType, results, variables);
                 }
                 catch (Exception e)
                 {
@@ -99,6 +63,70 @@ namespace Utils.Core.Test
             }
         }
 
+        private void VerifyResults(TestInfo test, ResultsType resultsType, IDictionary<string, object> results, IDictionary<string, object> variables)
+        {
+            try
+            {
+                if (resultsType == ResultsType.Primitive)
+                {
+                    var finalExpectedValue = EvaluateParameters(new Dictionary<string, object>()
+                    {
+                        {"result", test.ReturnValue}
+                    }, variables).First();
+                    var result = results["result"];
+                    Verify(test, () => result, finalExpectedValue.Value);
+                }
+                else if (resultsType == ResultsType.Void)
+                {
+                    // Nothing to verify.
+                }
+                else if (resultsType == ResultsType.Object)
+                {
+                    var evaluatedExpectedValues = EvaluateParameters(test.GetExpectedResults(), variables);
+                    if (evaluatedExpectedValues.Any())
+                    {
+                        var returnObject = results["result"];
+                        var output = JsonConvert.SerializeObject(returnObject, Formatting.Indented);
+                        File.WriteAllText(@"c:\temp\test.json", output);
+                        var expectedObjectJson = JsonConvert.SerializeObject(evaluatedExpectedValues.First().Value);
+                        Console.WriteLine(expectedObjectJson);
+                        var returnType = results["resultType"];
+                        var expectedObject = JsonConvert.DeserializeObject(expectedObjectJson?.ToString(), returnType as Type);
+                        // Verify dictionary.
+                        SendVerificationTraceInfo(test, returnObject, expectedObject);
+                        returnObject.Should().BeEquivalentTo(expectedObject, test.Name);
+                    }
+                }
+                else
+                {
+                    var evaluatedExpectedValues = EvaluateParameters(test.GetExpectedResults(true), variables);
+                    if (evaluatedExpectedValues.Any())
+                    {
+                        Console.WriteLine("===========================");
+                        // Verify dictionary.
+                        results.Remove("resultType");
+                        SendVerificationTraceInfo(test, results, evaluatedExpectedValues);
+                        results.Should().BeEquivalentTo(evaluatedExpectedValues, test.Name);
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                var expectedObjectJson = JsonConvert.DeserializeObject<ExpectedExceptionInfo>(
+                    JsonConvert.SerializeObject(test.GetExpectedResults()));
+                Console.WriteLine(expectedObjectJson);
+                if (expectedObjectJson.Exception)
+                {
+                    VerifyException(test, expectedObjectJson, e);
+                }
+                else
+                {
+                    throw;
+                }
+            }
+
+        }
+
         private void VerifyException(TestInfo testInfo, ExpectedExceptionInfo expected, Exception exception)
         {
             SendVerificationTraceInfo(testInfo, exception, expected);
@@ -106,9 +134,17 @@ namespace Utils.Core.Test
             exception.Message.Should().Contain(expected.ExceptionMessageLike);
         }
 
-        private IDictionary<string, object> ExecuteTest(TestInfo test, IDictionary<string, object> variables, out ResultsType resultsType)
+        private IDictionary<string, object> ExecuteTest(
+            TestInfo test, 
+            IDictionary<string, object> variables, 
+            IDictionary<string,object> previousTestResults,
+            out ResultsType resultsType)
         {
-            var newParameters = EvaluateParameters(test.Parameters, variables);
+            var allParameters = new Dictionary<string, object>();
+            test.Parameters.ToList().ForEach(kv=> allParameters[kv.Key] = kv.Value);
+            previousTestResults.ToList().ForEach(kv => allParameters[kv.Key] = kv.Value);
+            var newParameters = EvaluateParameters(allParameters, variables);
+
             var output = this._methodProxy.Execute(test.Api, newParameters);
             var results = new Dictionary<string, object>()
             {
@@ -160,6 +196,13 @@ namespace Utils.Core.Test
                 return newParameterValues;
             }
 
+            var allVariables = new Dictionary<string, object>(StringComparer.InvariantCultureIgnoreCase);
+            variables.ToList().ForEach(kv=> allVariables[kv.Key] = kv.Value);
+            if (parameters.TryGetValue("result", out object result))
+            {
+                allVariables["result"] = result;
+            }
+
             foreach (var parameter in parameters)
             {
                 if (parameter.Value is System.String[])
@@ -169,7 +212,7 @@ namespace Utils.Core.Test
                     {
                         if (TryExpression(val, out var expression))
                         {
-                            evaluatedItems.Add(Evaluate(expression, variables)?.ToString());
+                            evaluatedItems.Add(Evaluate(expression, allVariables)?.ToString());
                         }
                         else
                         {
@@ -182,14 +225,14 @@ namespace Utils.Core.Test
 
                 if (parameter.Value is JArray array)
                 {
-                    newParameterValues[parameter.Key] = ProcessJArray(array, variables);
+                    newParameterValues[parameter.Key] = ProcessJArray(array, allVariables);
                     continue;
                 }
 
                 var value = parameter.Value;
                 if (TryExpression(value?.ToString(), out var expression2))
                 {
-                    value = Evaluate(expression2, variables);
+                    value = Evaluate(expression2, allVariables);
                 }
 
                 newParameterValues[parameter.Key] = value;
@@ -249,6 +292,11 @@ namespace Utils.Core.Test
                 foreach (var arg in expressionInfo.MethodData.Arguments)
                 {
                     evaluatedParameters[arg.Name] = EvaluateValue(arg, variables);
+                }
+
+                if (variables.TryGetValue("result", out object result))
+                {
+                    evaluatedParameters["result"] = result;
                 }
 
                 evaluatedValue = _methodProxy.Execute(expressionInfo.MethodData.Name, evaluatedParameters);
