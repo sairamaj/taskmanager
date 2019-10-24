@@ -1,4 +1,6 @@
 {
   "mynum1": 33,
-  "mynum2": 44
+  "mynum2": 44,
+  "item1": "val1",
+  "item2": "val2"
 }

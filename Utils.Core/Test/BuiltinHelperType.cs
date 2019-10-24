@@ -1,9 +1,15 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace Utils.Core.Test
 {
     public static class BuiltinHelperType
     {
+        public static int Random(int min, int max)
+        {
+            return new Random().Next(min, max);
+        }
+
         public static string ToLower(string input)
         {
             return input?.ToLowerInvariant();

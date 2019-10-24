@@ -1,0 +1,13 @@
+[
+  {
+    "Name": "BuiltinTypeMethod.Random.Test",
+    "Api": "random",
+    "Parameters": {
+      "num1": "${random(min=1,max=900)}",
+      "num2": 20
+    },
+    "Expected": {
+      "result": 30
+    }
+  }
+]

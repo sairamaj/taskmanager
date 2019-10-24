@@ -1,0 +1,15 @@
+[
+  {
+    "Name": "Sample.MethodTakingDictionary",
+    "Api": "MethodTakingDictionary",
+    "Parameters": {
+      "inputs": {
+        "one": "${var.item1}",
+        "two": "${var.item2}"
+      }
+    },
+    "Expected": {
+      "result": "one=val1 two=val2"
+    }
+  }
+]

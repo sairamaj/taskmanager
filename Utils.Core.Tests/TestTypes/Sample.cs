@@ -79,11 +79,21 @@ namespace Utils.Core.Tests.TestTypes
             return new Random().Next(Int32.MaxValue).ToString();
         }
 
-    
 
         public static void DisplayString(string input)
         {
             Console.WriteLine($"Input is:{input}");
+        }
+
+        public static string MethodTakingDictionary(IDictionary<string, string> inputs)
+        {
+            var output = string.Empty;
+            foreach (var kv in inputs)
+            {
+                output += $"{kv.Key}={kv.Value} ";
+            }
+
+            return output.TrimEnd();
         }
     }
 }

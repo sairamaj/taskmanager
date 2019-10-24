@@ -37,7 +37,7 @@ namespace Utils.Core.Test
 
         public void ExecuteAndVerify(IDictionary<string, object> variables)
         {
-            IDictionary<string,object> previousTestResults = new Dictionary<string, object>();
+            IDictionary<string, object> previousTestResults = new Dictionary<string, object>();
             foreach (var test in _tests)
             {
                 try
@@ -135,13 +135,13 @@ namespace Utils.Core.Test
         }
 
         private IDictionary<string, object> ExecuteTest(
-            TestInfo test, 
-            IDictionary<string, object> variables, 
-            IDictionary<string,object> previousTestResults,
+            TestInfo test,
+            IDictionary<string, object> variables,
+            IDictionary<string, object> previousTestResults,
             out ResultsType resultsType)
         {
             var allParameters = new Dictionary<string, object>();
-            test.Parameters.ToList().ForEach(kv=> allParameters[kv.Key] = kv.Value);
+            test.Parameters.ToList().ForEach(kv => allParameters[kv.Key] = kv.Value);
             previousTestResults.ToList().ForEach(kv => allParameters[kv.Key] = kv.Value);
             var newParameters = EvaluateParameters(allParameters, variables);
 
@@ -197,7 +197,7 @@ namespace Utils.Core.Test
             }
 
             var allVariables = new Dictionary<string, object>(StringComparer.InvariantCultureIgnoreCase);
-            variables.ToList().ForEach(kv=> allVariables[kv.Key] = kv.Value);
+            variables.ToList().ForEach(kv => allVariables[kv.Key] = kv.Value);
             if (parameters.TryGetValue("result", out object result))
             {
                 allVariables["result"] = result;
@@ -229,16 +229,58 @@ namespace Utils.Core.Test
                     continue;
                 }
 
-                var value = parameter.Value;
-                if (TryExpression(value?.ToString(), out var expression2))
+                if (parameter.Value is JObject jObj)
                 {
-                    value = Evaluate(expression2, allVariables);
+                    newParameterValues[parameter.Key] = ProcessJObject(jObj, allVariables);
                 }
+                else
+                {
+                    var value = parameter.Value;
+                    if (TryExpression(value?.ToString(), out var expression2))
+                    {
+                        value = Evaluate(expression2, allVariables);
+                    }
 
-                newParameterValues[parameter.Key] = value;
+                    newParameterValues[parameter.Key] = value;
+                }
             }
 
             return newParameterValues;
+        }
+
+        // todo: combine  with ProcessJToken
+        private JObject ProcessJObject(JObject jObject, IDictionary<string, object> variables)
+        {
+            if (jObject == null)
+            {
+                return null;
+            }
+
+            if (!jObject.Children().Any())
+            {
+                return jObject;
+            }
+
+            var newToken = new JObject();
+            foreach (var childToken in jObject.Children())
+            {
+                if (childToken is JProperty property)
+                {
+                    if (TryExpression(property.Value?.ToString(), out var expression))
+                    {
+                        newToken.Add(new JProperty(property.Name, Evaluate(expression, variables)?.ToString()));
+                    }
+                    else
+                    {
+                        newToken.Add(property);
+                    }
+                }
+                else
+                {
+                    newToken.Add(childToken);
+                }
+            }
+            return newToken;
         }
 
         private JArray ProcessJArray(JArray array, IDictionary<string, object> variables)

@@ -172,6 +172,33 @@ namespace Utils.Core.Tests
             var tester = new JsonExecutor(ReadTestFile("ExtractStrigToVariable.json"), ReadTestFile("config.json"), msg => { });
             tester.ExecuteAndVerify(new Dictionary<string, object>() { });
         }
+
+        [Test(Description = "Methods taking dictionary.")]
+        public void MethodTakingDictionary()
+        {
+            var tester = new JsonExecutor(ReadTestFile("MethodTakingDictionary.json"), ReadTestFile("config.json"), msg => { });
+            tester.ExecuteAndVerify(new Dictionary<string, object>() { });
+        }
+
+        [Test(Description = "Methods taking dictionary with variables.")]
+        public void MethodTakingDictionaryWithVariables()
+        {
+            var tester = new JsonExecutor(ReadTestFile("MethodTakingDictionaryWithVariables.json"), ReadTestFile("config.json"), msg => { });
+            tester.ExecuteAndVerify(new Dictionary<string, object>()
+            {
+                {"item1" , "val1" },
+                {"item2" , "val2" }
+            });
+        }
+
+        [Test(Description = "BuiltinType Random method.")]
+        public void BuiltinTypeRandomMethod()
+        {
+            var tester = new JsonExecutor(ReadTestFile("BuiltinTypeRandomMethod.json"), ReadTestFile("config.json"), msg => { });
+            tester.ExecuteAndVerify(new Dictionary<string, object>() { });
+        }
+
+        
         private string ReadTestFile(string fileName)
         {
             return 
