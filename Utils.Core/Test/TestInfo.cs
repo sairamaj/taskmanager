@@ -12,6 +12,9 @@ namespace Utils.Core.Test
         public string Name { get; set; }
         public string Api { get; set; }
         public IDictionary<string,object> Parameters { get; set; }
+        public IDictionary<string, object> Variables { get; set; }
+        public IDictionary<string, object> Extracts { get; set; }
+        
         public IDictionary<string, object> Expected { get; set; }
 
         public object GetParameter(string name)

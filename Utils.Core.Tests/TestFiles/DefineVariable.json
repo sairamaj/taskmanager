@@ -1,0 +1,20 @@
+[
+  {
+    "Name": "DefineVariables",
+    "Variables": {
+        "name": "testuser",
+        "age": "26"
+    }
+  },
+  {
+    "Name": "UsingVariable defined variables",
+    "Api": "EchoString",
+    "Parameters": {
+      "input": "${var.name}"
+    },
+    "Expected": {
+      "result": "testuser"
+    }
+  }
+
+]

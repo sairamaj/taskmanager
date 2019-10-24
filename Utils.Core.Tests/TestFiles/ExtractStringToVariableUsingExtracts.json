@@ -1,0 +1,27 @@
+[
+  {
+    "Name": "UsingVariable From previous test",
+    "Api": "Reverse",
+    "Parameters": {
+      "input": "this is string"
+    },
+    "Expected": {
+      "result": "gnirts si siht"
+    },
+    "Extracts": {
+      "valueextracted": "${extract(key=result)}"
+    } 
+  },
+  {
+    "Name": "UsingVariable From previous test",
+    "Api": "EchoString",
+    "Parameters": {
+      "input": "${var.valueextracted}"
+    },
+    "Expected": {
+      "result": "gnirts si siht"
+    }
+  }
+
+
+]

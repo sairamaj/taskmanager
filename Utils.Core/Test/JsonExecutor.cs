@@ -27,9 +27,21 @@ namespace Utils.Core.Test
         public IDictionary<string, object> Execute(IDictionary<string, object> variables)
         {
             IDictionary<string, object> results = new Dictionary<string, object>();
+            IDictionary<string, object> allVariables = new Dictionary<string, object>(StringComparer.InvariantCultureIgnoreCase);
+            variables.ToList().ForEach(kv=> allVariables[kv.Key] = kv.Value);
             foreach (var test in _tests)
             {
-                results[test.Name] = ExecuteTest(test, variables, results, out _);
+                if (test.Variables != null)
+                {
+                    var testVariables = EvaluateParameters(test.Variables, allVariables);
+                    // merge these into all variables
+                    testVariables.ToList().ForEach(kv => allVariables[kv.Key] = kv.Value);
+                }
+
+                if (!string.IsNullOrWhiteSpace(test.Api))
+                {
+                    results[test.Name] = ExecuteTest(test, allVariables, results, out _);
+                }
             }
 
             return results;
@@ -38,13 +50,32 @@ namespace Utils.Core.Test
         public void ExecuteAndVerify(IDictionary<string, object> variables)
         {
             IDictionary<string, object> previousTestResults = new Dictionary<string, object>();
+            IDictionary<string, object> allVariables = new Dictionary<string, object>(StringComparer.InvariantCultureIgnoreCase);
+            variables.ToList().ForEach(kv => allVariables[kv.Key] = kv.Value);
+
             foreach (var test in _tests)
             {
                 try
                 {
-                    var results = ExecuteTest(test, variables, previousTestResults, out var resultsType);
-                    previousTestResults["result"] = results;
-                    VerifyResults(test, resultsType, results, variables);
+                    if (test.Variables != null)
+                    {
+                        var testVariables = EvaluateParameters(test.Variables, allVariables);
+                        // merge these into all variables
+                        testVariables.ToList().ForEach(kv => allVariables[kv.Key] = kv.Value);
+                    }
+
+                    if (!string.IsNullOrWhiteSpace(test.Api))
+                    {
+                        var results = ExecuteTest(test, allVariables, previousTestResults, out var resultsType);
+                        previousTestResults["result"] = results;
+                        VerifyResults(test, resultsType, results, allVariables);
+                        if (test.Extracts != null)
+                        {
+                            allVariables["result"] = results;
+                            var extractVariables = EvaluateParameters(test.Extracts, allVariables);
+                            extractVariables.ToList().ForEach(kv => allVariables[kv.Key] = kv.Value);
+                        }
+                    }
                 }
                 catch (Exception e)
                 {
@@ -141,7 +172,7 @@ namespace Utils.Core.Test
             out ResultsType resultsType)
         {
             var allParameters = new Dictionary<string, object>();
-            test.Parameters.ToList().ForEach(kv => allParameters[kv.Key] = kv.Value);
+            test.Parameters?.ToList().ForEach(kv => allParameters[kv.Key] = kv.Value);
             previousTestResults.ToList().ForEach(kv => allParameters[kv.Key] = kv.Value);
             var newParameters = EvaluateParameters(allParameters, variables);
 

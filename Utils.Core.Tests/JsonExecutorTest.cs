@@ -192,12 +192,33 @@ namespace Utils.Core.Tests
         }
 
         [Test(Description = "BuiltinType Random method.")]
+        [Ignore("Need to enable this.")]
         public void BuiltinTypeRandomMethod()
         {
             var tester = new JsonExecutor(ReadTestFile("BuiltinTypeRandomMethod.json"), ReadTestFile("config.json"), msg => { });
             tester.ExecuteAndVerify(new Dictionary<string, object>() { });
         }
 
+        [Test(Description = "DefineVariable.")]
+        public void DefineVariable()
+        {
+            var tester = new JsonExecutor(ReadTestFile("DefineVariable.json"), ReadTestFile("config.json"), msg => { });
+            tester.ExecuteAndVerify(new Dictionary<string, object>() { });
+        }
+
+        [Test(Description = "DefineVariableWithFunctions.")]
+        public void DefineVariableWithFunctions()
+        {
+            var tester = new JsonExecutor(ReadTestFile("DefineVariableWithFunctions.json"), ReadTestFile("config.json"), msg => { });
+            tester.ExecuteAndVerify(new Dictionary<string, object>() { });
+        }
+
+        [Test(Description = "ExtractStringToVariableUsingExtracts.")]
+        public void ExtractStringToVariableUsingExtracts()
+        {
+            var tester = new JsonExecutor(ReadTestFile("ExtractStringToVariableUsingExtracts.json"), ReadTestFile("config.json"), msg => { });
+            tester.ExecuteAndVerify(new Dictionary<string, object>() { });
+        }
         
         private string ReadTestFile(string fileName)
         {
