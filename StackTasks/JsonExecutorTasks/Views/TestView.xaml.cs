@@ -1,17 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
+﻿using System.IO;
+using System.Reflection;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
+using System.Xml;
 
 namespace JsonExecutorTasks.Views
 {
@@ -23,6 +13,15 @@ namespace JsonExecutorTasks.Views
         public TestView()
         {
             InitializeComponent();
+
+            var assembly = Assembly.GetExecutingAssembly();
+            var resourceName = "JsonExecutorTasks.AvalonJsonSyntax.xml";
+
+            using (var xshd_stream = assembly.GetManifestResourceStream(resourceName))
+            {
+                var xshd_reader = new XmlTextReader(xshd_stream);
+                TextEditor.SyntaxHighlighting = ICSharpCode.AvalonEdit.Highlighting.Xshd.HighlightingLoader.Load(xshd_reader, ICSharpCode.AvalonEdit.Highlighting.HighlightingManager.Instance);
+            }
         }
     }
 }
