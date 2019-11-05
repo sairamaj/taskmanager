@@ -65,7 +65,7 @@ namespace Utils.Core.Extensions
                     }
                 }
             }
-            //  stringBuilder.Append('}');
+
             return stringBuilder.ToString();
         }
     }

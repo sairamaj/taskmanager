@@ -74,5 +74,4 @@ namespace Utils.Core.Extensions
             return (T)dispatcher.Invoke(new DispatcherOperationCallback((a) => func()), new object[] { "a" });
         }
     }
-
 }

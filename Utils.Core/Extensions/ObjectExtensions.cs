@@ -15,7 +15,9 @@ namespace Utils.Core.Extensions
             {
                 var val = prop.GetValue(obj, null);
                 if (val != null)
+                {
                     return val.ToString();
+                }
             }
             return null;
         }

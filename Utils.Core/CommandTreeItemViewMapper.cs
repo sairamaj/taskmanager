@@ -94,5 +94,4 @@ namespace Utils.Core
             return null;
         }
     }
-
 }

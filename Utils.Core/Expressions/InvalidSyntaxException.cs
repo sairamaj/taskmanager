@@ -3,31 +3,57 @@ using System.Runtime.Serialization;
 
 namespace Utils.Core.Expressions
 {
+    /// <summary>
+    /// Invalid syntax exception.
+    /// </summary>
     [Serializable]
     public class InvalidSyntaxException : Exception
     {
-        //
-        // For guidelines regarding the creation of new exception types, see
-        //    http://msdn.microsoft.com/library/default.asp?url=/library/en-us/cpgenref/html/cpconerrorraisinghandlingguidelines.asp
-        // and
-        //    http://msdn.microsoft.com/library/default.asp?url=/library/en-us/dncscol/html/csharp07192001.asp
-        //
-
+        /// <summary>
+        /// Initializes a new instance of the <see cref="InvalidSyntaxException"/> class.
+        /// </summary>
         public InvalidSyntaxException()
         {
         }
 
-        public InvalidSyntaxException(string message) : base(message)
+        /// <summary>
+        /// Initializes a new instance of the <see cref="InvalidSyntaxException"/> class.
+        /// </summary>
+        /// <param name="message">
+        /// Message of the exception.
+        /// </param>
+        public InvalidSyntaxException(string message)
+            : base(message)
         {
         }
 
-        public InvalidSyntaxException(string message, Exception inner) : base(message, inner)
+        /// <summary>
+        /// Initializes a new instance of the <see cref="InvalidSyntaxException"/> class.
+        /// </summary>
+        /// <param name="message">
+        /// Message of the exception.
+        /// </param>
+        /// <param name="inner">
+        /// Inner exception.
+        /// </param>
+        public InvalidSyntaxException(string message, Exception inner)
+            : base(message, inner)
         {
         }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="InvalidSyntaxException"/> class.
+        /// </summary>
+        /// <param name="info">
+        /// A <see cref="SerializationInfo"/> instance.
+        /// </param>
+        /// <param name="context">
+        /// A <see cref="StreamingContext"/> instance.
+        /// </param>
         protected InvalidSyntaxException(
             SerializationInfo info,
-            StreamingContext context) : base(info, context)
+            StreamingContext context)
+            : base(info, context)
         {
         }
     }

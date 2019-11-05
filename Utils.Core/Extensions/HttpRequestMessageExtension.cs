@@ -6,8 +6,20 @@ using System.Text;
 
 namespace Utils.Core.Extensions
 {
+    /// <summary>
+    /// Http request message extensions.
+    /// </summary>
     internal static class HttpRequestMessageExtension
     {
+        /// <summary>
+        /// Formats request to get a string format.
+        /// </summary>
+        /// <param name="requestMessage">
+        /// A <see cref="HttpRequestMessage"/> class.
+        /// </param>
+        /// <returns>
+        /// String representation of the message.
+        /// </returns>
         public static string ToCustomString(this HttpRequestMessage requestMessage)
         {
             var stringBuilder = new StringBuilder();
@@ -18,9 +30,10 @@ namespace Utils.Core.Extensions
                 ? "<null>"
                 : requestMessage.RequestUri.ToString());
             stringBuilder.Append(System.Environment.NewLine);
-            stringBuilder.Append(GetHeaders(requestMessage.Headers,
-                (HttpHeaders)
-                    (requestMessage.Content == null ? (HttpContentHeaders)null : requestMessage.Content.Headers)));
+            stringBuilder.Append(
+                GetHeaders(
+                    requestMessage.Headers,
+                    requestMessage.Content?.Headers));
 
             stringBuilder.Append(System.Environment.NewLine);
             if (requestMessage.Content != null)
@@ -31,6 +44,15 @@ namespace Utils.Core.Extensions
             return stringBuilder.ToString();
         }
 
+        /// <summary>
+        /// Gets title representation of the http request message.
+        /// </summary>
+        /// <param name="requestMessage">
+        /// A <see cref="HttpRequestMessage"/> instance.
+        /// </param>
+        /// <returns>
+        /// Returns title of the request message.
+        /// </returns>
         public static string GetTitle(this HttpRequestMessage requestMessage)
         {
             var stringBuilder = new StringBuilder();
@@ -41,6 +63,15 @@ namespace Utils.Core.Extensions
             return stringBuilder.ToString();
         }
 
+        /// <summary>
+        /// Gets headers in string format.
+        /// </summary>
+        /// <param name="headers">
+        /// Http headers instance.
+        /// </param>
+        /// <returns>
+        /// String representation of the Http request.
+        /// </returns>
         internal static string GetHeaders(params HttpHeaders[] headers)
         {
             var stringBuilder = new StringBuilder();
@@ -62,7 +93,7 @@ namespace Utils.Core.Extensions
                     }
                 }
             }
-            //  stringBuilder.Append('}');
+
             return stringBuilder.ToString();
         }
     }

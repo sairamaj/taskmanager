@@ -1,113 +1,192 @@
 ﻿using System;
 using System.Collections;
+using System.Diagnostics;
 using System.Linq;
 using System.Runtime.Serialization;
 using Utils.Core.Extensions;
+using Utils.Core.Model;
 
 namespace Utils.Core.ViewModels
 {
+    /// <summary>
+    /// Tree view for generic object.
+    /// </summary>
     public class ObjectTreeViewModel : TreeViewItemViewModel
     {
+        /// <summary>
+        /// Object depth.
+        /// </summary>
         private readonly int _depth;
 
-        public enum InfoType
-        {
-            Properties,
-            Fields,
-            Both
-        }
-
+        /// <summary>
+        /// Name of the object.
+        /// </summary>
         private readonly string _name;
-        private readonly object _obj;
-        private readonly InfoType _infoType;
-        public string Title { get; set; }
-        bool _isOneProperty;
-        private ObjectTreeViewModel(TreeViewItemViewModel parent, string name, object obj, InfoType infoType, int depth)
-            : base(parent, name, true)
-        {
-            _name = name;
-            _obj = obj;
-            _infoType = infoType;
-            _depth = depth;
-            Title = GetTitle(_obj);
-            IsExpanded = true;
-        }
 
+        /// <summary>
+        /// Object value.
+        /// </summary>
+        private readonly object _obj;
+
+        /// <summary>
+        /// Object extracting information type.
+        /// </summary>
+        private readonly InfoType _infoType;
+
+        /// <summary>
+        /// Indicates the object has only one property.
+        /// </summary>
+        private bool _isOneProperty;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ObjectTreeViewModel"/> class.
+        /// </summary>
+        /// <param name="parent">
+        /// Parent object.
+        /// </param>
+        /// <param name="name">
+        /// Name of the object.
+        /// </param>
+        /// <param name="obj">
+        /// Object value.
+        /// </param>
+        /// <param name="infoType">
+        /// Extracting information.
+        /// </param>
         public ObjectTreeViewModel(TreeViewItemViewModel parent, string name, object obj, InfoType infoType)
             : this(parent, name, obj, infoType, 0)
         {
         }
 
-        public object Object { get { return _obj; } }
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ObjectTreeViewModel"/> class.
+        /// </summary>
+        /// <param name="parent">
+        /// Parent object.
+        /// </param>
+        /// <param name="name">
+        /// Name of the object.
+        /// </param>
+        /// <param name="obj">
+        /// Object value.
+        /// </param>
+        /// <param name="infoType">
+        /// Extracting information.
+        /// </param>
+        /// <param name="depth">
+        /// Depth to be traversed.
+        /// </param>
+        private ObjectTreeViewModel(TreeViewItemViewModel parent, string name, object obj, InfoType infoType, int depth)
+            : base(parent, name, true)
+        {
+            this._name = name;
+            this._obj = obj;
+            this._infoType = infoType;
+            this._depth = depth;
+            this.Title = this.GetTitle(this._obj);
+            this.IsExpanded = true;
+        }
 
+        /// <summary>
+        /// Gets or sets value.
+        /// </summary>
+        public string Title { get; set; }
+
+        /// <summary>
+        /// Gets object value.
+        /// </summary>
+        public object Object => this._obj;
+
+        /// <summary>
+        /// Gets or sets name property of the object.
+        /// </summary>
         public override string Name
         {
             get
             {
-                if (_obj == null)
+                if (this._obj == null)
+                {
                     return null;
-                if (_name != null)
-                {
-                    return String.Format("{0}{1}", _name, Title);
                 }
-                else
+
+                if (this._name != null)
                 {
-                    return String.Format("{0}", Title);
+                    return $"{this._name}{this.Title}";
                 }
+
+                return $"{this.Title}";
             }
-            set
-            {
-                base.Name = value;
-            }
+            set => base.Name = value;
         }
 
-
+        /// <summary>
+        /// Load object inner properties or fields.
+        /// </summary>
         protected override void LoadChildren()
         {
-            if (_isOneProperty)
-                return;
-            if (_depth > 2)
-                return;
-            if (_obj == null || _obj.GetType() == typeof(string) || _obj.GetType().IsValueType)
-                return;
-            if (typeof(IDictionary).IsAssignableFrom(_obj.GetType()))
+            if (this._isOneProperty)
             {
-                var dictionary = _obj as IDictionary;
-                if (dictionary == null)
-                    return;
-                foreach (var key in dictionary.Keys)
-                {
-                    this.Children.Add(new ObjectTreeViewModel(this, key.ToString(), dictionary[key], _infoType, _depth + 1));
-                }
                 return;
             }
-            else if (typeof(IList).IsAssignableFrom(_obj.GetType()))
+
+            // todo: why 2?
+            if (this._depth > 2)
             {
-                var list = _obj as IList;
-                if (list != null)
+                return;
+            }
+
+            if (this._obj == null || this._obj.GetType() == typeof(string) || this._obj.GetType().IsValueType)
+            {
+                return;
+            }
+
+            if (typeof(IDictionary).IsAssignableFrom(this._obj.GetType()))
+            {
+                var dictionary = this._obj as IDictionary;
+                if (dictionary == null)
+                {
+                    return;
+                }
+
+                foreach (var key in dictionary.Keys)
+                {
+                    this.Children.Add(new ObjectTreeViewModel(this, key.ToString(), dictionary[key], this._infoType, this._depth + 1));
+                }
+
+                return;
+            }
+
+            if (typeof(IList).IsAssignableFrom(this._obj.GetType()))
+            {
+                if (this._obj is IList list)
                 {
                     for (int i = 0; i < list.Count; i++)
                     {
-                        this.Children.Add(new ObjectTreeViewModel(this, list[i] == null ? "(null)" : String.Format("[{0}]", i), list[i], _infoType, _depth + 1));
+                        this.Children.Add(new ObjectTreeViewModel(this, list[i] == null ? "(null)" : $"[{i}]", list[i], this._infoType, this._depth + 1));
                     }
                 }
+
                 return;
             }
-            if (_infoType == InfoType.Properties || _infoType == InfoType.Both)
+
+            if (this._infoType == InfoType.Properties || this._infoType == InfoType.Both)
             {
-                foreach (var prop in _obj.GetType().GetProperties().OrderBy(p => p.Name))
+                foreach (var prop in this._obj.GetType().GetProperties().OrderBy(p => p.Name))
                 {
                     try
                     {
-                        var objValue = prop.GetValue(_obj, null);
+                        var objValue = prop.GetValue(this._obj, null);
                         if (objValue == null)
+                        {
                             continue;
+                        }
+
                         if (objValue is IList)
                         {
                             var list = objValue as IList;
                             for (int i = 0; i < list.Count; i++)
                             {
-                                this.Children.Add(new ObjectTreeViewModel(this, list[i] == null ? "(null)" : String.Format("[{0}]", i), list[i], _infoType, _depth + 1));
+                                this.Children.Add(new ObjectTreeViewModel(this, list[i] == null ? "(null)" : $"[{i}]", list[i], this._infoType, this._depth + 1));
                             }
                         }
                         else if (objValue is IDictionary)
@@ -120,57 +199,49 @@ namespace Utils.Core.ViewModels
                         }
                         else
                         {
-
-                            var objectItem = new NameValueTreeViewModel(this, prop.Name,
-                                                                        objValue == null ? "" : objValue.ToString());
+                            var objectItem = new NameValueTreeViewModel(this, prop.Name, objValue.ToString());
                             this.Children.Add(objectItem);
 
                             if (prop.PropertyType.GetInterface("IEnumerable`1") != null &&
-                                prop.PropertyType.IsGenericType &&
-                                objValue != null)
+                                prop.PropertyType.IsGenericType)
                             {
                                 var genericTypeArgument = prop.PropertyType.GetGenericArguments()[0];
-                                foreach (var item in objValue as IEnumerable)
+                                foreach (var item in (IEnumerable)objValue)
                                 {
-                                    objectItem.Children.Add(new ObjectTreeViewModel(this, GetTitle(item), item,
-                                                                                    InfoType.Properties, _depth + 1));
+                                    objectItem.Children.Add(new ObjectTreeViewModel(this, this.GetTitle(item), item, InfoType.Properties, this._depth + 1));
                                 }
                             }
-                            else if (objValue != null && !objValue.GetType().IsValueType && objValue.GetType() != typeof(string))
+                            else if (!objValue.GetType().IsValueType && objValue.GetType() != typeof(string))
                             {
-                                objectItem.Children.Add(new ObjectTreeViewModel(this, objValue.ToString(), objValue,
-                                                                                _infoType, _depth + 1));
+                                objectItem.Children.Add(
+                                    new ObjectTreeViewModel(this, objValue.ToString(), objValue, this._infoType, this._depth + 1));
                             }
                         }
                     }
                     catch (Exception e)
                     {
-                        //   MessageBox.Show(String.Format("Property:{0} of type:{1} excpetion:{2} obj:{3} objGetType:{4}", prop.Name,
-                        //                               prop.PropertyType, e.Message, _obj, _obj.GetType()));
-                        //throw;
+                        Trace.WriteLine($"Exception {e}");
                         return;
                     }
                 }
             }
 
-            if (_infoType == InfoType.Fields || _infoType == InfoType.Both)
+            if (this._infoType == InfoType.Fields || this._infoType == InfoType.Both)
             {
-                foreach (var field in _obj.GetType().GetFields().OrderBy(f => f.Name))
+                foreach (var field in this._obj.GetType().GetFields().OrderBy(f => f.Name))
                 {
-                    var objValue = field.GetValue(_obj);
+                    var objValue = field.GetValue(this._obj);
 
-                    if (objValue is IList)
+                    if (objValue is IList list)
                     {
-                        var list = objValue as IList;
                         for (int i = 0; i < list.Count; i++)
                         {
-                            this.Children.Add(new ObjectTreeViewModel(this, list[i] == null ? "(null)" : String.Format("[{0}]", i), list[i], _infoType, _depth + 1));
+                            this.Children.Add(new ObjectTreeViewModel(this, list[i] == null ? "(null)" : $"[{i}]", list[i], this._infoType, this._depth + 1));
                         }
                     }
                     else if (!field.FieldType.IsClass || field.FieldType == typeof(string) || objValue == null)
                     {
-                        this.Children.Add(new NameValueTreeViewModel(this, field.Name,
-                                                                 objValue == null ? "" : objValue.ToString()));
+                        this.Children.Add(new NameValueTreeViewModel(this, field.Name, objValue == null ? string.Empty : objValue.ToString()));
                     }
                     else
                     {
@@ -183,18 +254,29 @@ namespace Utils.Core.ViewModels
         private string GetTitle(object obj)
         {
             if (obj == null)
+            {
                 return "null";
-            if (obj.GetType() == typeof(string))
-                return obj.ToString();
-            if (obj.GetType().IsValueType)
-                return obj.ToString();
+            }
 
-            var nameProperty = obj.GetType().GetProperty("Name");    // try to see whether name property 
+            if (obj.GetType() == typeof(string))
+            {
+                return obj.ToString();
+            }
+
+            if (obj.GetType().IsValueType)
+            {
+                return obj.ToString();
+            }
+
+            // try to see whether name property
+            var nameProperty = obj.GetType().GetProperty("Name");
             if (nameProperty != null)
             {
                 var namePropertyValue = nameProperty.GetValue(obj, null);
                 if (namePropertyValue != null)
+                {
                     return namePropertyValue.ToString();
+                }
             }
 
             var typeName = obj.GetType().Name;
@@ -203,16 +285,19 @@ namespace Utils.Core.ViewModels
             {
                 var namePropertyValue = nameProperty.GetValue(obj, null);
                 if (namePropertyValue != null)
+                {
                     return namePropertyValue.ToString();
+                }
             }
 
             // If there is only one property and is value type(or string )then use it
             var val = obj.TryForOneProperty();
             if (val != null)
             {
-                _isOneProperty = true;
+                this._isOneProperty = true;
                 return $"{typeName} ({val})";
             }
+
             return typeName;
         }
     }

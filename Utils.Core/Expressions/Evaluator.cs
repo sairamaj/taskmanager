@@ -12,7 +12,7 @@ namespace Utils.Core.Expressions
             return new ExpressionInfo
             {
                 MethodData = walker.Method,
-                Variable = walker.Variable
+                Variable = walker.Variable,
             };
         }
     }

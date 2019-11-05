@@ -24,6 +24,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <CodeAnalysisRuleSet>..\build\Source.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -32,6 +33,7 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <CodeAnalysisRuleSet>..\build\Source.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Autofac, Version=4.9.4.0, Culture=neutral, PublicKeyToken=17863af14b0044da, processorArchitecture=MSIL">
@@ -154,6 +156,7 @@
     <Compile Include="Diagnostics\ILogger.cs" />
     <Compile Include="ITokenClient.cs" />
     <Compile Include="KeyEqualityComparer.cs" />
+    <Compile Include="Model\InfoType.cs" />
     <Compile Include="Model\LogLevel.cs" />
     <Compile Include="Model\LogMessage.cs" />
     <Compile Include="Model\RegistrationInfo.cs" />
@@ -172,7 +175,7 @@
     <Compile Include="Test\TestConfig.cs" />
     <Compile Include="Test\TestInfo.cs" />
     <Compile Include="Test\TraceType.cs" />
-    <Compile Include="TokenClient2.cs" />
+    <Compile Include="TokenClient.cs" />
     <Compile Include="ViewModels\ChildChangedEventArgs.cs" />
     <Compile Include="ViewModels\CommandTreeViewModel.cs" />
     <Compile Include="ViewModels\CoreViewModel.cs" />
@@ -215,6 +218,12 @@
   <ItemGroup>
     <Analyzer Include="..\packages\Microsoft.CodeAnalysis.Analyzers.2.9.4\analyzers\dotnet\cs\Microsoft.CodeAnalysis.Analyzers.dll" />
     <Analyzer Include="..\packages\Microsoft.CodeAnalysis.Analyzers.2.9.4\analyzers\dotnet\cs\Microsoft.CodeAnalysis.CSharp.Analyzers.dll" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="StyleCop.Analyzers" Version="1.1.118">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
+    </PackageReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

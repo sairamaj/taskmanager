@@ -1,17 +1,31 @@
-﻿using System.Collections.Generic;
-
-namespace Utils.Core.ViewModels
+﻿namespace Utils.Core.ViewModels
 {
+    /// <summary>
+    /// Object container view model.
+    /// </summary>
     public class ObjectContainerViewModel : TreeViewItemViewModel
     {
+        /// <summary>
+        /// Object value.
+        /// </summary>
         private readonly object _obj;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ObjectContainerViewModel"/> class.
+        /// </summary>
+        /// <param name="parent">
+        /// Parent view model.
+        /// </param>
+        /// <param name="obj">
+        /// Object to be displayed.
+        /// </param>
+        /// <param name="name">
+        /// Name of the view model.
+        /// </param>
         public ObjectContainerViewModel(TreeViewItemViewModel parent, object obj, string name)
             : base(parent, name, true)
         {
-            _obj = obj;
+            this._obj = obj;
         }
-
-        public List<ObjectTreeViewModel> Objects => new List<ObjectTreeViewModel>() { new ObjectTreeViewModel(this, Name, _obj, ObjectTreeViewModel.InfoType.Properties) };
     }
 }

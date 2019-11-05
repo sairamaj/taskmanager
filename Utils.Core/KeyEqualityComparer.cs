@@ -5,53 +5,117 @@ using System.Linq;
 namespace Utils.Core
 {
     // https://github.com/jehugaleahsa/ComparerExtensions/blob/master/ComparerExtensions/KeyEqualityComparer.cs
+
+    /// <summary>
+    /// Key equality comparer.
+    /// </summary>
+    /// <typeparam name="T">
+    /// Type name.
+    /// </typeparam>
     public class KeyEqualityComparer<T> : IEqualityComparer<T>
     {
-        private readonly Func<T, T, bool> comparer;
-        private readonly Func<T, object> keyExtractor;
+        /// <summary>
+        /// Comparer function.
+        /// </summary>
+        private readonly Func<T, T, bool> _comparer;
 
-        // Allows us to simply specify the key to compare with: y => y.CustomerID
-        public KeyEqualityComparer(Func<T, object> keyExtractor) : this(keyExtractor, null)
+        /// <summary>
+        /// Key extractor.
+        /// </summary>
+        private readonly Func<T, object> _keyExtractor;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="KeyEqualityComparer{T}"/> class.
+        /// </summary>
+        /// <param name="keyExtractor">
+        /// Key extractor func.
+        /// </param>
+        public KeyEqualityComparer(Func<T, object> keyExtractor)
+            : this(keyExtractor, null)
         {
         }
 
-        // Allows us to tell if two objects are equal: (x, y) => y.CustomerID == x.CustomerID
-        public KeyEqualityComparer(Func<T, T, bool> comparer) : this(null, comparer)
+        /// <summary>
+        /// Initializes a new instance of the <see cref="KeyEqualityComparer{T}"/> class.
+        /// </summary>
+        /// <param name="comparer">
+        /// Comparer func.
+        /// </param>
+        public KeyEqualityComparer(Func<T, T, bool> comparer)
+            : this(null, comparer)
         {
         }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="KeyEqualityComparer{T}"/> class.
+        /// </summary>
+        /// <param name="keyExtractor">
+        /// Key extractor func.
+        /// </param>
+        /// <param name="comparer">
+        /// Comparer func.
+        /// </param>
         public KeyEqualityComparer(Func<T, object> keyExtractor, Func<T, T, bool> comparer)
         {
-            this.keyExtractor = keyExtractor;
-            this.comparer = comparer;
+            this._keyExtractor = keyExtractor;
+            this._comparer = comparer;
         }
 
+        /// <summary>
+        /// Equality function.
+        /// </summary>
+        /// <param name="x">
+        /// A <see cref="T"/> first instance.
+        /// </param>
+        /// <param name="y">
+        /// A <see cref="T"/> second instance.
+        /// </param>
+        /// <returns>
+        /// true if these two instances are equal.
+        /// </returns>
         public bool Equals(T x, T y)
         {
-            if (comparer != null)
-                return comparer(x, y);
-            else
+            if (this._comparer != null)
             {
-                var valX = keyExtractor(x);
-                if (valX is IEnumerable<object>) // The special case where we pass a list of keys
-                    return ((IEnumerable<object>) valX).SequenceEqual((IEnumerable<object>) keyExtractor(y));
-
-                return valX.Equals(keyExtractor(y));
+                return this._comparer(x, y);
             }
+
+            var valX = this._keyExtractor(x);
+
+            // The special case where we pass a list of keys
+            if (valX is IEnumerable<object>)
+            {
+                return ((IEnumerable<object>)valX).SequenceEqual((IEnumerable<object>)this._keyExtractor(y));
+            }
+
+            return valX.Equals(this._keyExtractor(y));
         }
 
+        /// <summary>
+        /// Gets hash code of object instance.
+        /// </summary>
+        /// <param name="obj">
+        /// Instance object.
+        /// </param>
+        /// <returns>
+        /// Hash code.
+        /// </returns>
         public int GetHashCode(T obj)
         {
-            if (keyExtractor == null)
-                return obj.ToString().ToLower().GetHashCode();
-            else
+            if (this._keyExtractor == null)
             {
-                var val = keyExtractor(obj);
-                if (val is IEnumerable<object>) // The special case where we pass a list of keys
-                    return (int) ((IEnumerable<object>) val).Aggregate((x, y) => x.GetHashCode() ^ y.GetHashCode());
-
-                return val.GetHashCode();
+                return obj.ToString().ToLower().GetHashCode();
             }
+
+            var val = this._keyExtractor(obj);
+
+            // The special case where we pass a list of keys
+            if (val is IEnumerable<object> objects)
+            {
+                return (int)objects.Aggregate((x, y) => x.GetHashCode() ^ y.GetHashCode());
+            }
+
+            return val.GetHashCode();
         }
     }
 }
