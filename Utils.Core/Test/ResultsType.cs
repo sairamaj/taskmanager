@@ -6,6 +6,6 @@
         String,
         Void,
         Dictionary,
-        Object
+        Object,
     }
 }

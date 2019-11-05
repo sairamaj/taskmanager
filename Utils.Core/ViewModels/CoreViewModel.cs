@@ -19,7 +19,7 @@ namespace Utils.Core.ViewModels
         /// <summary>
         /// The system events.
         /// </summary>
-        private static readonly EventHandler<ViewModelEventArgs> SystemEvents = delegate { };
+        private static readonly EventHandler<ViewModelEventArgs> SystemEvents = (sender, args) => { };
 
         /// <summary>
         /// Initializes a new instance of the <see cref="CoreViewModel"/> class.

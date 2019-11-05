@@ -25,13 +25,6 @@ namespace Utils.Core.Views
         /// Gets selected item.
         /// </summary>
         /// <value>Selected object.</value>
-        public object SelectedItem
-        {
-            get
-            {
-                return this._selectedItem;
-            }
-        }
+        public object SelectedItem => this._selectedItem;
     }
-
 }

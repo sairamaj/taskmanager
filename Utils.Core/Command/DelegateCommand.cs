@@ -170,7 +170,7 @@ namespace Utils.Core.Command
         /// <summary>
         /// Automatic query disabled flag.
         /// </summary>
-        private bool _isAutomaticRequeryDisabled = false;
+        private readonly bool _isAutomaticRequeryDisabled = false;
 
         /// <summary>
         /// Execute change handlers.
@@ -221,9 +221,9 @@ namespace Utils.Core.Command
                 throw new ArgumentNullException("executeMethod");
             }
 
-            _executeMethod = executeMethod;
-            _canExecuteMethod = canExecuteMethod;
-            _isAutomaticRequeryDisabled = isAutomaticRequeryDisabled;
+            this._executeMethod = executeMethod;
+            this._canExecuteMethod = canExecuteMethod;
+            this._isAutomaticRequeryDisabled = isAutomaticRequeryDisabled;
         }
 
         #endregion

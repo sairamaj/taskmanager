@@ -56,5 +56,4 @@ namespace Utils.Core.ViewModels
             this._stopEvent.Set();
         }
     }
-
 }

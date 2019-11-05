@@ -88,11 +88,11 @@ namespace Utils.Core.ViewModels
 
             this.Children.CollectionChanged += (s, e) =>
             {
-                if (ChildAdded != null)
+                if (this.ChildAdded != null)
                 {
                     if (e.Action == NotifyCollectionChangedAction.Add)
                     {
-                        ChildAdded(this, new ChildChangedEventArgs(e.NewItems[e.NewItems.Count - 1] as TreeViewItemViewModel));
+                        this.ChildAdded(this, new ChildChangedEventArgs(e.NewItems[e.NewItems.Count - 1] as TreeViewItemViewModel));
                     }
                 }
             };

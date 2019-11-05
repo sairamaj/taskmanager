@@ -45,15 +45,11 @@ namespace Utils.Core.ViewModels
         public ExceptionTreeViewItemViewModel(TreeViewItemViewModel parent, Exception exception, string additionalInfo)
             : base(parent, string.Format(CultureInfo.InvariantCulture, "{0} {1}", exception == null ? "" : exception.GetType().ToString(), exception), true)
         {
-            if (exception == null)
-            {
-                throw new ArgumentNullException("exception");
-            }
-
             this.AdditionalInfo = additionalInfo;
-            this._exception = exception;
+            this._exception = exception ?? throw new ArgumentNullException(nameof(exception));
             if (this._exception is TargetInvocationException)
-            {   // for reflection exception look in innerexception.
+            {
+                // for reflection exception look in inner exception.
                 if (this._exception.InnerException != null)
                 {
                     this._exception = this._exception.InnerException;

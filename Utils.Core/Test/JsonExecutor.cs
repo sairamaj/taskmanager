@@ -10,69 +10,113 @@ using Utils.Core.Expressions;
 
 namespace Utils.Core.Test
 {
+    /// <summary>
+    /// Json Executor.
+    /// Executes the json which contains api, expressions and variables.
+    /// </summary>
     public class JsonExecutor
     {
+        /// <summary>
+        /// Trace action.
+        /// </summary>
         private readonly Action<ExecuteTraceInfo> _traceAction;
+
+        /// <summary>
+        /// Tests information.
+        /// </summary>
         private readonly IEnumerable<TestInfo> _tests;
+
+        /// <summary>
+        /// Method proxy.
+        /// </summary>
         private readonly MethodProxy _methodProxy;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="JsonExecutor"/> class.
+        /// </summary>
+        /// <param name="dataJson">
+        /// Json data to be executed.
+        /// </param>
+        /// <param name="configJson">
+        /// Configuration json which contains types.
+        /// </param>
+        /// <param name="traceAction">
+        /// A <see cref="Action{T}"/> of <see cref="ExecuteTraceInfo"/> for tracking the execution.
+        /// </param>
         public JsonExecutor(string dataJson, string configJson, Action<ExecuteTraceInfo> traceAction)
         {
-            _traceAction = traceAction;
+            this._traceAction = traceAction;
             this._tests = JsonConvert.DeserializeObject<IEnumerable<TestInfo>>(dataJson);
             var config = JsonConvert.DeserializeObject<IEnumerable<TestConfig>>(configJson);
-            _methodProxy = new MethodProxy(config?.Select(c => c.TypeName), traceAction);
+            this._methodProxy = new MethodProxy(config?.Select(c => c.TypeName), traceAction);
         }
 
+        /// <summary>
+        /// Executes with given variables.
+        /// </summary>
+        /// <param name="variables">
+        /// A <see cref="IDictionary{TKey,TValue}"/> of variables.
+        /// </param>
+        /// <returns>
+        /// Execution results.
+        /// </returns>
         public IDictionary<string, object> Execute(IDictionary<string, object> variables)
         {
             IDictionary<string, object> results = new Dictionary<string, object>();
             IDictionary<string, object> allVariables = new Dictionary<string, object>(StringComparer.InvariantCultureIgnoreCase);
-            variables.ToList().ForEach(kv=> allVariables[kv.Key] = kv.Value);
-            foreach (var test in _tests)
+            variables.ToList().ForEach(kv => allVariables[kv.Key] = kv.Value);
+            foreach (var test in this._tests)
             {
                 if (test.Variables != null)
                 {
-                    var testVariables = EvaluateParameters(test.Variables, allVariables);
+                    var testVariables = this.EvaluateParameters(test.Variables, allVariables);
+
                     // merge these into all variables
                     testVariables.ToList().ForEach(kv => allVariables[kv.Key] = kv.Value);
                 }
 
                 if (!string.IsNullOrWhiteSpace(test.Api))
                 {
-                    results[test.Name] = ExecuteTest(test, allVariables, results, out _);
+                    results[test.Name] = this.ExecuteTest(test, allVariables, results, out _);
                 }
             }
 
             return results;
         }
 
+        /// <summary>
+        /// Excutes and also verifies the results with expected values.
+        /// </summary>
+        /// <param name="variables">
+        /// A <see cref="IDictionary{TKey,TValue}"/> of variables.
+        /// </param>
         public void ExecuteAndVerify(IDictionary<string, object> variables)
         {
             IDictionary<string, object> previousTestResults = new Dictionary<string, object>();
             IDictionary<string, object> allVariables = new Dictionary<string, object>(StringComparer.InvariantCultureIgnoreCase);
             variables.ToList().ForEach(kv => allVariables[kv.Key] = kv.Value);
 
-            foreach (var test in _tests)
+            foreach (var test in this._tests)
             {
                 try
                 {
                     if (test.Variables != null)
                     {
-                        var testVariables = EvaluateParameters(test.Variables, allVariables);
+                        var testVariables = this.EvaluateParameters(test.Variables, allVariables);
+
                         // merge these into all variables
                         testVariables.ToList().ForEach(kv => allVariables[kv.Key] = kv.Value);
                     }
 
                     if (!string.IsNullOrWhiteSpace(test.Api))
                     {
-                        var results = ExecuteTest(test, allVariables, previousTestResults, out var resultsType);
+                        var results = this.ExecuteTest(test, allVariables, previousTestResults, out var resultsType);
                         previousTestResults["result"] = results;
-                        VerifyResults(test, resultsType, results, allVariables);
+                        this.VerifyResults(test, resultsType, results, allVariables);
                         if (test.Extracts != null)
                         {
                             allVariables["result"] = results;
-                            var extractVariables = EvaluateParameters(test.Extracts, allVariables);
+                            var extractVariables = this.EvaluateParameters(test.Extracts, allVariables);
                             extractVariables.ToList().ForEach(kv => allVariables[kv.Key] = kv.Value);
                         }
                     }
@@ -84,7 +128,7 @@ namespace Utils.Core.Test
                     Console.WriteLine(expectedObjectJson);
                     if (expectedObjectJson.Exception)
                     {
-                        VerifyException(test, expectedObjectJson, e);
+                        this.VerifyException(test, expectedObjectJson, e);
                     }
                     else
                     {
@@ -94,18 +138,34 @@ namespace Utils.Core.Test
             }
         }
 
+        /// <summary>
+        /// Verifies the results of a test.
+        /// </summary>
+        /// <param name="test">
+        /// A <see cref="TestInfo"/> of test.
+        /// </param>
+        /// <param name="resultsType">
+        /// A <see cref="ResultsType"/> of result type.
+        /// </param>
+        /// <param name="results">
+        /// A <see cref="IDictionary{TKey,TValue}"/> of results.
+        /// </param>
+        /// <param name="variables">
+        /// A <see cref="IDictionary{TKey,TValue}"/> of variables.
+        /// </param>
         private void VerifyResults(TestInfo test, ResultsType resultsType, IDictionary<string, object> results, IDictionary<string, object> variables)
         {
             try
             {
                 if (resultsType == ResultsType.Primitive)
                 {
-                    var finalExpectedValue = EvaluateParameters(new Dictionary<string, object>()
+                    var finalExpectedValue = this.EvaluateParameters(
+                        new Dictionary<string, object>()
                     {
-                        {"result", test.ReturnValue}
+                        {"result", test.ReturnValue},
                     }, variables).First();
                     var result = results["result"];
-                    Verify(test, () => result, finalExpectedValue.Value);
+                    this.Verify(test, () => result, finalExpectedValue.Value);
                 }
                 else if (resultsType == ResultsType.Void)
                 {
@@ -113,7 +173,7 @@ namespace Utils.Core.Test
                 }
                 else if (resultsType == ResultsType.Object)
                 {
-                    var evaluatedExpectedValues = EvaluateParameters(test.GetExpectedResults(), variables);
+                    var evaluatedExpectedValues = this.EvaluateParameters(test.GetExpectedResults(), variables);
                     if (evaluatedExpectedValues.Any())
                     {
                         var returnObject = results["result"];
@@ -123,20 +183,22 @@ namespace Utils.Core.Test
                         Console.WriteLine(expectedObjectJson);
                         var returnType = results["resultType"];
                         var expectedObject = JsonConvert.DeserializeObject(expectedObjectJson?.ToString(), returnType as Type);
+
                         // Verify dictionary.
-                        SendVerificationTraceInfo(test, returnObject, expectedObject);
+                        this.SendVerificationTraceInfo(test, returnObject, expectedObject);
                         returnObject.Should().BeEquivalentTo(expectedObject, test.Name);
                     }
                 }
                 else
                 {
-                    var evaluatedExpectedValues = EvaluateParameters(test.GetExpectedResults(true), variables);
+                    var evaluatedExpectedValues = this.EvaluateParameters(test.GetExpectedResults(true), variables);
                     if (evaluatedExpectedValues.Any())
                     {
                         Console.WriteLine("===========================");
+
                         // Verify dictionary.
                         results.Remove("resultType");
-                        SendVerificationTraceInfo(test, results, evaluatedExpectedValues);
+                        this.SendVerificationTraceInfo(test, results, evaluatedExpectedValues);
                         results.Should().BeEquivalentTo(evaluatedExpectedValues, test.Name);
                     }
                 }
@@ -148,23 +210,52 @@ namespace Utils.Core.Test
                 Console.WriteLine(expectedObjectJson);
                 if (expectedObjectJson.Exception)
                 {
-                    VerifyException(test, expectedObjectJson, e);
+                    this.VerifyException(test, expectedObjectJson, e);
                 }
                 else
                 {
                     throw;
                 }
             }
-
         }
 
+        /// <summary>
+        /// Verifies exception.
+        /// </summary>
+        /// <param name="testInfo">
+        /// A <see cref="TestInfo"/>.
+        /// </param>
+        /// <param name="expected">
+        /// A <see cref="ExpectedExceptionInfo"/> expected exception info.
+        /// </param>
+        /// <param name="exception">
+        /// A <see cref="Exception"/> of actual.
+        /// </param>
         private void VerifyException(TestInfo testInfo, ExpectedExceptionInfo expected, Exception exception)
         {
-            SendVerificationTraceInfo(testInfo, exception, expected);
+            this.SendVerificationTraceInfo(testInfo, exception, expected);
             exception.GetType().ToString().Should().Be(expected.ExceptionType);
             exception.Message.Should().Contain(expected.ExceptionMessageLike);
         }
 
+        /// <summary>
+        /// Excute tests.
+        /// </summary>
+        /// <param name="test">
+        /// A <see cref="TestInfo"/>.
+        /// </param>
+        /// <param name="variables">
+        /// A <see cref="IDictionary{TKey,TValue}"/> variables.
+        /// </param>
+        /// <param name="previousTestResults">
+        /// A <see cref="IDictionary{TKey,TValue}"/> of previous results.
+        /// </param>
+        /// <param name="resultsType">
+        /// Results type
+        /// </param>
+        /// <returns>
+        /// Results dictionary.
+        /// </returns>
         private IDictionary<string, object> ExecuteTest(
             TestInfo test,
             IDictionary<string, object> variables,
@@ -174,12 +265,12 @@ namespace Utils.Core.Test
             var allParameters = new Dictionary<string, object>();
             test.Parameters?.ToList().ForEach(kv => allParameters[kv.Key] = kv.Value);
             previousTestResults.ToList().ForEach(kv => allParameters[kv.Key] = kv.Value);
-            var newParameters = EvaluateParameters(allParameters, variables);
+            var newParameters = this.EvaluateParameters(allParameters, variables);
 
             var output = this._methodProxy.Execute(test.Api, newParameters);
             var results = new Dictionary<string, object>()
             {
-                {"resultType", this._methodProxy.ReturnType}
+                {"resultType", this._methodProxy.ReturnType},
             };
 
             if (output == null)
@@ -219,7 +310,20 @@ namespace Utils.Core.Test
             results["result"] = output;
             return results;
         }
-        IDictionary<string, object> EvaluateParameters(IDictionary<string, object> parameters, IDictionary<string, object> variables)
+
+        /// <summary>
+        /// Evaluates parameters.
+        /// </summary>
+        /// <param name="parameters">
+        /// A <see cref="IDictionary{TKey,TValue}"/> parameters.
+        /// </param>
+        /// <param name="variables">
+        /// A <see cref="IDictionary{TKey,TValue}"/> variables.
+        /// </param>
+        /// <returns>
+        /// A <see cref="IDictionary{TKey,TValue}"/> evaluated with variables.
+        /// </returns>
+        private IDictionary<string, object> EvaluateParameters(IDictionary<string, object> parameters, IDictionary<string, object> variables)
         {
             var newParameterValues = new Dictionary<string, object>(StringComparer.InvariantCultureIgnoreCase);
             if (parameters == null)
@@ -241,35 +345,36 @@ namespace Utils.Core.Test
                     var evaluatedItems = new List<string>();
                     foreach (var val in parameter.Value as System.String[])
                     {
-                        if (TryExpression(val, out var expression))
+                        if (this.TryExpression(val, out var expression))
                         {
-                            evaluatedItems.Add(Evaluate(expression, allVariables)?.ToString());
+                            evaluatedItems.Add(this.Evaluate(expression, allVariables)?.ToString());
                         }
                         else
                         {
                             evaluatedItems.Add(val);
                         }
                     }
+
                     newParameterValues[parameter.Key] = evaluatedItems.ToArray();
                     continue;
                 }
 
                 if (parameter.Value is JArray array)
                 {
-                    newParameterValues[parameter.Key] = ProcessJArray(array, allVariables);
+                    newParameterValues[parameter.Key] = this.ProcessJArray(array, allVariables);
                     continue;
                 }
 
                 if (parameter.Value is JObject jObj)
                 {
-                    newParameterValues[parameter.Key] = ProcessJObject(jObj, allVariables);
+                    newParameterValues[parameter.Key] = this.ProcessJObject(jObj, allVariables);
                 }
                 else
                 {
                     var value = parameter.Value;
-                    if (TryExpression(value?.ToString(), out var expression2))
+                    if (this.TryExpression(value?.ToString(), out var expression2))
                     {
-                        value = Evaluate(expression2, allVariables);
+                        value = this.Evaluate(expression2, allVariables);
                     }
 
                     newParameterValues[parameter.Key] = value;
@@ -279,7 +384,18 @@ namespace Utils.Core.Test
             return newParameterValues;
         }
 
-        // todo: combine  with ProcessJToken
+        /// <summary>
+        /// Process JObject.
+        /// </summary>
+        /// <param name="jObject">
+        /// JObject instance.
+        /// </param>
+        /// <param name="variables">
+        /// Variables to be used.
+        /// </param>
+        /// <returns>
+        /// Evaluated JObject instance.
+        /// </returns>
         private JObject ProcessJObject(JObject jObject, IDictionary<string, object> variables)
         {
             if (jObject == null)
@@ -297,9 +413,9 @@ namespace Utils.Core.Test
             {
                 if (childToken is JProperty property)
                 {
-                    if (TryExpression(property.Value?.ToString(), out var expression))
+                    if (this.TryExpression(property.Value?.ToString(), out var expression))
                     {
-                        newToken.Add(new JProperty(property.Name, Evaluate(expression, variables)?.ToString()));
+                        newToken.Add(new JProperty(property.Name, this.Evaluate(expression, variables)?.ToString()));
                     }
                     else
                     {
@@ -311,21 +427,46 @@ namespace Utils.Core.Test
                     newToken.Add(childToken);
                 }
             }
+
             return newToken;
         }
 
+        /// <summary>
+        /// Process JArray.
+        /// </summary>
+        /// <param name="array">
+        /// JArray instance.
+        /// </param>
+        /// <param name="variables">
+        /// Variables to be used.
+        /// </param>
+        /// <returns>
+        /// Processed JArray with variables.
+        /// </returns>
         private JArray ProcessJArray(JArray array, IDictionary<string, object> variables)
         {
             JArray newArray = new JArray();
             foreach (var token in array)
             {
-                var modifiedToken = ProcessJToken(token, variables);
+                var modifiedToken = this.ProcessJToken(token, variables);
                 newArray.Add(modifiedToken);
             }
 
             return newArray;
         }
 
+        /// <summary>
+        /// Process JToken.
+        /// </summary>
+        /// <param name="token">
+        /// JToken instance.
+        /// </param>
+        /// <param name="variables">
+        /// Variables to be used.
+        /// </param>
+        /// <returns>
+        /// Processed JToken.
+        /// </returns>
         private JToken ProcessJToken(JToken token, IDictionary<string, object> variables)
         {
             if (!token.Children().Any())
@@ -338,9 +479,9 @@ namespace Utils.Core.Test
             {
                 if (childToken is JProperty property)
                 {
-                    if (TryExpression(property.Value?.ToString(), out var expression))
+                    if (this.TryExpression(property.Value?.ToString(), out var expression))
                     {
-                        newToken.Add(new JProperty(property.Name, Evaluate(expression, variables)?.ToString()));
+                        newToken.Add(new JProperty(property.Name, this.Evaluate(expression, variables)?.ToString()));
                     }
                     else
                     {
@@ -352,9 +493,22 @@ namespace Utils.Core.Test
                     newToken.Add(childToken);
                 }
             }
+
             return newToken;
         }
 
+        /// <summary>
+        /// Evaluate expression.
+        /// </summary>
+        /// <param name="expression">
+        /// Expression to be evaluated.
+        /// </param>
+        /// <param name="variables">
+        /// Variables to be used.
+        /// </param>
+        /// <returns>
+        /// Evaluated instance.
+        /// </returns>
         private object Evaluate(string expression, IDictionary<string, object> variables)
         {
             object evaluatedValue = expression;
@@ -364,7 +518,7 @@ namespace Utils.Core.Test
             {
                 foreach (var arg in expressionInfo.MethodData.Arguments)
                 {
-                    evaluatedParameters[arg.Name] = EvaluateValue(arg, variables);
+                    evaluatedParameters[arg.Name] = this.EvaluateValue(arg, variables);
                 }
 
                 if (variables.TryGetValue("result", out object result))
@@ -372,20 +526,31 @@ namespace Utils.Core.Test
                     evaluatedParameters["result"] = result;
                 }
 
-                evaluatedValue = _methodProxy.Execute(expressionInfo.MethodData.Name, evaluatedParameters);
+                evaluatedValue = this._methodProxy.Execute(expressionInfo.MethodData.Name, evaluatedParameters);
             }
             else if (expressionInfo.Variable != null)
             {
-                evaluatedValue = EvaluateValue(expressionInfo.Variable, variables);
+                evaluatedValue = this.EvaluateValue(expressionInfo.Variable, variables);
             }
 
             return evaluatedValue;
         }
 
+        /// <summary>
+        /// Evaluate value.
+        /// </summary>
+        /// <param name="variable">
+        /// A Variable instance.
+        /// </param>
+        /// <param name="variables">
+        /// Variables to be used.
+        /// </param>
+        /// <returns>
+        /// Evaluated variable instance.
+        /// </returns>
         private object EvaluateValue(Variable variable, IDictionary<string, object> variables)
         {
-            object variableValue;
-            if (variables.TryGetValue(variable.Name, out variableValue))
+            if (variables.TryGetValue(variable.Name, out var variableValue))
             {
                 return variableValue;
             }
@@ -393,6 +558,18 @@ namespace Utils.Core.Test
             return null;
         }
 
+        /// <summary>
+        /// Evaluate argument value.
+        /// </summary>
+        /// <param name="arg">
+        /// A <see cref="Argument"/> instance.
+        /// </param>
+        /// <param name="variables">
+        /// Variables to be used.
+        /// </param>
+        /// <returns>
+        /// Evaluated value.
+        /// </returns>
         private object EvaluateValue(Argument arg, IDictionary<string, object> variables)
         {
             var value = arg.Val;
@@ -406,9 +583,8 @@ namespace Utils.Core.Test
                 return value;
             }
 
-            var variablename = arg.Val;
-            object variableValue;
-            if (variables.TryGetValue(variablename, out variableValue))
+            var variableName = arg.Val;
+            if (variables.TryGetValue(variableName, out var variableValue))
             {
                 return variableValue;
             }
@@ -416,7 +592,21 @@ namespace Utils.Core.Test
             return null;
         }
 
-
+        /// <summary>
+        /// Verfies the test.
+        /// </summary>
+        /// <typeparam name="T">
+        /// Type name.
+        /// </typeparam>
+        /// <param name="test">
+        /// A <see cref="TestInfo"/> instance.
+        /// </param>
+        /// <param name="selectorExpression">
+        /// A <see cref="Func{TResult}"/> expression.
+        /// </param>
+        /// <param name="expectedValue">
+        /// Expected value.
+        /// </param>
         public void Verify<T>(TestInfo test, Expression<Func<T>> selectorExpression, object expectedValue)
         {
             if (selectorExpression == null)
@@ -432,7 +622,7 @@ namespace Utils.Core.Test
                 return;
             }
 
-            SendVerificationTraceInfo(test, actual, expectedValue);
+            this.SendVerificationTraceInfo(test, actual, expectedValue);
             var propertyName = body.Member.Name;
             if (actual != null && actual.GetType().IsArray)
             {
@@ -444,6 +634,18 @@ namespace Utils.Core.Test
             }
         }
 
+        /// <summary>
+        /// Gets expression if given value is a proper expression.
+        /// </summary>
+        /// <param name="val">
+        /// Value to be parsed for expression.
+        /// </param>
+        /// <param name="expression">
+        /// Expression.
+        /// </param>
+        /// <returns>
+        /// true if it is expression.
+        /// </returns>
         private bool TryExpression(string val, out string expression)
         {
             expression = null;
@@ -461,13 +663,25 @@ namespace Utils.Core.Test
             return false;
         }
 
+        /// <summary>
+        /// Send verification trace info.
+        /// </summary>
+        /// <param name="testInfo">
+        /// A <see cref="TestInfo"/> instance.
+        /// </param>
+        /// <param name="actual">
+        /// Actual value.
+        /// </param>
+        /// <param name="expected">
+        /// Expected value.
+        /// </param>
         private void SendVerificationTraceInfo(TestInfo testInfo, object actual, object expected)
         {
             this._traceAction(new ExecuteTraceInfo(TraceType.Verification)
             {
                 Actual = actual,
                 TestInfo = testInfo,
-                Expected = expected
+                Expected = expected,
             });
         }
     }

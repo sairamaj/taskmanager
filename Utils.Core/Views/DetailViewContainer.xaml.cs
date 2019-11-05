@@ -7,9 +7,12 @@ namespace Utils.Core.Views
     /// </summary>
     public partial class DetailViewContainer
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DetailViewContainer"/> class.
+        /// </summary>
         public DetailViewContainer()
         {
-            InitializeComponent();
+            this.InitializeComponent();
         }
 
         /// <summary>
@@ -18,11 +21,11 @@ namespace Utils.Core.Views
         /// <param name="view">View to be show. <see cref="UserControl"/></param>
         public void ShowView(UserControl view)
         {
-            detailPanel.Children.Clear();
+            this.detailPanel.Children.Clear();
             if (view != null)
             {
-                detailPanel.Children.Add(view);
-                detailPanel.UpdateLayout();
+                this.detailPanel.Children.Add(view);
+                this.detailPanel.UpdateLayout();
             }
         }
     }

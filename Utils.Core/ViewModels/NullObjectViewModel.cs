@@ -5,6 +5,12 @@
     /// </summary>
     public class NullObjectViewModel : TreeViewItemViewModel
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="NullObjectViewModel"/> class.
+        /// </summary>
+        /// <param name="name">
+        /// Name of the view model.
+        /// </param>
         public NullObjectViewModel(string name)
             : base(null, name, true)
         {
@@ -12,10 +18,9 @@
         }
 
         /// <summary>
-        /// Gets or sets the message.
+        /// Gets the message.
         /// </summary>
         /// <value>Message string.</value>
         public string Message => "null";
     }
-
 }

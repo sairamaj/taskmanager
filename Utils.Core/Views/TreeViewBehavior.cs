@@ -5,9 +5,9 @@ using System.Windows.Input;
 namespace Utils.Core.Views
 {
     /// <summary>
-	/// The tree view behavior.
-	/// </summary>
-	[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "Behaviours", Justification = "Copied from different project.")]
+    /// The tree view behavior.
+    /// </summary>
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "Behaviours", Justification = "Copied from different project.")]
     public static class TreeViewBehavior
     {
         /// <summary>

@@ -6,13 +6,33 @@ using Newtonsoft.Json;
 
 namespace Utils.Core.Test
 {
+    /// <summary>
+    /// Proxy for method.
+    /// </summary>
     internal class MethodProxy
     {
+        /// <summary>
+        /// Trace info.
+        /// </summary>
         private readonly Action<ExecuteTraceInfo> _traceInfo;
+
+        /// <summary>
+        /// Methods list.
+        /// </summary>
         private readonly IDictionary<string, MethodInfo> _methods;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="MethodProxy"/> class.
+        /// </summary>
+        /// <param name="typeInfo">
+        /// Type information fromw which methods needs to be parsed.
+        /// </param>
+        /// <param name="traceInfo">
+        /// Trace info emitter action.
+        /// </param>
         public MethodProxy(IEnumerable<string> typeInfo, Action<ExecuteTraceInfo> traceInfo)
         {
-            _traceInfo = traceInfo ?? throw new ArgumentNullException(nameof(traceInfo));
+            this._traceInfo = traceInfo ?? throw new ArgumentNullException(nameof(traceInfo));
             IEnumerable<MethodInfo> methods;
             if (typeInfo == null)
             {
@@ -43,16 +63,31 @@ namespace Utils.Core.Test
             }
 
             methods = methods.Union(typeof(BuiltinHelperType).GetMethods());
-            _methods = new Dictionary<string, MethodInfo>(StringComparer.InvariantCultureIgnoreCase);
+            this._methods = new Dictionary<string, MethodInfo>(StringComparer.InvariantCultureIgnoreCase);
             foreach (var m in methods.OrderBy(m => m.Name))
             {
-                _methods[m.Name] = m;
-                _methods[$"{m.ReflectedType?.Name}.{m.Name}"] = m;
+                this._methods[m.Name] = m;
+                this._methods[$"{m.ReflectedType?.Name}.{m.Name}"] = m;
             }
         }
 
-        public Type ReturnType { get ; set; }
+        /// <summary>
+        /// Gets or sets return type of the method executed.
+        /// </summary>
+        public Type ReturnType { get; set; }
 
+        /// <summary>
+        /// Executes method.
+        /// </summary>
+        /// <param name="name">
+        /// Method name.
+        /// </param>
+        /// <param name="parameters">
+        /// Method parameters.
+        /// </param>
+        /// <returns>
+        /// Return value from method execution.
+        /// </returns>
         public object Execute(string name, IDictionary<string, object> parameters)
         {
             if (string.IsNullOrWhiteSpace(name))
@@ -60,7 +95,7 @@ namespace Utils.Core.Test
                 throw new ArgumentException($"method name cannot be empty or null", nameof(name));
             }
 
-            if (!_methods.TryGetValue(name, out var foundMethod))
+            if (!this._methods.TryGetValue(name, out var foundMethod))
             {
                 throw new Exception($"Method {name} not found.");
             }
@@ -71,9 +106,12 @@ namespace Utils.Core.Test
             {
                 argIndex++;
                 object val = null;
-                if (!parameters.TryGetValue(p.Name, out val))           // try named parameter
+
+                // try named parameter
+                if (!parameters.TryGetValue(p.Name, out val))
                 {
-                    if (!parameters.TryGetValue($"arg{argIndex}", out val))  // try positional parameter
+                    // try positional parameter
+                    if (!parameters.TryGetValue($"arg{argIndex}", out val))
                     {
                         return null;
                     }
@@ -84,6 +122,7 @@ namespace Utils.Core.Test
                     parameters[p.Name] = Convert.ChangeType(val, p.ParameterType);
                     return parameters[p.Name];
                 }
+
                 if (p.ParameterType == typeof(Guid))
                 {
                     return Guid.Parse(val?.ToString());
@@ -126,13 +165,13 @@ namespace Utils.Core.Test
             }
             finally
             {
-                _traceInfo(new ExecuteTraceInfo(TraceType.MethodFinished)
+                this._traceInfo(new ExecuteTraceInfo(TraceType.MethodFinished)
                 {
                     MethodName = foundMethod.Name,
                     MethodReturnValue = returnValue,
                     MethodParameters = inputs,
                     MethodException = methodException,
-                    MethodReturnType = foundMethod.ReturnType
+                    MethodReturnType = foundMethod.ReturnType,
                 });
             }
         }

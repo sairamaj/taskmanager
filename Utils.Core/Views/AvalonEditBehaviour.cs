@@ -13,7 +13,7 @@ namespace Utils.Core.Views
 
         public string GiveMeTheText
         {
-            get { return (string)GetValue(GiveMeTheTextProperty); }
+            get { return (string)this.GetValue(GiveMeTheTextProperty); }
             set { SetValue(GiveMeTheTextProperty, value); }
         }
 

@@ -34,5 +34,4 @@ namespace Utils.Core.ViewModels
         /// <value>Data for event.</value>
         public object Data { get; private set; }
     }
-
 }

@@ -63,6 +63,7 @@ namespace Utils.Core
                     // If the subscriber is a DispatcherObject and different thread
                     if (dispatcherObject != null && dispatcherObject.CheckAccess() == false)
                     {
+
                         // Invoke handler in the target dispatcher's thread
                         dispatcherObject.Dispatcher.Invoke(DispatcherPriority.DataBind, handler, this, e);
                     }

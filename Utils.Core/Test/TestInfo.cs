@@ -1,66 +1,68 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Linq.Expressions;
-using FluentAssertions;
 using Newtonsoft.Json.Linq;
 
 namespace Utils.Core.Test
 {
+    /// <summary>
+    /// Test information.
+    /// </summary>
     public class TestInfo
     {
+        /// <summary>
+        /// Gets or sets test name.
+        /// </summary>
         public string Name { get; set; }
+
+        /// <summary>
+        /// Gets or sets api of the test.
+        /// </summary>
         public string Api { get; set; }
+
+        /// <summary>
+        /// Gets or sets parameters.
+        /// </summary>
         public IDictionary<string,object> Parameters { get; set; }
+
+        /// <summary>
+        /// Gets or sets variables.
+        /// </summary>
         public IDictionary<string, object> Variables { get; set; }
+
+        /// <summary>
+        /// Gets or sets extracts.
+        /// </summary>
         public IDictionary<string, object> Extracts { get; set; }
-        
+
+        /// <summary>
+        /// Gets or sets expected values.
+        /// </summary>
         public IDictionary<string, object> Expected { get; set; }
 
-        public object GetParameter(string name)
-        {
-            if (this.Parameters == null)
-            {
-                return null;
-            }
+        /// <summary>
+        /// Gets return value.
+        /// </summary>
+        public object ReturnValue => this.GetExpectedValue<object>("result");
 
-            if (this.Parameters.ContainsKey(name))
-            {
-                return this.Parameters[name];
-            }
-
-            return null;
-        }
-
-        public object ReturnValue => GetExpectedValue<object>("result");
-
-        public void LogParameters()
-        {
-            if (this.Parameters == null)
-            {
-                return;
-            }
-
-            foreach (var parameter in this.Parameters)
-            {
-                Console.WriteLine($"{parameter.Key}:|{parameter.Value}|");
-            }
-        }
-
-        public void LogExpected()
-        {
-            foreach (var kv in this.GetExpectedResults())
-            {
-                Console.WriteLine($"{kv.Key}:|{kv.Value}|{kv.Value?.GetType()}");
-            }
-        }
-
+        /// <summary>
+        /// Gets expected value.
+        /// </summary>
+        /// <typeparam name="T">
+        /// Type name.
+        /// </typeparam>
+        /// <param name="name">
+        /// Name of the expected parameter.
+        /// </param>
+        /// <returns>
+        /// Gets value.
+        /// </returns>
         public T GetExpectedValue<T>(string name)
         {
             name = name.ToLowerInvariant();
-            if (GetExpectedResults().ContainsKey(name))
+            if (this.GetExpectedResults().ContainsKey(name))
             {
-                var val = GetExpectedResults()[name];
+                var val = this.GetExpectedResults()[name];
                 if (typeof(IConvertible).IsAssignableFrom(val.GetType()))
                 {
                     return (T)Convert.ChangeType(val, typeof(T));
@@ -72,38 +74,18 @@ namespace Utils.Core.Test
             return default(T);
         }
 
-        public void Verify<T>(Expression<Func<T>> selectorExpression)
-        {
-            if (selectorExpression == null)
-            {
-                throw new ArgumentNullException(nameof(selectorExpression));
-            }
-
-            var actual = selectorExpression.Compile()();
-
-            var body = selectorExpression.Body as MemberExpression;
-            if (body == null)
-            {
-                return;
-            }
-
-            var propertyName = body.Member.Name;
-
-            var expected = GetExpectedValue<T>(propertyName);
-            if (actual != null && actual.GetType().IsArray)
-            {
-                var expectedObject = Convert.ChangeType(expected, expected.GetType());
-                actual.Should().BeEquivalentTo(expectedObject, $"{this.Name} {propertyName} did fail");
-            }
-            else
-            {
-                actual.Should().Be(expected, $"{this.Name} {propertyName} did fail");
-            }
-        }
-
+        /// <summary>
+        /// Gets expected results.
+        /// </summary>
+        /// <param name="convertJArray">
+        /// A value indicating whether to convert JArray in to string array or not.
+        /// </param>
+        /// <returns>
+        /// Expected results value.
+        /// </returns>
         public IDictionary<string, object> GetExpectedResults(bool convertJArray = false)
         {
-            if (this.Expected == null || this.Expected.Values == null)
+            if (Expected?.Values == null)
             {
                 return new Dictionary<string, object>();
             }
@@ -124,7 +106,5 @@ namespace Utils.Core.Test
                     return kv.Value;
                 });
         }
-
     }
-
 }

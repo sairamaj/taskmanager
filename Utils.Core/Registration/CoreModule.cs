@@ -1,7 +1,6 @@
 ﻿using Autofac;
 using Utils.Core.Diagnostics;
 using Utils.Core.ViewModels;
-using Utils.Core.Views;
 
 namespace Utils.Core.Registration
 {
@@ -10,7 +9,7 @@ namespace Utils.Core.Registration
     /// </summary>
     public class CoreModule : Module
     {
-        /// <summary>							  
+        /// <summary>
         /// Loading function for Autofac module.
         /// </summary>
         /// <param name="builder">Builder instance <see cref="ContainerBuilder"/></param>

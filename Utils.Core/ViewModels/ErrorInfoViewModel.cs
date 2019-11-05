@@ -78,5 +78,4 @@ namespace Utils.Core.ViewModels
             }
         }
     }
-
 }
