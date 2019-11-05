@@ -1,4 +1,5 @@
-﻿using Utils.Core.Test;
+﻿using Utils.Core.Model;
+using Utils.Core.Test;
 using Utils.Core.ViewModels;
 
 namespace JsonExecutorTasks.ViewModel
@@ -15,8 +16,8 @@ namespace JsonExecutorTasks.ViewModel
 
         protected override void LoadChildren()
         {
-            this.Children.Add(new ObjectTreeViewModel(null, "actual", this._traceInfo.Actual, ObjectTreeViewModel.InfoType.Properties));
-            this.Children.Add(new ObjectTreeViewModel(null, "expected", this._traceInfo.Expected, ObjectTreeViewModel.InfoType.Properties));
+            this.Children.Add(new ObjectTreeViewModel(null, "actual", this._traceInfo.Actual, InfoType.Properties));
+            this.Children.Add(new ObjectTreeViewModel(null, "expected", this._traceInfo.Expected, InfoType.Properties));
         }
     }
 }

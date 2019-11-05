@@ -1,4 +1,5 @@
-﻿using Utils.Core.ViewModels;
+﻿using Utils.Core.Model;
+using Utils.Core.ViewModels;
 
 namespace JsonExecutorTasks.ViewModel
 {
@@ -14,7 +15,7 @@ namespace JsonExecutorTasks.ViewModel
 
         protected override void LoadChildren()
         {
-            this.Children.Add(new ObjectTreeViewModel(null, "return", _output, ObjectTreeViewModel.InfoType.Properties));
+            this.Children.Add(new ObjectTreeViewModel(null, "return", _output, InfoType.Properties));
         }
     }
 }

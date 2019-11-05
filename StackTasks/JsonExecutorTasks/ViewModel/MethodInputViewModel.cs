@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Utils.Core.Model;
 using Utils.Core.ViewModels;
 
 namespace JsonExecutorTasks.ViewModel
@@ -18,7 +19,7 @@ namespace JsonExecutorTasks.ViewModel
         {
             foreach (var input in this._inputs)
             {
-                this.Children.Add(new ObjectTreeViewModel(null, input.Key, input.Value, ObjectTreeViewModel.InfoType.Properties));
+                this.Children.Add(new ObjectTreeViewModel(null, input.Key, input.Value, InfoType.Properties));
             }
         }
     }
