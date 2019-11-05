@@ -65,10 +65,10 @@ namespace Utils.Core
         /// Equality function.
         /// </summary>
         /// <param name="x">
-        /// A <see cref="T"/> first instance.
+        /// A first instance.
         /// </param>
         /// <param name="y">
-        /// A <see cref="T"/> second instance.
+        /// A second instance.
         /// </param>
         /// <returns>
         /// true if these two instances are equal.

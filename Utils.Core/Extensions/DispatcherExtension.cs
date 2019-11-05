@@ -54,7 +54,7 @@ namespace Utils.Core.Extensions
         /// <typeparam name="T">Function input type.
         /// </typeparam>
         /// <returns>
-        /// The <see cref="T"/>Return object.
+        /// The Return object.
         /// </returns>
         /// <exception cref="ArgumentNullException">
         /// Thrown if <paramref name="dispatcher"/> or <paramref name="func"/> is <see language="null"/>.

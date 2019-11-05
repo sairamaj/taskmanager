@@ -25,6 +25,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <CodeAnalysisRuleSet>..\build\Source.ruleset</CodeAnalysisRuleSet>
+    <DocumentationFile>bin\Debug\Utils.Core.xml</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -34,6 +35,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <CodeAnalysisRuleSet>..\build\Source.ruleset</CodeAnalysisRuleSet>
+    <DocumentationFile>bin\Release\Utils.Core.xml</DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Autofac, Version=4.9.4.0, Culture=neutral, PublicKeyToken=17863af14b0044da, processorArchitecture=MSIL">
@@ -140,6 +142,7 @@
     <Compile Include="CommandTreeItemViewMapper.cs" />
     <Compile Include="Command\CommandManager.cs" />
     <Compile Include="Command\DelegateCommand.cs" />
+    <Compile Include="Command\DelegateCommand2.cs" />
     <Compile Include="Expressions\Argument.cs" />
     <Compile Include="Expressions\Evaluator.cs" />
     <Compile Include="Expressions\ExpressionInfo.cs" />

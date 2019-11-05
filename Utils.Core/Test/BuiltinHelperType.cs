@@ -5,7 +5,7 @@ using System.Linq;
 namespace Utils.Core.Test
 {
     /// <summary>
-    /// Helper functions for expression evaluations. 
+    /// Helper functions for expression evaluations.
     /// </summary>
     public static class BuiltinHelperType
     {
@@ -51,7 +51,7 @@ namespace Utils.Core.Test
         /// </returns>
         public static string Reverse(string input)
         {
-            return new string( input.ToCharArray().Reverse().ToArray());
+            return new string(input.ToCharArray().Reverse().ToArray());
         }
 
         /// <summary>

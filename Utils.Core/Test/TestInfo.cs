@@ -23,7 +23,7 @@ namespace Utils.Core.Test
         /// <summary>
         /// Gets or sets parameters.
         /// </summary>
-        public IDictionary<string,object> Parameters { get; set; }
+        public IDictionary<string, object> Parameters { get; set; }
 
         /// <summary>
         /// Gets or sets variables.
@@ -85,7 +85,7 @@ namespace Utils.Core.Test
         /// </returns>
         public IDictionary<string, object> GetExpectedResults(bool convertJArray = false)
         {
-            if (Expected?.Values == null)
+            if (this.Expected?.Values == null)
             {
                 return new Dictionary<string, object>();
             }

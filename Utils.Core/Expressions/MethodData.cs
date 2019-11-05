@@ -16,7 +16,9 @@ namespace Utils.Core.Expressions
         /// <summary>
         /// Initializes a new instance of the <see cref="MethodData"/> class.
         /// </summary>
-        /// <param name="name"></param>
+        /// <param name="name">
+        /// Method name.
+        /// </param>
         public MethodData(string name)
         {
             this.Name = name;

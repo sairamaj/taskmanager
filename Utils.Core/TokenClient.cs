@@ -8,7 +8,7 @@ using IdentityModelTokenClient=IdentityModel.Client;
 namespace Utils.Core
 {
     /// <summary>
-    /// Token client to get access token
+    /// Token client to get access token.
     /// </summary>
     public class TokenClient : ITokenClient
     {
@@ -24,7 +24,7 @@ namespace Utils.Core
         }
 
         /// <summary>
-        /// Gets client handler. 
+        /// Gets client handler.
         /// </summary>
         public HttpClientHandler ClientHandler { get; }
 
@@ -62,7 +62,6 @@ namespace Utils.Core
             var response = await client.RequestClientCredentialsAsync("identity request_claims", extraData);
             if (response.HttpStatusCode != HttpStatusCode.OK)
             {
-                // todo: change 
                 throw new Exception($"Could not get access token from: {address} {response.HttpStatusCode} {response.ErrorDescription} {response.Json}");
             }
 

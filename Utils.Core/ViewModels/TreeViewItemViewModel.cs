@@ -123,7 +123,6 @@ namespace Utils.Core.ViewModels
         /// Gets the children.
         /// </summary>
         /// <value>Children items.</value>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1721:PropertyNamesShouldNotMatchGetMethods")]
         public ObservableCollection<TreeViewItemViewModel> Children
         {
             get
@@ -162,7 +161,7 @@ namespace Utils.Core.ViewModels
                 if (value != this._isExpanded)
                 {
                     this._isExpanded = value;
-                    this.OnPropertyChanged(() => IsExpanded);
+                    this.OnPropertyChanged(() => this.IsExpanded);
                 }
 
                 // Expand all the way up to the root.
@@ -196,7 +195,7 @@ namespace Utils.Core.ViewModels
                 if (value != this._isSelected)
                 {
                     this._isSelected = value;
-                    this.OnPropertyChanged(() => IsSelected);
+                    this.OnPropertyChanged(() => this.IsSelected);
                 }
             }
         }
@@ -236,15 +235,12 @@ namespace Utils.Core.ViewModels
         /// <value>Success flag.</value>
         public virtual bool? IsSuccess
         {
-            get
-            {
-                return this._isSuccess;
-            }
+            get => this._isSuccess;
 
             set
             {
                 this._isSuccess = value;
-                this.OnPropertyChanged(() => IsSuccess);
+                this.OnPropertyChanged(() => this.IsSuccess);
             }
         }
 
@@ -254,15 +250,12 @@ namespace Utils.Core.ViewModels
         /// <value>Working flag.</value>
         public bool IsWorking
         {
-            get
-            {
-                return this._isWorking;
-            }
+            get => this._isWorking;
 
             set
             {
                 this._isWorking = value;
-                this.OnPropertyChanged(() => IsWorking);
+                this.OnPropertyChanged(() => this.IsWorking);
             }
         }
 
@@ -396,7 +389,6 @@ namespace Utils.Core.ViewModels
         /// <param name="errorViewModel">
         /// The error view model.
         /// </param>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1011:ConsiderPassingBaseTypesAsParameters")]
         public void AddErrorViewModel(ErrorInfoViewModel errorViewModel)
         {
             this.AddToChildrenInUIThread(errorViewModel);
@@ -432,7 +424,7 @@ namespace Utils.Core.ViewModels
         /// </param>
         /// <typeparam name="T">The type name.
         /// </typeparam>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes", Justification = "Used in UI.")]
         protected virtual void LoadChildrenAsync<T>(Func<IEnumerable<T>> dataRetriever, Func<T, TreeViewItemViewModel> childNodeCreator, Action afterLoadingAction)
         {
             this.AddWorkInProgress("Retrieving...");
@@ -522,7 +514,7 @@ namespace Utils.Core.ViewModels
         }
 
         /// <summary>
-        /// This helper method traverses the tree in a depth-first non-recursive way 
+        /// This helper method traverses the tree in a depth-first non-recursive way
         /// and executes the action passed as a parameter on each item.
         /// </summary>
         /// <param name="itemAction">Action to be executed for each item.</param>

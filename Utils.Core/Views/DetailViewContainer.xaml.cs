@@ -3,7 +3,7 @@
 namespace Utils.Core.Views
 {
     /// <summary>
-    /// Interaction logic for DetailViewContainer.xaml
+    /// Interaction logic for DetailViewContainer.xaml.
     /// </summary>
     public partial class DetailViewContainer
     {
@@ -18,7 +18,7 @@ namespace Utils.Core.Views
         /// <summary>
         /// Shows the given view.
         /// </summary>
-        /// <param name="view">View to be show. <see cref="UserControl"/></param>
+        /// <param name="view">View to be show. <see cref="UserControl"/>.</param>
         public void ShowView(UserControl view)
         {
             this.detailPanel.Children.Clear();

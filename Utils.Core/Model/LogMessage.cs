@@ -33,4 +33,3 @@ namespace Utils.Core.Model
         public string Timestamp => this.DateTime.ToString("HH:mm:ss");
     }
 }
-                                       

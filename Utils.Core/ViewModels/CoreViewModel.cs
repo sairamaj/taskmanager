@@ -41,6 +41,20 @@ namespace Utils.Core.ViewModels
         protected Dispatcher UiDispatcher { get; }
 
         /// <summary>
+        /// Execute given action in UI thread.
+        /// </summary>
+        /// <param name="action">
+        /// Action to be executed.
+        /// </param>
+        public static void ExecuteAsync(Action action)
+        {
+            if (Application.Current.Dispatcher != null)
+            {
+                Application.Current.Dispatcher.InvokeAsync(new Action(action), DispatcherPriority.ContextIdle);
+            }
+        }
+
+        /// <summary>
         /// On activate.
         /// </summary>
         public virtual void OnActivate()
@@ -257,21 +271,12 @@ namespace Utils.Core.ViewModels
         /// <typeparam name="T">Type name.
         /// </typeparam>
         /// <returns>
-        /// The <see cref="T"/>Type name.
+        /// The Type name.
         /// </returns>
         [SuppressMessage("Microsoft.Naming", "CA1702:CompoundWordsShouldBeCasedCorrectly", MessageId = "InUi", Justification = "Copied code from some other project.")]
         protected T ExecuteInUiThread<T>(Func<T> func)
         {
             return this.UiDispatcher.Execute<T>(func);
         }
-
-        public static void ExecuteAsync(Action action)
-        {
-            if (Application.Current.Dispatcher != null)
-            {
-                Application.Current.Dispatcher.InvokeAsync(new Action(action), DispatcherPriority.ContextIdle);
-            }
-        }
     }
-
 }

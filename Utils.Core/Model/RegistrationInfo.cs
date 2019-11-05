@@ -19,7 +19,7 @@ namespace Utils.Core.Model
         public Type ImplementationType { get; set; }
 
         /// <summary>
-        /// Gets or assembly name.
+        /// Gets or sets assembly name.
         /// </summary>
         public Assembly Assembly { get; set; }
 

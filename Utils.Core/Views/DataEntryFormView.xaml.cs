@@ -1,7 +1,7 @@
 ﻿namespace Utils.Core.Views
 {
     /// <summary>
-    /// Interaction logic for FormView.xaml
+    /// Interaction logic for FormView.xaml.
     /// </summary>
     public partial class DataEntryFormView
     {

@@ -13,7 +13,7 @@ namespace Utils.Core.ViewModels
         /// <summary>
         /// Counter to keep requests.
         /// </summary>
-        private static int Counter = 1;
+        private static int _counter = 1;
 
         /// <summary>
         /// Measuring the time.
@@ -31,7 +31,7 @@ namespace Utils.Core.ViewModels
             this.RequestMessage = request.ToCustomString();
             this.RequestUri = request.RequestUri == (Uri)null ? "<null>" : request.RequestUri.ToString();
             this.Method = request.Method.ToString();
-            this.Id = Counter++;
+            this.Id = _counter++;
             this._watch = new Stopwatch();
             this._watch.Start();
         }
@@ -91,7 +91,6 @@ namespace Utils.Core.ViewModels
         {
             this._watch.Stop();
             this.ResponseMessage = response.ToCustomString();
-            // this.SummaryText = this.SummaryText + "  " + response.GetTitle();
             this.HttpStatusCodeString = response.StatusCode.ToString();
             this.HttpStatusCode = (int)response.StatusCode;
             this.ReasonPhrase = response.ReasonPhrase ?? "<null>";

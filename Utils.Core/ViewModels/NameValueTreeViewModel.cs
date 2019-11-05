@@ -1,7 +1,7 @@
 ﻿namespace Utils.Core.ViewModels
 {
     /// <summary>
-    /// Name value tree view model. 
+    /// Name value tree view model.
     /// </summary>
     public class NameValueTreeViewModel : TreeViewItemViewModel
     {

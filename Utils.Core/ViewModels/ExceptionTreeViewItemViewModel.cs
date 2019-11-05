@@ -43,7 +43,7 @@ namespace Utils.Core.ViewModels
         /// The additional info.
         /// </param>
         public ExceptionTreeViewItemViewModel(TreeViewItemViewModel parent, Exception exception, string additionalInfo)
-            : base(parent, string.Format(CultureInfo.InvariantCulture, "{0} {1}", exception == null ? "" : exception.GetType().ToString(), exception), true)
+            : base(parent, string.Format(CultureInfo.InvariantCulture, "{0} {1}", exception == null ? string.Empty : exception.GetType().ToString(), exception), true)
         {
             this.AdditionalInfo = additionalInfo;
             this._exception = exception ?? throw new ArgumentNullException(nameof(exception));
@@ -139,5 +139,4 @@ namespace Utils.Core.ViewModels
             return msg;
         }
     }
-
 }

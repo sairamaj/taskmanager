@@ -162,7 +162,7 @@ namespace Utils.Core.Test
                     var finalExpectedValue = this.EvaluateParameters(
                         new Dictionary<string, object>()
                     {
-                        {"result", test.ReturnValue},
+                        { "result", test.ReturnValue },
                     }, variables).First();
                     var result = results["result"];
                     this.Verify(test, () => result, finalExpectedValue.Value);
@@ -251,7 +251,7 @@ namespace Utils.Core.Test
         /// A <see cref="IDictionary{TKey,TValue}"/> of previous results.
         /// </param>
         /// <param name="resultsType">
-        /// Results type
+        /// Results type.
         /// </param>
         /// <returns>
         /// Results dictionary.
@@ -270,7 +270,7 @@ namespace Utils.Core.Test
             var output = this._methodProxy.Execute(test.Api, newParameters);
             var results = new Dictionary<string, object>()
             {
-                {"resultType", this._methodProxy.ReturnType},
+                { "resultType", this._methodProxy.ReturnType },
             };
 
             if (output == null)
@@ -593,7 +593,7 @@ namespace Utils.Core.Test
         }
 
         /// <summary>
-        /// Verfies the test.
+        /// Verifies the test.
         /// </summary>
         /// <typeparam name="T">
         /// Type name.
@@ -607,7 +607,7 @@ namespace Utils.Core.Test
         /// <param name="expectedValue">
         /// Expected value.
         /// </param>
-        public void Verify<T>(TestInfo test, Expression<Func<T>> selectorExpression, object expectedValue)
+        private void Verify<T>(TestInfo test, Expression<Func<T>> selectorExpression, object expectedValue)
         {
             if (selectorExpression == null)
             {

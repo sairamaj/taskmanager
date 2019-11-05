@@ -30,7 +30,7 @@ namespace Utils.Core.ViewModels
         public static HttpMessagesViewModel Instance => _instance;
 
         /// <summary>
-        /// Gets or sets Http request and responses
+        /// Gets or sets Http request and responses.
         /// </summary>
         public ObservableCollection<HttpRequestResponseMessageViewModel> HttpRequestResponses { get; set; }
 

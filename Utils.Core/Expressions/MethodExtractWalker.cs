@@ -54,12 +54,12 @@ namespace Utils.Core.Expressions
         /// <summary>
         /// Gets method data.
         /// </summary>
-        public MethodData Method => _methodData;
+        public MethodData Method => this._methodData;
 
         /// <summary>
         /// Gets variable data.
         /// </summary>
-        public Variable Variable => _variable;
+        public Variable Variable => this._variable;
 
         /// <summary>
         /// Visits syntax node.

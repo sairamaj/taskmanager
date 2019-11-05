@@ -1,13 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
 using Autofac;
 using Autofac.Core;
 using Utils.Core.Model;
 
 namespace Utils.Core.Registration
 {
+    /// <summary>
+    /// Service locator.
+    /// </summary>
     public class ServiceLocator : IServiceLocator
     {
         /// <summary>
@@ -16,8 +18,11 @@ namespace Utils.Core.Registration
         private static IContainer _container;
 
         /// <summary>
-        /// Initializes AUTOFAC container.
+        /// Initializes the container.
         /// </summary>
+        /// <param name="builder">
+        /// A instance of <see cref="ContainerBuilder"/>.
+        /// </param>
         public void Initialize(ContainerBuilder builder)
         {
             builder.RegisterModule(new CoreModule());
@@ -59,6 +64,12 @@ namespace Utils.Core.Registration
             return _container.Resolve(serviceType);
         }
 
+        /// <summary>
+        /// Gets registrations.
+        /// </summary>
+        /// <returns>
+        /// A <see cref="IEnumerable{T}"/> of type <see cref="RegistrationInfo"/>.
+        /// </returns>
         public IEnumerable<RegistrationInfo> GetRegisteredTypes()
         {
             foreach (var registration in _container.ComponentRegistry.Registrations)
@@ -79,7 +90,7 @@ namespace Utils.Core.Registration
                         InterfaceType = interfaceType,
                         Assembly = interfaceType?.Assembly,
                         AssemblyName = interfaceType?.Assembly.GetName().Name,
-                        Scope = scope
+                        Scope = scope,
                     };
                 }
             }

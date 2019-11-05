@@ -23,7 +23,9 @@ namespace Utils.Core.ViewModels
         /// <summary>
         /// Adds a log message to the collection.
         /// </summary>
-        /// <param name="logMessage"></param>
+        /// <param name="logMessage">
+        /// Log message.
+        /// </param>
         public void AddMessage(LogMessage logMessage)
         {
             this._logMessages.Add(logMessage);
@@ -41,7 +43,7 @@ namespace Utils.Core.ViewModels
         /// Adds error message.
         /// </summary>
         /// <param name="message">
-        /// Error message. 
+        /// Error message.
         /// </param>
         public void Error(string message)
         {

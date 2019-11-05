@@ -5,8 +5,20 @@ using System.Text;
 
 namespace Utils.Core.Extensions
 {
+    /// <summary>
+    /// Http response message extension.
+    /// </summary>
     internal static class HttpResponseMessageExtension
     {
+        /// <summary>
+        /// Builds custom string for the Http response.
+        /// </summary>
+        /// <param name="responseMessage">
+        /// A <see cref="HttpRequestMessage"/> instance.
+        /// </param>
+        /// <returns>
+        /// A string format of the object.
+        /// </returns>
         public static string ToCustomString(this HttpResponseMessage responseMessage)
         {
             StringBuilder stringBuilder = new StringBuilder();
@@ -31,6 +43,15 @@ namespace Utils.Core.Extensions
             return stringBuilder.ToString();
         }
 
+        /// <summary>
+        /// Gets title representation of the message.
+        /// </summary>
+        /// <param name="responseMessage">
+        /// A <see cref="HttpRequestMessage"/>.
+        /// </param>
+        /// <returns>
+        /// Title value.
+        /// </returns>
         public static string GetTitle(this HttpResponseMessage responseMessage)
         {
             StringBuilder stringBuilder = new StringBuilder();
@@ -44,6 +65,15 @@ namespace Utils.Core.Extensions
             return stringBuilder.ToString();
         }
 
+        /// <summary>
+        /// Gets headers as string.
+        /// </summary>
+        /// <param name="headers">
+        /// Headers info.
+        /// </param>
+        /// <returns>
+        /// Headers as string.
+        /// </returns>
         internal static string GetHeaders(params HttpHeaders[] headers)
         {
             var stringBuilder = new StringBuilder();
