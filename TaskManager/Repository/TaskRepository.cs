@@ -12,8 +12,23 @@ using Module = Autofac.Module;
 
 namespace TaskManager.Repository
 {
-    class TaskRepository : ITaskRepository
+    /// <summary>
+    /// Repository for getting task information.
+    /// </summary>
+    internal class TaskRepository : ITaskRepository
     {
+        /// <summary>
+        /// Gets all tasks information.
+        /// </summary>
+        /// <param name="serviceLocator">
+        /// A <see cref="IServiceLocator"/> instance used for resolving dependencies.
+        /// </param>
+        /// <param name="logger">
+        /// A <see cref="ILogger"/> instance.
+        /// </param>
+        /// <returns>
+        /// A <see cref="IEnumerable{T}"/> of tasks info.
+        /// </returns>
         public async Task<IEnumerable<TaskInfo>> GetTasksAsync(IServiceLocator serviceLocator, ILogger logger)
         {
             await Task.Delay(0);
@@ -25,13 +40,13 @@ namespace TaskManager.Repository
                     Type = TaskType.TaskGroup,
                     Name = Path.GetFileName(dir),
                     Tag = dir,
-                    Tasks = new List<TaskInfo>()
+                    Tasks = new List<TaskInfo>(),
                 };
 
                 taskList.Add(parentTask);
 
                 var subTasks = new List<TaskInfo>();
-                foreach (var assembly in GetTaskAssemblies(dir, "*Tasks.dll", logger))
+                foreach (var assembly in this.GetTaskAssemblies(dir, "*Tasks.dll", logger))
                 {
                     try
                     {
@@ -52,11 +67,23 @@ namespace TaskManager.Repository
             return taskList;
         }
 
+        /// <summary>
+        /// Initializes task modules.
+        /// </summary>
+        /// <param name="builder">
+        /// A <see cref="ContainerBuilder"/> instance.
+        /// </param>
+        /// <param name="logger">
+        /// A <see cref="ILogger"/> instance.
+        /// </param>
+        /// <returns>
+        /// A task object.
+        /// </returns>
         public async Task InitializeTaskModulesAsync(ContainerBuilder builder, ILogger logger)
         {
             await Task.Delay(0);
             var taskModules = new List<Module>();
-            foreach (var assembly in GetTaskAssemblies(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Tasks"), "*Tasks.dll", logger))
+            foreach (var assembly in this.GetTaskAssemblies(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Tasks"), "*Tasks.dll", logger))
             {
                 logger.Debug($"Loading {assembly.FullName}");
                 try
@@ -69,7 +96,7 @@ namespace TaskManager.Repository
                 }
             }
 
-            foreach (var assembly in GetTaskAssemblies(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Tasks"), "*Startup.dll", logger))
+            foreach (var assembly in this.GetTaskAssemblies(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Tasks"), "*Startup.dll", logger))
             {
                 logger.Debug($"Loading {assembly.FullName}");
                 try
@@ -83,7 +110,21 @@ namespace TaskManager.Repository
             }
         }
 
-    
+        /// <summary>
+        /// Gets assemblies containing tasks.
+        /// </summary>
+        /// <param name="path">
+        /// Path to look for assemblies.
+        /// </param>
+        /// <param name="filter">
+        /// File Filter.
+        /// </param>
+        /// <param name="logger">
+        /// Logger instance.
+        /// </param>
+        /// <returns>
+        /// A list of assemblies containing tasks.
+        /// </returns>
         private IEnumerable<Assembly> GetTaskAssemblies(string path, string filter, ILogger logger)
         {
             var taskAssemblies = new List<Assembly>();
@@ -101,21 +142,5 @@ namespace TaskManager.Repository
 
             return taskAssemblies;
         }
-        static string GetTaskName(string name)
-        {
-            if (name == null)
-            {
-                return null;
-            }
-            var index = name.IndexOf("Tasks");
-            if (index < 0)
-            {
-                return name;
-            }
-
-            return name.Substring(0, index);
-        }
-
-
     }
 }

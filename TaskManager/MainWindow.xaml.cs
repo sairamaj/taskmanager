@@ -5,13 +5,19 @@ using Utils.Core;
 namespace TaskManager
 {
     /// <summary>
-    /// Interaction logic for MainWindow.xaml
+    /// Interaction logic for MainWindow.xaml.
     /// </summary>
-    public partial class MainWindow : Window
+    public partial class MainWindow
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="MainWindow"/> class.
+        /// </summary>
+        /// <param name="mapper">
+        /// A <see cref="ICommandTreeItemViewMapper"/> mapper.
+        /// </param>
         public MainWindow(ICommandTreeItemViewMapper mapper)
         {
-            InitializeComponent();
+            this.InitializeComponent();
             this.TaskNavigationViewer.TaskSelectionChangedEvent += (s, e) =>
             {
                 var taskViewModel = e.SelectedItem as TaskViewModel;
@@ -26,7 +32,6 @@ namespace TaskManager
                     ctrl.DataContext = taskViewModel.DataContext;
                     this.DetailViewContainer.ShowView(ctrl);
                 }
-
             };
         }
     }

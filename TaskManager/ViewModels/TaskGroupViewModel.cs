@@ -5,21 +5,51 @@ using Utils.Core;
 
 namespace TaskManager.ViewModels
 {
-    class TaskGroupViewModel : TaskViewModel
+    /// <summary>
+    /// Task group view model.
+    /// </summary>
+    internal class TaskGroupViewModel : TaskViewModel
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="TaskGroupViewModel"/> class.
+        /// </summary>
+        /// <param name="mapper">
+        /// A <see cref="ICommandTreeItemViewMapper"/> mapper.
+        /// </param>
+        /// <param name="name">
+        /// Group name.
+        /// </param>
+        /// <param name="tag">
+        /// A unique value for the view model.
+        /// </param>
+        /// <param name="tasks">
+        /// A list of tasks.
+        /// </param>
         public TaskGroupViewModel(
-            ICommandTreeItemViewMapper mapper, 
-            string name, 
-            string tag, 
-            IEnumerable<TaskInfo> tasks) : base(null, name, tag)
+            ICommandTreeItemViewMapper mapper,
+            string name,
+            string tag,
+            IEnumerable<TaskInfo> tasks)
+            : base(null, name, tag)
         {
-            Mapper = mapper;
-            Tasks = tasks;
-            this.Name = name;       // todo: need to debug this why the base is not showing up in UI.
+            this.Mapper = mapper;
+            this.Tasks = tasks;
+            this.Name = name;
         }
 
+        /// <summary>
+        /// Gets command mapper.
+        /// </summary>
         public ICommandTreeItemViewMapper Mapper { get; }
+
+        /// <summary>
+        /// Gets list of tasks.
+        /// </summary>
         public IEnumerable<TaskInfo> Tasks { get; }
+
+        /// <summary>
+        /// Load tasks.
+        /// </summary>
         protected override void LoadChildren()
         {
             foreach (var task in this.Tasks)
@@ -30,7 +60,7 @@ namespace TaskManager.ViewModels
                     this.Children.Add(viewModel);
                     this.Mapper.Add(task.Tag, new TaskWithErrorView()
                     {
-                        DataContext = viewModel
+                        DataContext = viewModel,
                     });
                 }
                 else

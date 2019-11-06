@@ -13,10 +13,33 @@ using Utils.Core.ViewModels;
 
 namespace TaskManager.ViewModels
 {
-    class MainViewModel : CoreViewModel
+    /// <summary>
+    /// Main view model.
+    /// </summary>
+    internal class MainViewModel : CoreViewModel
     {
+        /// <summary>
+        /// Selected log level.
+        /// </summary>
         private string _selectedLogLevel;
+
+        /// <summary>
+        /// Filtered log messages collections.
+        /// </summary>
         private SafeObservableCollection<LogMessage> _filteredLogMessages = new SafeObservableCollection<LogMessage>();
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="MainViewModel"/> class.
+        /// </summary>
+        /// <param name="serviceLocator">
+        /// A <see cref="IServiceLocator"/> instance.
+        /// </param>
+        /// <param name="mapper">
+        /// A <see cref="ICommandTreeItemViewMapper"/> mapper.
+        /// </param>
+        /// <param name="taskRepository">
+        /// A <see cref="ITaskRepository"/> repository.
+        /// </param>
         public MainViewModel(
             IServiceLocator serviceLocator,
             ICommandTreeItemViewMapper mapper,
@@ -29,7 +52,7 @@ namespace TaskManager.ViewModels
                 this.Logger.Clear();
                 this._filteredLogMessages.Clear();
             });
-            this.SelectedLogLevel = LogLevels.First();
+            this.SelectedLogLevel = this.LogLevels.First();
             this.Logger.LogMessages.CollectionChanged += (s, e) =>
             {
                 if (this.SelectedLogLevel == "All")
@@ -50,13 +73,27 @@ namespace TaskManager.ViewModels
                 }
             };
 
-            this.Registrations = serviceLocator.GetRegisteredTypes().OrderBy(t=>t.InterfaceType.FullName);
+            this.Registrations = serviceLocator.GetRegisteredTypes().OrderBy(t => t.InterfaceType.FullName);
         }
 
+        /// <summary>
+        /// Gets or sets task container view model.
+        /// </summary>
         public TaskContainerViewModel TaskContainer { get; set; }
-        public ILogger Logger { get; private set; }
+
+        /// <summary>
+        /// Gets logger instance.
+        /// </summary>
+        public ILogger Logger { get; }
+
+        /// <summary>
+        /// Gets or sets Clear command handler.
+        /// </summary>
         public ICommand ClearCommand { get; set; }
 
+        /// <summary>
+        /// Gets log messages.
+        /// </summary>
         public ObservableCollection<LogMessage> LogMessages
         {
             get
@@ -66,10 +103,13 @@ namespace TaskManager.ViewModels
                     return this.Logger.LogMessages;
                 }
 
-                return _filteredLogMessages;
+                return this._filteredLogMessages;
             }
         }
 
+        /// <summary>
+        /// Gets log levels as strin.
+        /// </summary>
         public string[] LogLevels => new string[]
         {
             "All",
@@ -78,29 +118,38 @@ namespace TaskManager.ViewModels
             LogLevel.Info.ToString(),
         };
 
+        /// <summary>
+        /// Gets or sets selected log level.
+        /// </summary>
         public string SelectedLogLevel
         {
-            get => _selectedLogLevel;
+            get => this._selectedLogLevel;
             set
             {
-                _selectedLogLevel = value;
+                this._selectedLogLevel = value;
                 if (value == "All")
                 {
-                    _filteredLogMessages.Clear();
+                    this._filteredLogMessages.Clear();
                 }
                 else
                 {
-                    _filteredLogMessages =
+                    this._filteredLogMessages =
                         new SafeObservableCollection<LogMessage>(
                             this.Logger.LogMessages.Where(l => l.Level.ToString() == value).ToList());
                 }
 
-                OnPropertyChanged(() => LogMessages);
+                this.OnPropertyChanged(() => this.LogMessages);
             }
         }
 
-        public IEnumerable<RegistrationInfo> Registrations { get; private set; }
+        /// <summary>
+        /// Gets registrations.
+        /// </summary>
+        public IEnumerable<RegistrationInfo> Registrations { get; }
 
+        /// <summary>
+        /// Gets http message view model.
+        /// </summary>
         public HttpMessagesViewModel HttpMessagesViewModel => Utils.Core.ViewModels.HttpMessagesViewModel.Instance;
     }
 }

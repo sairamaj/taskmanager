@@ -12,8 +12,23 @@ using Utils.Core.Registration;
 
 namespace TaskManager.Extension
 {
+    /// <summary>
+    /// Assembly tasks extensions.
+    /// </summary>
     internal static class TaskAssemblyExtension
     {
+        /// <summary>
+        /// Initializes task assembly modules.
+        /// </summary>
+        /// <param name="assembly">
+        /// A <see cref="Assembly"/> instance.
+        /// </param>
+        /// <param name="builder">
+        /// A <see cref="ContainerBuilder"/> instance.
+        /// </param>
+        /// <param name="logger">
+        /// A <see cref="ILogger"/> instance.
+        /// </param>
         public static void InitializeTaskAssemblyModules(this Assembly assembly, ContainerBuilder builder, ILogger logger)
         {
             if (assembly == null)
@@ -34,9 +49,23 @@ namespace TaskManager.Extension
             {
                 logger.Warn($"No Initializer found in {assembly.FullName}");
             }
-
         }
 
+        /// <summary>
+        /// Gets view models from given assembly.
+        /// </summary>
+        /// <param name="assembly">
+        /// A <see cref="Assembly"/>.
+        /// </param>
+        /// <param name="serviceLocator">
+        /// A <see cref="IServiceLocator"/> instance.
+        /// </param>
+        /// <param name="logger">
+        /// A <see cref="ILogger"/> instance.
+        /// </param>
+        /// <returns>
+        /// A <see cref="IEnumerable{T}"/> of <see cref="TaskInfo"/> found in given assembly.
+        /// </returns>
         public static IEnumerable<TaskInfo> GetViewViewModels(this Assembly assembly, IServiceLocator serviceLocator, ILogger logger)
         {
             var viewPattern = "^Task(?<name>\\w+)View$";
@@ -55,7 +84,7 @@ namespace TaskManager.Extension
             {
                 foreach (var viewModel in assembly
                     .GetTypes()
-                    .Where(t => t.Name == $"Task{viewTuple.Item1}ViewModel")        // Task<name>ViewModel
+                    .Where(t => t.Name == $"Task{viewTuple.Item1}ViewModel")
                     .Select(t => t))
                 {
                     foundCount++;
@@ -71,7 +100,8 @@ namespace TaskManager.Extension
                             BindingFlags.Instance | BindingFlags.Public,
                             null,
                             CreateConstructorParameters(viewModel, serviceLocator),
-                            CultureInfo.CurrentCulture, null);
+                            CultureInfo.CurrentCulture,
+                            null);
                         taskView = viewTuple.Item2.Assembly.CreateInstance(viewTuple.Item2.FullName) as UserControl;
                     }
                     catch (Exception e)
@@ -86,7 +116,7 @@ namespace TaskManager.Extension
                         View = taskView,
                         DataContext = dataModelContext,
                         Tag = viewTuple.Item2.FullName,
-                        TaskCreationException = taskCreationException
+                        TaskCreationException = taskCreationException,
                     };
                 }
             }
@@ -94,7 +124,19 @@ namespace TaskManager.Extension
             logger.Info($"{foundCount} found in {assembly}");
         }
 
-        static object[] CreateConstructorParameters(Type type, IServiceLocator serviceLocator)
+        /// <summary>
+        /// Create constructor parameters for given type.
+        /// </summary>
+        /// <param name="type">
+        /// Type name for looking up constructor.
+        /// </param>
+        /// <param name="serviceLocator">
+        /// A <see cref="IServiceLocator"/> for resolving the dependencies.
+        /// </param>
+        /// <returns>
+        /// Constructor parameter values.
+        /// </returns>
+        private static object[] CreateConstructorParameters(Type type, IServiceLocator serviceLocator)
         {
             var constructor = type.GetConstructors().FirstOrDefault();
             if (constructor == null)

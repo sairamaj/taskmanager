@@ -1,20 +1,25 @@
 ﻿using System;
 using System.Windows;
-using System.Windows.Controls;
 using Utils.Core.Views;
 
 namespace TaskManager.Views
 {
     /// <summary>
-    /// Interaction logic for TaskNavigationView.xaml
+    /// Interaction logic for TaskNavigationView.xaml.
     /// </summary>
-    public partial class TaskNavigationView : UserControl
+    public partial class TaskNavigationView
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="TaskNavigationView"/> class.
+        /// </summary>
         public TaskNavigationView()
         {
-            InitializeComponent();
+            this.InitializeComponent();
         }
 
+        /// <summary>
+        /// Task selection change event.
+        /// </summary>
         public event EventHandler<CommandChangeEventArgs> TaskSelectionChangedEvent;
 
         /// <summary>
@@ -24,7 +29,7 @@ namespace TaskManager.Views
         /// <param name="e">Event arguments.</param>
         private void TaskSelectedItemChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
         {
-            TaskSelectionChangedEvent?.Invoke(this, new CommandChangeEventArgs(e.NewValue));
+            this.TaskSelectionChangedEvent?.Invoke(this, new CommandChangeEventArgs(e.NewValue));
         }
     }
 }

@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Windows;
@@ -13,7 +12,7 @@ using Utils.Core.Extensions;
 namespace TaskManager
 {
     /// <summary>
-    /// Interaction logic for App.xaml
+    /// Interaction logic for App.xaml.
     /// </summary>
     public partial class App
     {
@@ -34,6 +33,7 @@ namespace TaskManager
                 new TaskRepository().InitializeTaskModulesAsync(builder, tempLogger).Wait();
                 builder.RegisterModule(new TaskModule());
                 var serviceLocator = ServiceLocatorFactory.Create(builder);
+
                 // transfer temp logger to real logger
                 var finalLogger = serviceLocator.Resolve<ILogger>();
                 tempLogger.LogMessages.ToList().ForEach(l =>
@@ -45,7 +45,7 @@ namespace TaskManager
                     DataContext = new MainViewModel(
                         serviceLocator,
                         serviceLocator.Resolve<ICommandTreeItemViewMapper>(),
-                        serviceLocator.Resolve<ITaskRepository>())
+                        serviceLocator.Resolve<ITaskRepository>()),
                 };
 
                 win.Show();
