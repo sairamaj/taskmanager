@@ -16,10 +16,25 @@ using Utils.Core.ViewModels;
 
 namespace JsonExecutorTasks.ViewModel
 {
+    /// <summary>
+    /// Test file data view model.
+    /// </summary>
     public class TestFileDataViewModel : CoreViewModel
     {
+        /// <summary>
+        /// Test file name.
+        /// </summary>
         private readonly string _fileName;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="TestFileDataViewModel"/> class.
+        /// </summary>
+        /// <param name="name">
+        /// Test name.
+        /// </param>
+        /// <param name="fileName">
+        /// Test file data.
+        /// </param>
         public TestFileDataViewModel(string name, string fileName)
         {
             this.Name = name;
@@ -29,20 +44,49 @@ namespace JsonExecutorTasks.ViewModel
                 this.Data = File.ReadAllText(fileName);
             }
             this.TraceMessages = new SafeObservableCollection<TreeViewItemViewModel>();
-            this.RunTestFileCommand = new DelegateCommand(async () => { await Execute(false); });
-            this.RunTestFileWithVerifyCommand = new DelegateCommand(async () => { await Execute(true); });
+            this.RunTestFileCommand = new DelegateCommand(async () => { await this.Execute(false); });
+            this.RunTestFileWithVerifyCommand = new DelegateCommand(async () => { await this.Execute(true); });
             this.TestStatus = TestStatus.None;
         }
 
+        /// <summary>
+        /// Gets test name.
+        /// </summary>
         public string Name { get; }
-        public string Data { get; set; }
-        public string ResultsData { get; set; }
-        public TestStatus TestStatus{ get; set; }
-        public ICommand RunTestFileCommand { get; }
-        public ICommand RunTestFileWithVerifyCommand { get; }
-        
-        public ObservableCollection<TreeViewItemViewModel> TraceMessages { get;  }
 
+        /// <summary>
+        /// Gets or sets test data.
+        /// </summary>
+        public string Data { get; set; }
+
+        /// <summary>
+        /// Gets or sets result data.
+        /// </summary>
+        public string ResultsData { get; set; }
+
+        /// <summary>
+        /// Gets or sets test status.
+        /// </summary>
+        public TestStatus TestStatus { get; set; }
+
+        /// <summary>
+        /// Gets run test file command.
+        /// </summary>
+        public ICommand RunTestFileCommand { get; }
+
+        /// <summary>
+        /// Gets run test file with verify command.
+        /// </summary>
+        public ICommand RunTestFileWithVerifyCommand { get; }
+
+        /// <summary>
+        /// Gets trace messages.
+        /// </summary>
+        public ObservableCollection<TreeViewItemViewModel> TraceMessages { get; }
+
+        /// <summary>
+        /// Gets configuration JSON file data.
+        /// </summary>
         public string ConfigJson
         {
             get
@@ -57,6 +101,9 @@ namespace JsonExecutorTasks.ViewModel
             }
         }
 
+        /// <summary>
+        /// Gets variables associated with this data.
+        /// </summary>
         public IDictionary<string, object> Variables
         {
             get
@@ -71,6 +118,15 @@ namespace JsonExecutorTasks.ViewModel
             }
         }
 
+        /// <summary>
+        /// Executes the test.
+        /// </summary>
+        /// <param name="isVerify">
+        /// true for verifying the results with expected one.
+        /// </param>
+        /// <returns>
+        /// Task instance.
+        /// </returns>
         public async Task Execute(bool isVerify)
         {
             await new TaskFactory().StartNew(() =>
@@ -79,7 +135,7 @@ namespace JsonExecutorTasks.ViewModel
                 {
                     this.TraceMessages.Clear();
                     this.TestStatus = TestStatus.Running;
-                    var executor = new JsonExecutor(this.Data, this.ConfigJson, TraceAction);
+                    var executor = new JsonExecutor(this.Data, this.ConfigJson, this.TraceAction);
                     if (isVerify)
                     {
                         executor.ExecuteAndVerify(this.Variables);
@@ -90,6 +146,7 @@ namespace JsonExecutorTasks.ViewModel
                         var output = executor.Execute(this.Variables);
                         this.ResultsData = JsonConvert.SerializeObject(output);
                     }
+
                     this.TestStatus = TestStatus.Success;
                 }
                 catch (AssertionFailedException ae)
@@ -104,12 +161,18 @@ namespace JsonExecutorTasks.ViewModel
                 }
                 finally
                 {
-                    OnPropertyChanged(()=> this.ResultsData);
-                    OnPropertyChanged(() => this.TestStatus);
+                    this.OnPropertyChanged(() => this.ResultsData);
+                    this.OnPropertyChanged(() => this.TestStatus);
                 }
             });
         }
 
+        /// <summary>
+        /// Trace action.
+        /// </summary>
+        /// <param name="traceInfo">
+        /// A <see cref="ExecuteTraceInfo"/> instance.
+        /// </param>
         private void TraceAction(ExecuteTraceInfo traceInfo)
         {
             ExecuteAsync(() =>

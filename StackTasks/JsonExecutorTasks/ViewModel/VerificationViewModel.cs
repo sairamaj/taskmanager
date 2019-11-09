@@ -4,16 +4,32 @@ using Utils.Core.ViewModels;
 
 namespace JsonExecutorTasks.ViewModel
 {
-    class VerificationViewModel : TreeViewItemViewModel
+    /// <summary>
+    /// Verification view model.
+    /// </summary>
+    internal class VerificationViewModel : TreeViewItemViewModel
     {
+        /// <summary>
+        /// Trace information.
+        /// </summary>
         private readonly ExecuteTraceInfo _traceInfo;
 
-        public VerificationViewModel(ExecuteTraceInfo traceInfo) :base(null, $"Verify-{traceInfo.TestInfo.Name}", true)
+        /// <summary>
+        /// Initializes a new instance of the <see cref="VerificationViewModel"/> class.
+        /// </summary>
+        /// <param name="traceInfo">
+        /// Trace information.
+        /// </param>
+        public VerificationViewModel(ExecuteTraceInfo traceInfo)
+            : base(null, $"Verify-{traceInfo.TestInfo.Name}", true)
         {
-            _traceInfo = traceInfo;
-            IsExpanded = true;
+            this._traceInfo = traceInfo;
+            this.IsExpanded = true;
         }
 
+        /// <summary>
+        /// Loads the verification children in tree view.
+        /// </summary>
         protected override void LoadChildren()
         {
             this.Children.Add(new ObjectTreeViewModel(null, "actual", this._traceInfo.Actual, InfoType.Properties));

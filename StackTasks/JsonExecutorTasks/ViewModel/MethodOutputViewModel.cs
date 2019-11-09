@@ -3,19 +3,33 @@ using Utils.Core.ViewModels;
 
 namespace JsonExecutorTasks.ViewModel
 {
-    class MethodOutputViewModel : TreeViewItemViewModel
+    /// <summary>
+    /// Method ouptut view model.
+    /// </summary>
+    internal class MethodOutputViewModel : TreeViewItemViewModel
     {
+        /// <summary>
+        /// Method return value.
+        /// </summary>
         private readonly object _output;
 
-        public MethodOutputViewModel(object output) : base(null, "Return", true)
+        /// <summary>
+        /// Initializes a new instance of the <see cref="MethodOutputViewModel"/> class.
+        /// </summary>
+        /// <param name="output"></param>
+        public MethodOutputViewModel(object output) 
+            : base(null, "Return", true)
         {
-            _output = output;
-            IsExpanded = true;
+            this._output = output;
+            this.IsExpanded = true;
         }
 
+        /// <summary>
+        /// Loads the return value tree item.
+        /// </summary>
         protected override void LoadChildren()
         {
-            this.Children.Add(new ObjectTreeViewModel(null, "return", _output, InfoType.Properties));
+            this.Children.Add(new ObjectTreeViewModel(null, "return", this._output, InfoType.Properties));
         }
     }
 }

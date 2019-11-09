@@ -10,17 +10,31 @@ namespace JsonExecutorTasks.Views
     /// </summary>
     public partial class TestFilesContainerView : UserControl
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="TestFilesContainerView"/> class.
+        /// </summary>
         public TestFilesContainerView()
         {
-            InitializeComponent();
+            this.InitializeComponent();
         }
 
+        /// <summary>
+        /// Task selection change event in tree.
+        /// </summary>
         public event EventHandler<CommandChangeEventArgs> TaskSelectionChangedEvent;
 
+        /// <summary>
+        /// Task selected change handler.
+        /// </summary>
+        /// <param name="sender">
+        /// Sender.
+        /// </param>
+        /// <param name="e">
+        /// Event arguments.
+        /// </param>
         private void TaskSelectedItemChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
         {
-            TaskSelectionChangedEvent?.Invoke(this, new CommandChangeEventArgs(e.NewValue));
+            this.TaskSelectionChangedEvent?.Invoke(this, new CommandChangeEventArgs(e.NewValue));
         }
-
     }
 }
