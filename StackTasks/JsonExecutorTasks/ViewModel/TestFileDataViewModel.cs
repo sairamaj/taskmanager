@@ -43,6 +43,7 @@ namespace JsonExecutorTasks.ViewModel
             {
                 this.Data = File.ReadAllText(fileName);
             }
+
             this.TraceMessages = new SafeObservableCollection<TreeViewItemViewModel>();
             this.RunTestFileCommand = new DelegateCommand(async () => { await this.Execute(false); });
             this.RunTestFileWithVerifyCommand = new DelegateCommand(async () => { await this.Execute(true); });

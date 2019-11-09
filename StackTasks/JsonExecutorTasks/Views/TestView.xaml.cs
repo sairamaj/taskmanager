@@ -6,13 +6,16 @@ using System.Xml;
 namespace JsonExecutorTasks.Views
 {
     /// <summary>
-    /// Interaction logic for TestView.xaml
+    /// Interaction logic for TestView.xaml.
     /// </summary>
     public partial class TestView : UserControl
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="TestView"/> class.
+        /// </summary>
         public TestView()
         {
-            InitializeComponent();
+            this.InitializeComponent();
 
             var assembly = Assembly.GetExecutingAssembly();
             var resourceName = "JsonExecutorTasks.AvalonJsonSyntax.xml";
@@ -20,7 +23,7 @@ namespace JsonExecutorTasks.Views
             using (var xshd_stream = assembly.GetManifestResourceStream(resourceName))
             {
                 var xshd_reader = new XmlTextReader(xshd_stream);
-                TextEditor.SyntaxHighlighting = ICSharpCode.AvalonEdit.Highlighting.Xshd.HighlightingLoader.Load(xshd_reader, ICSharpCode.AvalonEdit.Highlighting.HighlightingManager.Instance);
+                this.TextEditor.SyntaxHighlighting = ICSharpCode.AvalonEdit.Highlighting.Xshd.HighlightingLoader.Load(xshd_reader, ICSharpCode.AvalonEdit.Highlighting.HighlightingManager.Instance);
             }
         }
     }

@@ -4,22 +4,24 @@ using Utils.Core.ViewModels;
 namespace JsonExecutorTasks.Views
 {
     /// <summary>
-    /// Interaction logic for TaskTestView.xaml
+    /// Interaction logic for TaskTestView.xaml.
     /// </summary>
     public partial class TaskTestView : UserControl
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="TaskTestView"/> class.
+        /// </summary>
         public TaskTestView()
         {
-            InitializeComponent();
+            this.InitializeComponent();
             this.TestFilesContainerView.TaskSelectionChangedEvent += (s, e) =>
             {
-                var viewModel = e.SelectedItem as CommandTreeViewModel;
-                if (viewModel == null)
+                if (!(e.SelectedItem is CommandTreeViewModel viewModel))
                 {
                     return;
                 }
 
-                var ctrl = new TestView {DataContext = viewModel.DataContext};
+                var ctrl = new TestView { DataContext = viewModel.DataContext };
                 this.DetailViewContainer.ShowView(ctrl);
             };
         }

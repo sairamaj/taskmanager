@@ -32,7 +32,7 @@ namespace JsonExecutorTasks.ViewModel
         protected override void LoadChildren()
         {
             this.Children.Add(new MethodInputViewModel(this.ExecuteTrace.MethodParameters));
-            if (this.ExecuteTrace.MethodReturnType != null )
+            if (this.ExecuteTrace.MethodReturnType != null)
             {
                 if (this.ExecuteTrace.MethodReturnValue != null)
                 {

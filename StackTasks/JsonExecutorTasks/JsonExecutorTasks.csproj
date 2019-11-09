@@ -23,6 +23,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <CodeAnalysisRuleSet>..\..\build\Source.ruleset</CodeAnalysisRuleSet>
+    <DocumentationFile>..\..\TaskManager\bin\Debug\Tasks\JsonExecutor\JsonExecutorTasks.xml</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -32,6 +33,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <CodeAnalysisRuleSet>..\..\build\Source.ruleset</CodeAnalysisRuleSet>
+    <DocumentationFile>bin\Release\JsonExecutorTasks.xml</DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="FluentAssertions, Version=5.9.0.0, Culture=neutral, PublicKeyToken=33f2691a05b67b6a, processorArchitecture=MSIL">

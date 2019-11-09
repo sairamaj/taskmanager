@@ -16,8 +16,10 @@ namespace JsonExecutorTasks.ViewModel
         /// <summary>
         /// Initializes a new instance of the <see cref="MethodOutputViewModel"/> class.
         /// </summary>
-        /// <param name="output"></param>
-        public MethodOutputViewModel(object output) 
+        /// <param name="output">
+        /// Output value.
+        /// </param>
+        public MethodOutputViewModel(object output)
             : base(null, "Return", true)
         {
             this._output = output;

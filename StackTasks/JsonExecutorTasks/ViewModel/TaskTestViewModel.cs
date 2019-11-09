@@ -30,7 +30,9 @@ namespace JsonExecutorTasks.ViewModel
         /// <summary>
         /// Initializes a new instance of the <see cref="TaskTestViewModel"/> class.
         /// </summary>
-        /// <param name="logger"></param>
+        /// <param name="logger">
+        /// A <see cref="ILogger"/>u instance.
+        /// </param>
         public TaskTestViewModel(ILogger logger)
         {
             var testFilesPath = Path.Combine(Path.GetDirectoryName(new Uri(this.GetType().Assembly.CodeBase).AbsolutePath), "TestFiles");
@@ -73,7 +75,7 @@ namespace JsonExecutorTasks.ViewModel
         public ICommand RunCommand { get; set; }
 
         /// <summary>
-        /// Gets or run verify command handler.
+        /// Gets or sets run verify command handler.
         /// </summary>
         public ICommand RunVerifyCommand { get; set; }
 

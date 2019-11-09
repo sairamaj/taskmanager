@@ -6,7 +6,7 @@ using Utils.Core.Views;
 namespace JsonExecutorTasks.Views
 {
     /// <summary>
-    /// Interaction logic for TestFilesContainerView.xaml
+    /// Interaction logic for TestFilesContainerView.xaml.
     /// </summary>
     public partial class TestFilesContainerView : UserControl
     {

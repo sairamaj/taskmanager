@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<package>
+	<metadata>
+		<id>Utilities.NetFramework.Misc</id>
+		<version>1.0.0</version>
+		<authors>sairamaj</authors>
+		<description>.Netframework utilties for creatin WPF applications and other miscellaneous utilities.</description>
+		<requireLicenseAcceptance>false</requireLicenseAcceptance>
+		<projectUrl>https://github.com/sairamaj/taskmanager/tree/master/Utils.Core</projectUrl>
+    <tags>utilities .net framework miscellaneous</tags>
+  </metadata>
+</package>
