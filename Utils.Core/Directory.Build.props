@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project>
   <PropertyGroup>
-    <Description>Fiserv.Security.PinVaultProxy</Description>
-    <Authors>Fiserv</Authors>
+    <Description>Utils.Core</Description>
+    <Authors>sairamaj</Authors>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="NuGet.Build.Tasks.Pack">
