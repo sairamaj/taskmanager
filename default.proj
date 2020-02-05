@@ -2,7 +2,7 @@
 <Project DefaultTargets="All" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="15.0">
   <PropertyGroup>
     <MasterSemanticVersion>1.0.0</MasterSemanticVersion>
-    <CommonName>Digital Channels - PinValutProxy</CommonName>
+    <CommonName>Generic purpose task manager</CommonName>
   </PropertyGroup>
   <PropertyGroup>
     <SuiteDirectory>$(MSBuildProjectDirectory)</SuiteDirectory>

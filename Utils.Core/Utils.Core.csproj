@@ -13,6 +13,7 @@
     <Deterministic>true</Deterministic>
     <NuGetPackageImportStamp>
     </NuGetPackageImportStamp>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -58,6 +59,7 @@
   <ItemGroup>
     <Compile Include="CommandTreeItemViewMapper.cs" />
     <Compile Include="Command\CommandManager.cs" />
+    <Compile Include="Command\CommandReference.cs" />
     <Compile Include="Command\DelegateCommand.cs" />
     <Compile Include="Command\DelegateCommand2.cs" />
     <Compile Include="Expressions\Argument.cs" />
@@ -71,6 +73,7 @@
     <Compile Include="Extensions\ExceptionExtension.cs" />
     <Compile Include="Extensions\HttpRequestMessageExtension.cs" />
     <Compile Include="Extensions\HttpResponseMessageExtension.cs" />
+    <Compile Include="Extensions\LinqExtensions.cs" />
     <Compile Include="Extensions\ObjectExtensions.cs" />
     <Compile Include="ICommandTreeItemViewMapper.cs" />
     <Compile Include="Diagnostics\ILogger.cs" />
@@ -99,6 +102,7 @@
     <Compile Include="ViewModels\ChildChangedEventArgs.cs" />
     <Compile Include="ViewModels\CommandTreeViewModel.cs" />
     <Compile Include="ViewModels\CoreViewModel.cs" />
+    <Compile Include="ViewModels\FaultExceptionViewModel.cs" />
     <Compile Include="ViewModels\NullObjectViewModel.cs" />
     <Compile Include="ViewModels\ErrorInfoViewModel.cs" />
     <Compile Include="ViewModels\ExceptionTreeViewItemViewModel.cs" />
@@ -113,6 +117,7 @@
     <Compile Include="ViewModels\WorkInProgressCommandTreeViewModel.cs" />
     <Compile Include="Views\AvalonEditBehaviour.cs" />
     <Compile Include="Views\CommandChangeEventArgs.cs" />
+    <Compile Include="Views\CoreUserControl.cs" />
     <Compile Include="Views\DetailViewContainer.xaml.cs">
       <DependentUpon>DetailViewContainer.xaml</DependentUpon>
     </Compile>

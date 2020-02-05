@@ -1,4 +1,4 @@
-﻿<Window x:Class="TaskManager.MainWindow"
+﻿<mah:MetroWindow x:Class="TaskManager.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
@@ -6,6 +6,7 @@
         xmlns:local="clr-namespace:TaskManager"
         xmlns:views="clr-namespace:TaskManager.Views"
         xmlns:views1="clr-namespace:Utils.Core.Views;assembly=Utils.Core"
+        xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
         mc:Ignorable="d"
         Title="Task Manager" Height="750" Width="1200">
     <DockPanel>
@@ -34,4 +35,4 @@
             <views1:DetailViewContainer Grid.Row="0" Grid.Column="2" x:Name="DetailViewContainer"/>
         </Grid>
     </DockPanel>
-</Window>
+</mah:MetroWindow>
